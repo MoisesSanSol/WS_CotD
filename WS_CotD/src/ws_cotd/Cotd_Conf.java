@@ -7,17 +7,16 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class Cotd_Conf {
-	
-	public File ongoingSeriesFolder;
-	public File downloadTargetFolder;
-	public static String animeFlvBaseUrl = "https://animeflv.net";
-	public static String animeFlvSeriesMainPageBaseUrl = "https://animeflv.net/anime/";
-	
-	public String setId;
-	public String 
-	
+
+	// Singleton instance.
 	private static Cotd_Conf instance;
 	
+	// Folders:
+	public File imagesFolder;
+	
+	// Urls:
+	public String wsJpCotdUrl;
+
 	private Cotd_Conf(){
 		this.loadLocalConfiguration();
 	}
@@ -35,14 +34,14 @@ public class Cotd_Conf {
 
 		try {
 
-			input = new FileInputStream("Conf/LocalConfiguration.properties");
+			input = new FileInputStream("Conf/configuration.properties");
 
 			prop.load(input);
 
-			String ongoingSeriesFolderPath = prop.getProperty("ongoingSeriesFolder");
-			this.ongoingSeriesFolder = new File(ongoingSeriesFolderPath);
-			String downloadTargetFolderPath = prop.getProperty("downloadTargetFolder");
-			this.downloadTargetFolder = new File(downloadTargetFolderPath);
+			String imagesFolder = prop.getProperty("imagesFolder");
+			this.imagesFolder = new File(imagesFolder);
+			
+			this.wsJpCotdUrl = prop.getProperty("wsJpCotdUrl");
 
 		} catch (IOException ex) {
 			ex.printStackTrace();
