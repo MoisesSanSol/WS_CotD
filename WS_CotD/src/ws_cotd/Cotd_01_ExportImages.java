@@ -3,9 +3,13 @@ package ws_cotd;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.net.URL;
 
+import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 public class Cotd_01_ExportImages {
 
@@ -77,7 +81,18 @@ public class Cotd_01_ExportImages {
 			this.downloadImage(src, CotD_Conf.imagesFolder, fileType, "jp_" + paddedNumber);
 		}*/
 		Document doc = Jsoup.connect(this.conf.wsJpCotdUrl).maxBodySize(0).get();
-		System.out.println("Page content: " + doc.html());
+		Elements images = doc.select("div.center img");
+
+		int count = 1;
+		
+		for(Element image : images){
+			String imageUrl = image.attr("abs:src");
+			System.out.println("Scrapping img: " + image.attr("abs:src"));
+			
+			
+			
+			//FileUtils.copyURLToFile(new URL(url), target);
+		}
 	}
 	
 	/*private void parseWsJpCotDExtra() throws Exception {

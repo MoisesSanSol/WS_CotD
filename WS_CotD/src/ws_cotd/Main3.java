@@ -7,13 +7,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Main {
+public class Main3 {
 
 	public static String path = "D:\\Workshop\\WeissSchwarz\\FB\\CotD_Web\\current.txt";
-	public static String path2 = "D:\\Workshop\\WeissSchwarz\\FB\\CotD_Web\\s51\\cards\\template.html";
-	public static String path3 = "D:\\Workshop\\WeissSchwarz\\FB\\CotD_Web\\s51\\cards\\";
-	public static String path4 = "D:\\Workshop\\WeissSchwarz\\FB\\CotD_Web\\s51\\index.html";
-	public static String path5 = "D:\\Workshop\\WeissSchwarz\\FB\\CotD_Web\\s51\\index2.html";
+	public static String path2 = "D:\\Workshop\\WeissSchwarz\\FB\\CotD_Web\\we28\\cards\\template.html";
+	public static String path3 = "D:\\Workshop\\WeissSchwarz\\FB\\CotD_Web\\we28\\cards\\";
+	public static String path4 = "D:\\Workshop\\WeissSchwarz\\FB\\CotD_Web\\we28\\index.html";
+	public static String path5 = "D:\\Workshop\\WeissSchwarz\\FB\\CotD_Web\\we28\\index2.html";
 	
 	public static void main(String[] args) throws Exception{
 		// TODO Auto-generated method stub
@@ -59,7 +59,7 @@ public class Main {
 				}
 			}
 			
-			String file = "s51_" + ref + ".html";
+			String file = "we28_" + ref + ".html";
 			
 			templateContent.add(0,"<meta charset=\"utf-8\">");
 			
@@ -85,7 +85,7 @@ public class Main {
 		for(int i = 0; i < indexContent.size(); i++){
 			for(String ref : newCards){
 				if(indexContent.get(i).endsWith(ref)){
-					String newLine = fecha + "<a href='./cards/s51_" + ref + ".html'><img src='./images/s51_" + ref + ".png' width=100% height=auto></img></a>SAO/S51-" + ref;
+					String newLine = fecha + "<a href='./cards/we28_" + ref + ".html'><img src='./images/we28_" + ref + ".png' width=100% height=auto></img></a>HLL/WE28-" + ref;
 					indexContent.set(i, newLine);
 				}
 			}
