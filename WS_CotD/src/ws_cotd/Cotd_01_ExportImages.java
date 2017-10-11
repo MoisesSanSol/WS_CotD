@@ -25,19 +25,18 @@ public class Cotd_01_ExportImages {
 		
 		Cotd_01_ExportImages main = new Cotd_01_ExportImages();
 		
-		//main.cleanImagesFolder();
+		main.cleanImagesFolder();
 		//main.parseWsEnCotD();
 		main.parseWsJpCotD();
-		/*main.parseWsJpCotDExtra();
+		main.parseWsJpExtraCotd();
 		
 		Desktop desktop = Desktop.getDesktop();
 		File dirToOpen = null;
 		try {
-			dirToOpen = new File(CotD_Conf.imagesFolder);
-			desktop.open(dirToOpen);
+			desktop.open(main.conf.imagesFolder);
 		} catch (IllegalArgumentException iae) {
 			System.out.println("File Not Found");
-		}*/
+		}
 		
 		System.out.println("*** Finished ***");
 	}
@@ -62,24 +61,6 @@ public class Cotd_01_ExportImages {
 	}*/
 
 	private void parseWsJpCotD() throws Exception {
-		/*UserAgent userAgent = new UserAgent();
-		//userAgent.settings.showHeaders = true;
-		
-		userAgent.sendGET(wsJpURL, "cookie: lang_setting=en");
-		System.out.println("Scrapping page: " + userAgent.getLocation());
-		//System.out.println("Page content: " + userAgent.doc.innerHTML());
-		
-		Elements divs = userAgent.doc.findEvery("<div class=\"center\">");
-		int count = 0;
-		for (Element div : divs) {
-			count++;
-			Element img = div.getFirst("<img>");
-			String src = img.getAtString("src");
-			System.out.println("Scrapping img: " + src);
-			String fileType = src.substring(src.lastIndexOf('.') + 1);
-			String paddedNumber = String.valueOf(count).replaceAll("^(\\d)$", "0$1");
-			this.downloadImage(src, CotD_Conf.imagesFolder, fileType, "jp_" + paddedNumber);
-		}*/
 		Document doc = Jsoup.connect(this.conf.wsJpCotdUrl).maxBodySize(0).get();
 		Elements images = doc.select("div.center img");
 
@@ -88,68 +69,40 @@ public class Cotd_01_ExportImages {
 		for(Element image : images){
 			String imageUrl = image.attr("abs:src");
 			System.out.println("Scrapping img: " + image.attr("abs:src"));
-			
-			
-			
-			//FileUtils.copyURLToFile(new URL(url), target);
-		}
-	}
-	
-	/*private void parseWsJpCotDExtra() throws Exception {
-		UserAgent userAgent = new UserAgent();
-		//userAgent.settings.showHeaders = true;
-		
-		userAgent.sendGET(wsJpURLExtra, "cookie: lang_setting=en");
-		System.out.println("Scrapping page: " + userAgent.getLocation());
-		//System.out.println("Page content: " + userAgent.doc.innerHTML());
-		
-		Elements divs = userAgent.doc.findEvery("<div class=\"center\">");
-		int count = 0;
-		for (Element div : divs) {
+			String paddedCount = String.format("%02d", count);
+			String imageName = "/jp_" + paddedCount + ".png";
+			File targetImageFile = new File(this.conf.imagesFolder.getAbsolutePath() + imageName);
+			System.out.println("Saving img: " + imageName);
+			FileUtils.copyURLToFile(new URL(imageUrl), targetImageFile);
+			Thread.sleep(1000);
 			count++;
-			Element img = div.getFirst("<img>");
-			String src = img.getAtString("src");
-			System.out.println("Scrapping img: " + src);
-			String fileType = src.substring(src.lastIndexOf('.') + 1);
-			this.downloadImage(src, CotD_Conf.imagesFolder, fileType, "jp_" + String.valueOf(count) + "_2");
 		}
 	}
 	
-	private void downloadImage(String url, String where, String what, String how) throws Exception{
+	private void parseWsJpExtraCotd() throws Exception {
+		Document doc = Jsoup.connect(this.conf.wsJpExtraCotdUrl).maxBodySize(0).get();
+		Elements images = doc.select("div.center img");
+
+		int count = 1;
 		
-		try {
-		    Thread.sleep(100);
-		} catch ( java.lang.InterruptedException ie) {
-		    System.out.println(ie);
-		}
-		
-		HandlerForBinary handlerForBinary = new HandlerForBinary();
-		UserAgent userAgent = new UserAgent();
-		
-		String handlerType = "image/";
-		
-		if(what.equals("jpg")){
-			handlerType = handlerType + "jpeg";
-		}else{
-			handlerType = handlerType + what;
-		}
-		
-		try{
-			userAgent.setHandler(handlerType, handlerForBinary);
-			userAgent.visit(url);
-			
-			System.out.println("Extracting image " + how + " from: " + url);
-			
-			FileOutputStream output = null;
-			output = new FileOutputStream(where + "\\" + how + "." + what);
-			output.write(handlerForBinary.getContent());
-			output.close();
-		}
-		catch(Exception ex){
-			System.out.println("Link for image: " + url + " is broken.");
+		for(Element image : images){
+			String imageUrl = image.attr("abs:src");
+			System.out.println("Scrapping img: " + image.attr("abs:src"));
+			String paddedCount = String.format("%02d", count);
+			String imageName = "/jp_" + paddedCount + "_2.png";
+			File targetImageFile = new File(this.conf.imagesFolder.getAbsolutePath() + imageName);
+			System.out.println("Saving img: " + imageName);
+			try{
+				FileUtils.copyURLToFile(new URL(imageUrl), targetImageFile);
+			}
+			catch(Exception any){
+				System.out.println("Lol: " + any.toString());
+			}
+			Thread.sleep(1000);
+			count++;
 		}
 	}
-	
+
 	private void cleanImagesFolder() throws Exception {
 		
 		File[] listOfFiles = this.conf.imagesFolder.listFiles();
@@ -168,5 +121,4 @@ public class Cotd_01_ExportImages {
 		    }
 		}
 	}
-*/
 }

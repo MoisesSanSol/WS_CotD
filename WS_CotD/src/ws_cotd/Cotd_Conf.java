@@ -16,6 +16,7 @@ public class Cotd_Conf {
 	
 	// Urls:
 	public String wsJpCotdUrl;
+	public String wsJpExtraCotdUrl;
 
 	private Cotd_Conf(){
 		this.loadLocalConfiguration();
@@ -42,6 +43,7 @@ public class Cotd_Conf {
 			this.imagesFolder = new File(imagesFolder);
 			
 			this.wsJpCotdUrl = prop.getProperty("wsJpCotdUrl");
+			this.wsJpExtraCotdUrl = prop.getProperty("wsJpExtraCotdUrl");
 
 		} catch (IOException ex) {
 			ex.printStackTrace();
