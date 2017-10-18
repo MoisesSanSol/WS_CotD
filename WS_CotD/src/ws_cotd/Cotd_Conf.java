@@ -13,6 +13,11 @@ public class Cotd_Conf {
 	
 	// Folders:
 	public File imagesFolder;
+	public File mainFolder;
+	
+	// Files:
+	
+	public File temporal;
 	
 	// Urls:
 	public String wsJpCotdUrl;
@@ -39,12 +44,23 @@ public class Cotd_Conf {
 
 			prop.load(input);
 
-			String imagesFolder = prop.getProperty("imagesFolder");
-			this.imagesFolder = new File(imagesFolder);
+			// Folders
+			String imagesFolderStr = prop.getProperty("imagesFolder");
+			this.imagesFolder = new File(imagesFolderStr);
+			String mainFolderStr = prop.getProperty("mainFolder");
+			this.mainFolder = new File(mainFolderStr);
 			
+			
+			// Files
+			String temporalStr = prop.getProperty("temporalFile");
+			String temporalPath = this.mainFolder.getAbsolutePath() + "\\" + temporalStr;
+			this.temporal = new File(temporalPath);
+			
+			// Urls
 			this.wsJpCotdUrl = prop.getProperty("wsJpCotdUrl");
 			this.wsJpExtraCotdUrl = prop.getProperty("wsJpExtraCotdUrl");
 
+			
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		} finally {
