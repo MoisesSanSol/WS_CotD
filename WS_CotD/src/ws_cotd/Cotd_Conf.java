@@ -14,14 +14,17 @@ public class Cotd_Conf {
 	// Folders:
 	public File imagesFolder;
 	public File mainFolder;
+	public File webFolder;
 	
 	// Files:
-	
-	public File temporal;
+	public File fromOutakuyaFile;
+	public File temporalFile;
+	public File currentSeriesFile;
 	
 	// Urls:
 	public String wsJpCotdUrl;
 	public String wsJpExtraCotdUrl;
+	public String outakuyaUrl;
 
 	private Cotd_Conf(){
 		this.loadLocalConfiguration();
@@ -49,16 +52,24 @@ public class Cotd_Conf {
 			this.imagesFolder = new File(imagesFolderStr);
 			String mainFolderStr = prop.getProperty("mainFolder");
 			this.mainFolder = new File(mainFolderStr);
-			
+			String webFolderStr = prop.getProperty("webFolder");
+			this.webFolder = new File(webFolderStr);
 			
 			// Files
 			String temporalStr = prop.getProperty("temporalFile");
 			String temporalPath = this.mainFolder.getAbsolutePath() + "\\" + temporalStr;
-			this.temporal = new File(temporalPath);
+			this.temporalFile = new File(temporalPath);
+			String fromOutakuyaFileStr = prop.getProperty("fromOutakuyaFile");
+			String fromOutakuyaFilePath = this.mainFolder.getAbsolutePath() + "\\" + fromOutakuyaFileStr;
+			this.fromOutakuyaFile = new File(fromOutakuyaFilePath);
+			String currentSeriesFileStr = prop.getProperty("currentSeriesFile");
+			String currentSeriesFilePath = this.mainFolder.getAbsolutePath() + "\\" + currentSeriesFileStr;
+			this.currentSeriesFile = new File(currentSeriesFilePath);
 			
 			// Urls
 			this.wsJpCotdUrl = prop.getProperty("wsJpCotdUrl");
 			this.wsJpExtraCotdUrl = prop.getProperty("wsJpExtraCotdUrl");
+			this.outakuyaUrl = prop.getProperty("outakuyaUrl");
 
 			
 		} catch (IOException ex) {

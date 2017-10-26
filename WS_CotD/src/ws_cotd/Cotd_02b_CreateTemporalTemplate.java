@@ -22,7 +22,7 @@ public class Cotd_02b_CreateTemporalTemplate {
 	}
 	
 	
-	public static void main(String[] args) throws Exception{
+	/*public static void main(String[] args) throws Exception{
 		System.out.println("*** Starting ***");
 		
 		Cotd_02b_CreateTemporalTemplate main = new Cotd_02b_CreateTemporalTemplate();
@@ -45,7 +45,7 @@ public class Cotd_02b_CreateTemporalTemplate {
 			
 		} catch (IllegalArgumentException iae) {
 			System.out.println("File Not Found");
-		}*/
+		}*
 		
 		System.out.println("*** Finished ***");
 
@@ -74,7 +74,7 @@ public class Cotd_02b_CreateTemporalTemplate {
 		
 		/*System.out.println("Red Color value = "+ red);
 		System.out.println("Green Color value = "+ green);
-		System.out.println("Blue Color value = "+ blue);*/
+		System.out.println("Blue Color value = "+ blue);*
 		
 		if(red > 200  && green > 200 && blue < 50){
 			color = "Amarillo";
@@ -159,7 +159,7 @@ public class Cotd_02b_CreateTemporalTemplate {
 		//System.out.println(color.getRGB());
 		/*System.out.println(color.getRed());
 		System.out.println(color.getGreen());
-		System.out.println(color.getBlue());*/
+		System.out.println(color.getBlue());*
 		
 		return color;
 	}
@@ -230,6 +230,6 @@ public class Cotd_02b_CreateTemporalTemplate {
 		}
 
 		writer.close();
-	}
+	}*/
 }
 

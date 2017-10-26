@@ -27,7 +27,7 @@ public class Main {
 		fileContent.subList(0, 5).clear();
 		List<String> cardContent = fileContent.subList(0, fileContent.indexOf("-") - 1);
 		
-		ArrayList<String> newCards = new ArrayList<String>();  
+		ArrayList<String> newCards = new ArrayList<String>(); 
 		
 		while(keep){
 			
@@ -92,6 +92,7 @@ public class Main {
 		}
 		
 		Files.write(new File(path4).toPath(), indexContent, StandardCharsets.UTF_8);
+		Cotd_Web.copyImagesForWeb("s51", newCards);
 		
 	}
 
