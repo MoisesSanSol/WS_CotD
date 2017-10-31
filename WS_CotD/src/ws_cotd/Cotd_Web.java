@@ -4,41 +4,102 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 
 public class Cotd_Web {
 
-	
 	public static void main(String[] args) throws Exception{
-		System.out.println("*** Starting Test ***");
-		
-		Cotd_Web.duplicateParallelCard("s51", "001", "001s", "SR");
-		
-		System.out.println("*** Finished ***");
-	}
-	
-	public static void copyImagesForWeb(String seriesId, ArrayList<String> cards) throws Exception{
-		
-		System.out.println("** Copy Images For Web ***");
-		System.out.println("* Series Id: " + seriesId);
-		
+		// TODO Auto-generated method stub
+
 		Cotd_Conf conf = Cotd_Conf.getInstance();
+		
+		List<String> fileContent = new ArrayList<>(Files.readAllLines(conf.temporalFile.toPath(), StandardCharsets.UTF_8));
+		
+		fileContent.remove(0); // Separador
+		String fecha = fileContent.remove(0).replace("Cartas del día ", "").replace(":", "");
+		
+		String linea = "";
+		while(!linea.startsWith("-")){
+			linea = fileContent.remove(0);
+		}
 		
 		int count = 0;
 		
-		for (String card : cards){
+		while(!fileContent.isEmpty()){
+			
+			fileContent.remove(0); // Salto de linea
+			String name = fileContent.remove(0);
+			String fullId = fileContent.remove(0);
+			String id = fullId.split(" ")[0];
+			String ref = id.split("-")[1];
+			String seriesRef = id.split("-")[0].split("/")[1].toLowerCase();
+			String caract1 = fileContent.remove(0);
+			String caract = caract1 + ", " + fileContent.remove(0);
+			fileContent.remove(0);
+			
+			String seriesWebPath = conf.webFolder.getPath() + "\\" +  seriesRef + "\\";
+			String templatePath = seriesWebPath + "cards\\template.html";
+			
+			List<String> templateContent = new ArrayList<>(Files.readAllLines(new File(templatePath).toPath(), StandardCharsets.UTF_8));
+			
+			templateContent.set(1, templateContent.get(1).replace("[Card Id]", id));
+			templateContent.set(12, templateContent.get(12).replace("[Ref]", ref));
+			templateContent.set(17, templateContent.get(17).replace("[Nombre]", name));
+			templateContent.set(22, fullId);
+			templateContent.set(27, caract.replace("&", "&amp;").replace(">", "&gt;").replace("<", "&lt;"));
+			templateContent.remove(32);
+
+			List<String> cardContent = new ArrayList<String>();
+			
+			String habLinea = fileContent.remove(0);
+			while(!habLinea.startsWith("-")){
+				cardContent.add(habLinea);
+				habLinea = fileContent.remove(0);
+			}
+				
+			Collections.reverse(cardContent);
+			
+			
+			while(!cardContent.isEmpty()){
+				String hab = cardContent.remove(0);
+				templateContent.add(32, hab.replace("&", "&amp;").replace(">", "&gt;").replace("<", "&lt;"));
+				if(!cardContent.isEmpty()){
+					templateContent.add(32, "<br>");
+				}
+			}
+			
+			String file = seriesRef + "_" + ref + ".html";
+			
+			templateContent.add(0,"<meta charset=\"utf-8\">");
+			
+			String cardsPath = seriesWebPath + "cards\\"; 
+			
+			Files.write(new File(cardsPath + file).toPath(), templateContent, StandardCharsets.UTF_8);
+		
+			String indexPath = seriesWebPath + "index.html";
+			
+			List<String> indexContent = new ArrayList<>(Files.readAllLines(new File(indexPath).toPath(), StandardCharsets.UTF_8));
+		
+			for(int i = 0; i < indexContent.size(); i++){
+				if(indexContent.get(i).endsWith(ref)){
+					String newLine = fecha + "<a href='./cards/" + seriesRef + "_" + ref + ".html'><img src='./images/" + seriesRef + "_" + ref + ".png' width=100% height=auto></img></a>" + id;
+					indexContent.set(i, newLine);
+				}
+			}
+			
+			Files.write(new File(indexPath).toPath(), indexContent, StandardCharsets.UTF_8);
 			
 			count++;
 			String paddedCount = String.format("%02d", count);
 			
 			File originFile = new File(conf.imagesFolder.getAbsolutePath() + "/jp_" + paddedCount + ".png");
-			File targetFile = new File(conf.webFolder.getAbsolutePath() + "/" + seriesId + "/images/" + seriesId + "_" + card + ".png");
+			File targetFile = new File(conf.webFolder.getAbsolutePath() + "/" + seriesRef + "/images/" + seriesRef + "_" + ref + ".png");
 			
 			System.out.println("* Copying image: " + originFile.getName() + ", to : " + targetFile.getName());
 			FileUtils.copyFile(originFile, targetFile);
-			
 		}
 	}
 	
@@ -67,5 +128,4 @@ public class Cotd_Web {
 		Files.write(newFile.toPath(), newFileContent, StandardCharsets.UTF_8);
 		
 	}
-	
 }
