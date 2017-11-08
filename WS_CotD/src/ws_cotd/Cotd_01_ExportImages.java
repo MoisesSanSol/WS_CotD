@@ -1,8 +1,6 @@
 package ws_cotd;
 
-import java.awt.Desktop;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
@@ -30,13 +28,7 @@ public class Cotd_01_ExportImages {
 		main.parseWsJpCotD();
 		main.parseWsJpExtraCotd();
 		
-		Desktop desktop = Desktop.getDesktop();
-		File dirToOpen = null;
-		try {
-			desktop.open(main.conf.imagesFolder);
-		} catch (IllegalArgumentException iae) {
-			System.out.println("File Not Found");
-		}
+		Cotd_Utilities.openDefaultFolders();
 		
 		System.out.println("*** Finished ***");
 	}

@@ -1,10 +1,17 @@
 package ws_cotd;
 
 import java.io.BufferedWriter;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -29,6 +36,8 @@ public class Cotd_02a_ExportOutakuyaTranslation {
 		//main.outakuyaPostUrl = "";
 		
 		main.exportOutakuyaTranslation();
+		
+		Cotd_Utilities.openFileInNotepad(main.conf.fromOutakuyaFile);
 		
 		System.out.println("*** Finished ***");
 
@@ -59,19 +68,18 @@ public class Cotd_02a_ExportOutakuyaTranslation {
 		
 		System.out.println("** Export Outakuya Translation");
 		
-		BufferedWriter writer = new BufferedWriter(new FileWriter(this.conf.fromOutakuyaFile));
+		ArrayList<String> postContent = new ArrayList<String>();  
 		
 		Document doc = Jsoup.connect(this.outakuyaPostUrl).maxBodySize(0).get();
 		Element post = doc.select("div.post_content").first();
 		
 		Elements contents = post.select("p");
-		
 		for (Element p : contents ) {
-			
-			writer.write(p.html());
-			writer.write("\r\n");
+			postContent.add(StringEscapeUtils.unescapeHtml4(p.html()));
 		}
-
-		writer.close();
+		
+		postContent.set(0, "-" + postContent.get(0));
+		
+		Files.write(conf.fromOutakuyaFile.toPath(), postContent, StandardCharsets.UTF_8);
 	}
 }

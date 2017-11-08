@@ -11,10 +11,14 @@ public class Cotd_Conf {
 	// Singleton instance.
 	private static Cotd_Conf instance;
 	
+	// Something:
+	public String notepadPath;
+	
 	// Folders:
 	public File imagesFolder;
 	public File mainFolder;
 	public File webFolder;
+	public File referencesFolder;
 	
 	// Files:
 	public File fromOutakuyaFile;
@@ -47,6 +51,9 @@ public class Cotd_Conf {
 
 			prop.load(input);
 
+			// Something
+			this.notepadPath = prop.getProperty("notepadPath");
+			
 			// Folders
 			String imagesFolderStr = prop.getProperty("imagesFolder");
 			this.imagesFolder = new File(imagesFolderStr);
@@ -54,6 +61,8 @@ public class Cotd_Conf {
 			this.mainFolder = new File(mainFolderStr);
 			String webFolderStr = prop.getProperty("webFolder");
 			this.webFolder = new File(webFolderStr);
+			String referencesFolderStr = prop.getProperty("referencesFolder");
+			this.referencesFolder = new File(referencesFolderStr);
 			
 			// Files
 			String temporalStr = prop.getProperty("temporalFile");

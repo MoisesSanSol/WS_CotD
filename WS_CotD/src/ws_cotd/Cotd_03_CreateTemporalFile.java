@@ -25,10 +25,12 @@ public class Cotd_03_CreateTemporalFile {
 		Cotd_03_CreateTemporalFile main = new Cotd_03_CreateTemporalFile();
 		main.generateTemporalFileFromOutakuya();
 		
+		Cotd_Utilities.openFileInNotepad(main.conf.temporalFile);
+		
 		System.out.println("*** Finished ***");
 	}
 	
-	public void generateTemporalFileFromOutakuya() throws Exception{
+	private void generateTemporalFileFromOutakuya() throws Exception{
 		
 		System.out.println("** Generate Temporal File From Outakuya");
 		
@@ -40,35 +42,68 @@ public class Cotd_03_CreateTemporalFile {
 		temporalContent.add("");
 		
 		List<String> currentSeriesContent = new ArrayList<>(Files.readAllLines(conf.currentSeriesFile.toPath(), StandardCharsets.UTF_8));
-		String seriesHeader = currentSeriesContent.get(0);
-		String seriesId = currentSeriesContent.get(1);
+		String seriesHeader = "";
+		String seriesId = "";
 		
-		temporalContent.add(seriesHeader);
-		temporalContent.add("");
-		
-		List<String> fromOutakuyaContent = new ArrayList<>(Files.readAllLines(conf.fromOutakuyaFile.toPath(), StandardCharsets.ISO_8859_1));
+		List<String> fromOutakuyaContent = new ArrayList<>(Files.readAllLines(conf.fromOutakuyaFile.toPath(), StandardCharsets.UTF_8));
 		
 		while(fromOutakuyaContent.size() >= 3){
 			
-			fromOutakuyaContent.remove(0);
-			String cardHeader = StringEscapeUtils.unescapeHtml4(fromOutakuyaContent.remove(0));
+			String imageLine = fromOutakuyaContent.remove(0);
+			
+			if(imageLine.startsWith("-")){
+				seriesHeader = currentSeriesContent.remove(0);
+				seriesId = currentSeriesContent.remove(0);
+				temporalContent.add(seriesHeader);
+			}
+			else{
+				temporalContent.add("-");
+			}
+			
+			String cardHeader = this.translateHeaders(fromOutakuyaContent.remove(0));
 			
 			ArrayList<String> splitHeader = new ArrayList<>(Arrays.asList(cardHeader.split("<br> ")));
+			temporalContent.add("");
 			temporalContent.add(splitHeader.remove(0));
 			temporalContent.add(seriesId);
 			temporalContent.addAll(splitHeader);
 			temporalContent.add("");
 			
-			String cardText = StringEscapeUtils.unescapeHtml4(fromOutakuyaContent.remove(0));
+			String cardText = fromOutakuyaContent.remove(0);
 			ArrayList<String> splitText = new ArrayList<>(Arrays.asList(cardText.split("<br> ")));
 			for(String text : splitText){
 				temporalContent.add("*" + text);
 			}
 			
 			temporalContent.add("");
-			temporalContent.add("-");
 		}
+		temporalContent.add("-");
 		
 		Files.write(conf.temporalFile.toPath(), temporalContent, StandardCharsets.UTF_8);
+	}
+	
+	private String translateHeaders(String headers){
+		
+		String newHeaders = headers.replace("Power", "Poder");
+		newHeaders = newHeaders.replace("Yellow Character", "Personaje Amarillo");
+		newHeaders = newHeaders.replace("Green Character", "Personaje Verde"); 
+		newHeaders = newHeaders.replace("Red Character", "Personaje Rojo");
+		newHeaders = newHeaders.replace("Blue Character", "Personaje Azul");
+		newHeaders = newHeaders.replace("Yellow Event", "Evento Amarillo");
+		newHeaders = newHeaders.replace("Green Event", "Evento Verde");
+		newHeaders = newHeaders.replace("Red Event", "Evento Rojo");
+		newHeaders = newHeaders.replace("Blue Event", "Evento Azul");
+		newHeaders = newHeaders.replace("Yellow Climax", "Climax Amarillo");
+		newHeaders = newHeaders.replace("Green Climax", "Climax Verde");
+		newHeaders = newHeaders.replace("Red Climax", "Climax Rojo");
+		newHeaders = newHeaders.replace("Blue Climax", "Climax Azul");
+		newHeaders = newHeaders.replace("Level", "Nivel");
+		newHeaders = newHeaders.replace("Cost", "Coste");
+		newHeaders = newHeaders.replace("Power", "Poder");
+		newHeaders = newHeaders.replace(">> and <<",">> y <<");
+		newHeaders = newHeaders.replace("None","No");
+		newHeaders = newHeaders.replace("Icon","Icono");		
+		
+		return newHeaders;
 	}
 }

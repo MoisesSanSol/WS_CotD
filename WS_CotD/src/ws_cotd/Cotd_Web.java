@@ -59,7 +59,7 @@ public class Cotd_Web {
 				cardContent.add(habLinea);
 				habLinea = fileContent.remove(0);
 			}
-				
+			cardContent.remove(cardContent.size()-1);
 			Collections.reverse(cardContent);
 			
 			
