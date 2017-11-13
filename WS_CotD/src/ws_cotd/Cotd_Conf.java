@@ -21,6 +21,7 @@ public class Cotd_Conf {
 	public File referencesFolder;
 	
 	// Files:
+	public File fromImagesFile;
 	public File fromOutakuyaFile;
 	public File temporalFile;
 	public File currentSeriesFile;
@@ -74,6 +75,9 @@ public class Cotd_Conf {
 			String currentSeriesFileStr = prop.getProperty("currentSeriesFile");
 			String currentSeriesFilePath = this.mainFolder.getAbsolutePath() + "\\" + currentSeriesFileStr;
 			this.currentSeriesFile = new File(currentSeriesFilePath);
+			String fromImagesFileStr = prop.getProperty("fromImagesFile");
+			String fromImagesFilePath = this.mainFolder.getAbsolutePath() + "\\" + fromImagesFileStr;
+			this.fromImagesFile = new File(fromImagesFilePath);
 			
 			// Urls
 			this.wsJpCotdUrl = prop.getProperty("wsJpCotdUrl");

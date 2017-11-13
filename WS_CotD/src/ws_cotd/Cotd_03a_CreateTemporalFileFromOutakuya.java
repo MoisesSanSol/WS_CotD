@@ -10,11 +10,11 @@ import java.util.List;
 
 import org.apache.commons.text.StringEscapeUtils;
 
-public class Cotd_03_CreateTemporalFile {
+public class Cotd_03a_CreateTemporalFileFromOutakuya {
 
 	private Cotd_Conf conf;
 	
-	public Cotd_03_CreateTemporalFile(){
+	public Cotd_03a_CreateTemporalFileFromOutakuya(){
 		this.conf = Cotd_Conf.getInstance();
 	}
 	
@@ -22,7 +22,7 @@ public class Cotd_03_CreateTemporalFile {
 		
 		System.out.println("*** Starting ***");
 		
-		Cotd_03_CreateTemporalFile main = new Cotd_03_CreateTemporalFile();
+		Cotd_03a_CreateTemporalFileFromOutakuya main = new Cotd_03a_CreateTemporalFileFromOutakuya();
 		main.generateTemporalFileFromOutakuya();
 		
 		Cotd_Utilities.openFileInNotepad(main.conf.temporalFile);

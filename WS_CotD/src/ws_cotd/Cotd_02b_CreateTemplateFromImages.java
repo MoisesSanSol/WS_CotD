@@ -13,19 +13,19 @@ import java.util.Date;
 
 import javax.imageio.ImageIO;
 
-public class Cotd_02b_CreateTemporalTemplate {
+public class Cotd_02b_CreateTemplateFromImages {
 
 	private Cotd_Conf conf;
 	
-	public Cotd_02b_CreateTemporalTemplate(){
+	public Cotd_02b_CreateTemplateFromImages(){
 		this.conf = Cotd_Conf.getInstance();
 	}
 	
 	
-	/*public static void main(String[] args) throws Exception{
+	public static void main(String[] args) throws Exception{
 		System.out.println("*** Starting ***");
 		
-		Cotd_02b_CreateTemporalTemplate main = new Cotd_02b_CreateTemporalTemplate();
+		Cotd_02b_CreateTemplateFromImages main = new Cotd_02b_CreateTemplateFromImages();
 
 		main.createTemporalTemplateFile();
 		
@@ -45,13 +45,13 @@ public class Cotd_02b_CreateTemporalTemplate {
 			
 		} catch (IllegalArgumentException iae) {
 			System.out.println("File Not Found");
-		}*
+		}*/
 		
 		System.out.println("*** Finished ***");
 
 	}
 
-	private static String getImageColor(File imageFile) throws Exception{
+	/*private static String getImageColor(File imageFile) throws Exception{
 		String color = "Desconocido";
 		//System.out.println("Image = "+ imageFile.getName());
 		
@@ -163,15 +163,16 @@ public class Cotd_02b_CreateTemporalTemplate {
 		
 		return color;
 	}
-	
+	*/
 	private void createTemporalTemplateFile() throws Exception{
 		
-		String fullPathWrite = CotD_Conf.resultsFolder + CotD_Conf.temporalFile;
-		Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fullPathWrite), "UTF-8"));
-
-		File imagesFolder = new File(CotD_Conf.imagesFolder);
-		File[] imageFiles = imagesFolder.listFiles();
+		System.out.println("** Create Temporal Template File");
+		
+		File[] imageFiles = conf.imagesFolder.listFiles();
 	
+		
+		
+		/*
 		writer.write("****************************************\r\n");
 		writer.write("Cartas del día ");
 		writer.write(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
@@ -229,7 +230,7 @@ public class Cotd_02b_CreateTemporalTemplate {
 			}
 		}
 
-		writer.close();
-	}*/
+		writer.close();*/
+	}
 }
 
