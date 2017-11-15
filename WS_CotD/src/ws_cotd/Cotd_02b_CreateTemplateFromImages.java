@@ -8,7 +8,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.imageio.ImageIO;
@@ -29,52 +32,44 @@ public class Cotd_02b_CreateTemplateFromImages {
 
 		main.createTemporalTemplateFile();
 		
-		/*Desktop desktop = Desktop.getDesktop();
-		File dirToOpen = null;
-		try {
-			dirToOpen = new File(main.conf.resultsFolder);
-			desktop.open(dirToOpen);
-
-			dirToOpen = new File(CotD_Conf.referencesFolder);
-			desktop.open(dirToOpen);
-			
-			String fullPathFile = CotD_Conf.resultsFolder + CotD_Conf.temporalFile;
-			
-			Runtime runtime = Runtime.getRuntime();
-			Process process = runtime.exec("C:\\Program Files (x86)\\Notepad++\\notepad++.exe " + fullPathFile);
-			
-		} catch (IllegalArgumentException iae) {
-			System.out.println("File Not Found");
-		}*/
+		Cotd_Utilities.openFileInNotepad(main.conf.fromImagesFile);
 		
 		System.out.println("*** Finished ***");
 
 	}
 
-	/*private static String getImageColor(File imageFile) throws Exception{
+	private String getImageColor(BufferedImage image, String tipo) throws Exception{
+
 		String color = "Desconocido";
-		//System.out.println("Image = "+ imageFile.getName());
 		
-		BufferedImage image = ImageIO.read(imageFile);
 		int x = 0;
 		int y = 0;
-		if(image.getHeight() > image.getWidth()){
+		
+		if(tipo.equals("Personaje")){
 			x = 325;
 			y = 465;
 		}
-		else{
+		else if (tipo.equals("Evento")){
+			x = 325;
+			y = 475;
+		}
+		else if (tipo.equals("Climax")){
 			x = 240;
 			y = 310;
 		}
+		else{
+			return color;
+		}
+		
 		// Getting pixel color by position x and y 
-		int clr=  image.getRGB(x, y); 
+		int clr = image.getRGB(x, y); 
 		int  red   = (clr & 0x00ff0000) >> 16;
 		int  green = (clr & 0x0000ff00) >> 8;
 		int  blue  =  clr & 0x000000ff;
 		
-		/*System.out.println("Red Color value = "+ red);
+		System.out.println("Red Color value = "+ red);
 		System.out.println("Green Color value = "+ green);
-		System.out.println("Blue Color value = "+ blue);*
+		System.out.println("Blue Color value = "+ blue);
 		
 		if(red > 200  && green > 200 && blue < 50){
 			color = "Amarillo";
@@ -92,11 +87,9 @@ public class Cotd_02b_CreateTemplateFromImages {
 		return color;
 	}
 	
-	private String getImageType(File imageFile) throws Exception{
+	private String getImageType(BufferedImage image) throws Exception{
+
 		String tipo = "Desconocido";
-		//System.out.println("Image = "+ imageFile.getName());
-		
-		BufferedImage image = ImageIO.read(imageFile);
 
 		if(image.getHeight() < image.getWidth()){
 			tipo = "Climax";
@@ -118,33 +111,80 @@ public class Cotd_02b_CreateTemplateFromImages {
 		return tipo;
 	}
 	
-	private int getImageLevel(BufferedImage image) throws Exception{
-		int level = -1;
+	private String getImageLevel(BufferedImage image) throws Exception{
 		
-		Color color0 = this.getPixelColor(image, 27, 36);
-		Color color1 = this.getPixelColor(image, 33, 41);
-		Color color2 = this.getPixelColor(image, 37, 44);
+		String level = "-1";
 		
-		if(color0.getRGB() == -1){
-			level = 0;
+		if(this.getPixelColorBW(image, 32, 32) == -1){
+			level = "1";
 		}
-		else if(color1.getRGB() == -1){
-			level = 1;
+		else if(this.getPixelColorBW(image, 28, 37) == -1){
+			level = "0";
 		}
-		else if(color2.getRGB() == -1){
-			level = 2;
+		else if(this.getPixelColorBW(image, 31, 36) == -1){
+			level = "3";
 		}
-		else{
-			level = 3;
+		else if(this.getPixelColorBW(image, 38, 43) == -1){
+			level = "2";
 		}
-
 		
 		return level;
 	}
 	
-	private String getImageCost(){
-		String color = "";
-		return color;
+	private String getImageCost(BufferedImage image) throws Exception{
+		
+		String coste = "-1";
+		
+		if(this.getPixelColorBW(image, 29, 72) < -10000000){
+			coste = "2";
+		}
+		else if(this.getPixelColorBW(image, 32, 66) < -10000000){
+			coste = "1";
+		}
+		else if(this.getPixelColorBW(image, 29, 66) < -10000000){
+			coste = "0";
+		}
+		
+		return coste;
+	}
+	
+	/*private String getImageCost(String nivel){
+		// TODO
+		String coste = "0";
+		
+		if(nivel.equals("2")){
+			coste = "1";
+		}
+		else if(nivel.equals("3")){
+			coste = "2";
+		}
+		
+		return coste;
+	}*/
+	
+	private String getImageTrigger(String nivel){
+		// TODO
+		String trigger = "No";
+		
+		if(nivel.equals("2")){
+			trigger = "1 Soul";
+		}
+		else if(nivel.equals("3")){
+			trigger = "1 Soul";
+		}
+		
+		return trigger;
+	}
+	
+	private String getImageSoul(String nivel){
+		// TODO
+		String soul = "1";
+		
+		if(nivel.equals("3")){
+			soul = "2";
+		}
+		
+		return soul;
 	}
 	
 	private Color getPixelColor(BufferedImage image, int x, int y) throws Exception{
@@ -159,78 +199,156 @@ public class Cotd_02b_CreateTemplateFromImages {
 		//System.out.println(color.getRGB());
 		/*System.out.println(color.getRed());
 		System.out.println(color.getGreen());
-		System.out.println(color.getBlue());*
+		System.out.println(color.getBlue());*/
 		
 		return color;
 	}
-	*/
+	
+	private int getPixelColorBW(BufferedImage image, int x, int y) throws Exception{
+
+		int clr =  image.getRGB(x, y); 
+		
+		System.out.println("* x: " + x + ", y: " + y + ", color: " + clr);
+		
+		return clr;
+	}
+	
 	private void createTemporalTemplateFile() throws Exception{
 		
 		System.out.println("** Create Temporal Template File");
 		
+		ArrayList<String> fileContent = new ArrayList<String>();
+		
 		File[] imageFiles = conf.imagesFolder.listFiles();
-	
-		
-		
-		/*
-		writer.write("****************************************\r\n");
-		writer.write("Cartas del día ");
-		writer.write(new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
-		writer.write(":\r\n");
-		writer.write("\r\n");
-		
-		for(File imageFile : imageFiles){
-			if(imageFile.getName().startsWith("jp")){
-				
-				System.out.println("Image = "+ imageFile.getName());
-				
-				writer.write("\r\n");
-				writer.write("\r\n");
-				writer.write("\r\n");
-				writer.write("-");
-				writer.write("\r\n");
-				writer.write("\r\n");
-				writer.write(imageFile.getName());
-				writer.write("\r\n");
-				writer.write("\r\n");
-				
-				String color = Cotd_02b_CreateTemporalTemplate.getImageColor(imageFile);
-				String type = Cotd_02b_CreateTemporalTemplate.getImageType(imageFile);
-				
-				switch(type){
-				case "Personaje":
-					int nivel = Cotd_02b_CreateTemporalTemplate.getImageLevel(ImageIO.read(imageFile));
-					int coste = nivel - 1;
-					if(coste < 0) coste = 0;
-					int soul = 1;
-					if(nivel > 2) soul = 2;
-					String trigger = "No";
-					if(nivel > 1) trigger = "1 Soul";
-					writer.write("Personaje ");
-					writer.write(color);
-					writer.write(", Nivel: " + nivel + ", Coste: " + coste + ", Poder: 00, Soul: " + soul + ", Trigger: " + trigger);
-					writer.write("\r\n");
-					writer.write("Traits: <<>> y <<>>.");
-					writer.write("\r\n");
-					break;
-				case "Climax":
-					writer.write("Climax ");
-					writer.write(color);
-					writer.write(", Trigger: 2 Soul.");
-					writer.write("\r\n");
-					break;
-				case "Evento":
-					int nivelE = Cotd_02b_CreateTemporalTemplate.getImageLevel(ImageIO.read(imageFile));
-					writer.write("Evento ");
-					writer.write(color);
-					writer.write(", Nivel: " + nivelE + ", Coste: , Trigger: No.");
-					writer.write("\r\n");
-					break;
-				}
-			}
-		}
 
-		writer.close();*/
+		for(File imageFile : imageFiles){
+
+			BufferedImage image = ImageIO.read(imageFile);
+			System.out.println("* Analyzing Image: " + imageFile.getName());
+			
+			String line = "";
+			String tipo = this.getImageType(image);
+			System.out.println("* Image Type: " + tipo);
+			String color = this.getImageColor(image, tipo);
+			System.out.println("* Image Color: " + color);
+			String nivel = "";
+			String coste = "";
+			String poder = "";
+			String soul = "";
+			String trigger = "";
+			
+			switch(tipo){
+			
+				case ("Personaje"):
+					
+					nivel = this.getImageLevel(image);
+					System.out.println("* Image Level: " + nivel);
+					coste = this.getImageCost(image);
+					System.out.println("* Image Cost: " + coste);
+					soul = this.getImageSoul(nivel);
+					System.out.println("* Image Soul: " + soul);
+					trigger = this.getImageTrigger(nivel);
+					System.out.println("* Image Trigger: " + trigger);
+					
+					line = "Personaje ";
+					line = line + color;
+					line = line + ", Nivel: " + nivel;
+					line = line + ", Coste: " + coste;
+					line = line + ", Poder: 00";
+					line = line + ", Soul: " + soul;
+					line = line + ", Trigger: " + trigger + ",";
+					fileContent.add(line);
+					
+					line = "Traits: <<>> y <<>>.";
+					fileContent.add(line);
+					
+					break;
+				
+				case ("Evento"):
+					
+					nivel = this.getImageLevel(image);
+					System.out.println("* Image Level: " + nivel);
+					coste = this.getImageCost(image);
+					System.out.println("* Image Cost: " + coste);
+					soul = this.getImageSoul(nivel);
+					
+					line = "Evento ";
+					line = line + color;
+					line = line + ", Nivel: " + nivel;
+					line = line + ", Coste: " + coste;
+					line = line + ", Trigger: No.";
+					fileContent.add(line);
+					
+					break;
+					
+				case ("Climax"):
+					
+					line = "Climax ";
+					line = line + color;
+					line = line + ", Trigger: 2 Soul.";
+					fileContent.add(line);
+				
+					break;
+				
+				case ("Desconocido"):
+				
+					line = "Whatever";
+					fileContent.add(line);
+				
+					break;
+			}
+			
+			fileContent.add("-");
+		}
+		
+		fileContent.set(fileContent.size()-1, "---");
+		
+		Files.write(conf.fromImagesFile.toPath(), fileContent, StandardCharsets.UTF_8);
+	}
+	
+	
+	private void test_CreateImageFromArea(File imageFile) throws Exception{
+		
+		System.out.println("** Test Function: Create Image From Area");
+		
+		// Soul area
+		/*int x = 108;
+	    int y = 458;
+	    int w = 54;
+	    int h = 13;*/
+
+		// Level area
+		int x = 15;
+	    int y = 11;
+	    int w = 38;
+	    int h = 44;
+		
+	    BufferedImage image = ImageIO.read(imageFile);
+	    BufferedImage out = image.getSubimage(x, y, w, h);
+
+	    String areaPath = imageFile.getAbsolutePath().replace(".png", "_area.png");
+	    
+	    ImageIO.write(out, "png", new File(areaPath));
+		
+	}
+	
+	private void test_AreaColors(File imageFile) throws Exception{
+		
+		System.out.println("** Test Function: Area Colors");
+		
+		int x = 32;
+	    int y = 32;
+	    int w = x + 0;
+	    int h = y + 1;
+		
+	    BufferedImage image = ImageIO.read(imageFile);
+	    
+	    for( ; x <= w; x++){
+		    for( ; y <= h; y++){
+		    	this.getPixelColorBW(image, x, y);
+		    }
+	    }
+		
 	}
 }
 
