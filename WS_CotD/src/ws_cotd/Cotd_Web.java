@@ -101,6 +101,8 @@ public class Cotd_Web {
 			System.out.println("* Copying image: " + originFile.getName() + ", to : " + targetFile.getName());
 			FileUtils.copyFile(originFile, targetFile);
 		}
+		
+		//Cotd_Web.createEmptyIndex();
 	}
 	
 	public static void duplicateParallelCard(String seriesId, String cardId, String newCardId, String newRarity) throws Exception{
@@ -128,4 +130,55 @@ public class Cotd_Web {
 		Files.write(newFile.toPath(), newFileContent, StandardCharsets.UTF_8);
 		
 	}
+	
+	public static void createEmptyIndex() throws Exception{
+		
+		System.out.println("* Create Empty Index");
+		
+		String seriesId = "w54";
+		String seriesFullId = "BD/W54-T";
+		String productType = "Trial Deck Plus";
+		String seriesName = "BanG Dream! Girls Band Party! [Roselia]";
+		
+		Cotd_Conf conf = Cotd_Conf.getInstance();
+		
+		File newFile = new File(conf.webFolder.getAbsolutePath() + "/" + seriesId + "/index.html");
+		
+		List<String> newFileContent = new ArrayList<>();
+		
+		newFileContent.add("<meta charset=\"utf-8\">");
+		newFileContent.add("<head>");
+		newFileContent.add("<title>Cartas del día · " + seriesName + "</title>");
+		newFileContent.add("</head>");
+		newFileContent.add("<body>");
+		newFileContent.add("<div align=center style=\"font-size:150%\"><b>");
+		newFileContent.add(productType + ": " + seriesName);
+		newFileContent.add("</b></div>");
+		newFileContent.add("<table border=2 width=100%>");
+		
+		int count = 1;
+		for(int i = 1; i <= 10; i++){
+			
+			newFileContent.add("<tr>");
+			
+			for(int j = 1; j <= 10; j++){
+				
+				String paddedCount = String.format("%02d", count);;
+				
+				newFileContent.add("<td width=10%  align=center>");
+				newFileContent.add("<img src='../images_default/no_image.png' width=100% height=auto id='" + seriesId + "_" + paddedCount + "'></img>" + seriesFullId + paddedCount);
+				newFileContent.add("</td>");
+				
+				count++;
+			}
+			
+			newFileContent.add("</tr>");
+		}
+		
+		newFileContent.add("</table>");
+		newFileContent.add("</body>");
+		
+		Files.write(newFile.toPath(), newFileContent, StandardCharsets.UTF_8);
+	}
+	
 }

@@ -23,14 +23,14 @@ public class Cotd_03b_CreateTemporalFileFromImages {
 		System.out.println("*** Starting ***");
 		
 		Cotd_03b_CreateTemporalFileFromImages main = new Cotd_03b_CreateTemporalFileFromImages();
-		main.generateTemporalFileFromImages();
+		main.generateTemporalFileFromImages(true);
 		
 		Cotd_Utilities.openFileInNotepad(main.conf.temporalFile);
 		
 		System.out.println("*** Finished ***");
 	}
 	
-	private void generateTemporalFileFromImages() throws Exception{
+	private void generateTemporalFileFromImages(boolean cardTextFromGlobal) throws Exception{
 		
 		System.out.println("** Generate Temporal File From Images");
 		
@@ -49,10 +49,12 @@ public class Cotd_03b_CreateTemporalFileFromImages {
 		seriesId = currentSeriesContent.remove(0);
 		temporalContent.add(seriesHeader);
 		temporalContent.add("");
-		temporalContent.add("Name goes here");
+		temporalContent.add("# Name goes here");
 		temporalContent.add(seriesId);
 		
 		List<String> fromImagesContent = new ArrayList<>(Files.readAllLines(conf.fromImagesFile.toPath(), StandardCharsets.UTF_8));
+		
+		ArrayList<ArrayList<String>> cardsText = this.getCardsTextFromGlobal();
 		
 		while(fromImagesContent.size() > 0){
 			
@@ -60,7 +62,14 @@ public class Cotd_03b_CreateTemporalFileFromImages {
 			
 			if(line.startsWith("-")){
 				temporalContent.add("");
-				temporalContent.add("Abilities go here");
+				if(cardTextFromGlobal){
+					ArrayList<String> cardText = cardsText.remove(0);
+					while(!cardText.isEmpty()){
+						temporalContent.add("*" + cardText.remove(0));
+					}
+				}else{
+					temporalContent.add("Abilities go here");
+				}
 				temporalContent.add("");
 				if(line.startsWith("---")){
 					// Do nothing
@@ -89,28 +98,24 @@ public class Cotd_03b_CreateTemporalFileFromImages {
 		Files.write(conf.temporalFile.toPath(), temporalContent, StandardCharsets.UTF_8);
 	}
 	
-	private String translateHeaders(String headers){
+	private ArrayList<ArrayList<String>> getCardsTextFromGlobal() throws Exception{
 		
-		String newHeaders = headers.replace("Power", "Poder");
-		newHeaders = newHeaders.replace("Yellow Character", "Personaje Amarillo");
-		newHeaders = newHeaders.replace("Green Character", "Personaje Verde"); 
-		newHeaders = newHeaders.replace("Red Character", "Personaje Rojo");
-		newHeaders = newHeaders.replace("Blue Character", "Personaje Azul");
-		newHeaders = newHeaders.replace("Yellow Event", "Evento Amarillo");
-		newHeaders = newHeaders.replace("Green Event", "Evento Verde");
-		newHeaders = newHeaders.replace("Red Event", "Evento Rojo");
-		newHeaders = newHeaders.replace("Blue Event", "Evento Azul");
-		newHeaders = newHeaders.replace("Yellow Climax", "Climax Amarillo");
-		newHeaders = newHeaders.replace("Green Climax", "Climax Verde");
-		newHeaders = newHeaders.replace("Red Climax", "Climax Rojo");
-		newHeaders = newHeaders.replace("Blue Climax", "Climax Azul");
-		newHeaders = newHeaders.replace("Level", "Nivel");
-		newHeaders = newHeaders.replace("Cost", "Coste");
-		newHeaders = newHeaders.replace("Power", "Poder");
-		newHeaders = newHeaders.replace(">> and <<",">> y <<");
-		newHeaders = newHeaders.replace("None","No");
-		newHeaders = newHeaders.replace("Icon","Icono");		
+		System.out.println("* Get Cards Text From Global");
 		
-		return newHeaders;
+		ArrayList<ArrayList<String>> cardsText = new ArrayList<ArrayList<String>>();
+		
+		List<String> fromGlobalContent = new ArrayList<>(Files.readAllLines(conf.fromGlobalFile.toPath(), StandardCharsets.UTF_8));
+		
+		while(!fromGlobalContent.isEmpty()){
+			ArrayList<String> cardText = new ArrayList<String>();
+			String textLine = fromGlobalContent.remove(0);
+			while(!textLine.equals("-")){
+				cardText.add(textLine);
+				textLine = fromGlobalContent.remove(0);
+			}
+			cardsText.add(cardText);
+		}
+		
+		return cardsText;
 	}
 }
