@@ -5,6 +5,7 @@ import java.awt.Desktop;
 import java.awt.image.BufferedImage;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
@@ -121,10 +122,10 @@ public class Cotd_02b_CreateTemplateFromImages {
 		else if(this.getPixelColorBW(image, 28, 37) == -1){
 			level = "0";
 		}
-		else if(this.getPixelColorBW(image, 31, 36) == -1){
+		else if(this.getPixelColorBW(image, 30, 36) == -1){
 			level = "3";
 		}
-		else if(this.getPixelColorBW(image, 38, 43) == -1){
+		else if(this.getPixelColorBW(image, 37, 44) == -1){
 			level = "2";
 		}
 		
@@ -219,7 +220,13 @@ public class Cotd_02b_CreateTemplateFromImages {
 		
 		ArrayList<String> fileContent = new ArrayList<String>();
 		
-		File[] imageFiles = conf.imagesFolder.listFiles();
+		FileFilter filter = new FileFilter() {
+            @Override
+            public boolean accept(File pathname) {
+               return !pathname.getName().endsWith("_2.png");
+            }
+        };
+		File[] imageFiles = conf.imagesFolder.listFiles(filter);
 
 		for(File imageFile : imageFiles){
 

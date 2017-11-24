@@ -54,7 +54,10 @@ public class Cotd_03b_CreateTemporalFileFromImages {
 		
 		List<String> fromImagesContent = new ArrayList<>(Files.readAllLines(conf.fromImagesFile.toPath(), StandardCharsets.UTF_8));
 		
-		ArrayList<ArrayList<String>> cardsText = this.getCardsTextFromGlobal();
+		ArrayList<ArrayList<String>> cardsText = new ArrayList<ArrayList<String>>();
+		if(cardTextFromGlobal){
+			cardsText = this.getCardsTextFromGlobal();
+		}
 		
 		while(fromImagesContent.size() > 0){
 			
@@ -68,7 +71,7 @@ public class Cotd_03b_CreateTemporalFileFromImages {
 						temporalContent.add("*" + cardText.remove(0));
 					}
 				}else{
-					temporalContent.add("Abilities go here");
+					temporalContent.add("* Abilities go here");
 				}
 				temporalContent.add("");
 				if(line.startsWith("---")){
@@ -84,7 +87,7 @@ public class Cotd_03b_CreateTemporalFileFromImages {
 						temporalContent.add("-");
 					}
 					temporalContent.add("");
-					temporalContent.add("Name goes here");
+					temporalContent.add("# Name goes here");
 					temporalContent.add(seriesId);
 				}
 			}

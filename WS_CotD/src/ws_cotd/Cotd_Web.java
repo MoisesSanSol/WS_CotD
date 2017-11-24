@@ -14,6 +14,11 @@ public class Cotd_Web {
 	public static void main(String[] args) throws Exception{
 		// TODO Auto-generated method stub
 
+		Cotd_Web.generateWebContentFromTemporal();
+		//Cotd_Web.createEmptyIndex();
+	}
+	
+	public static void generateWebContentFromTemporal() throws Exception{
 		Cotd_Conf conf = Cotd_Conf.getInstance();
 		
 		List<String> fileContent = new ArrayList<>(Files.readAllLines(conf.temporalFile.toPath(), StandardCharsets.UTF_8));
@@ -26,7 +31,7 @@ public class Cotd_Web {
 			linea = fileContent.remove(0);
 		}
 		
-		int count = 0;
+		int count = 1;
 		
 		while(!fileContent.isEmpty()){
 			
@@ -92,8 +97,8 @@ public class Cotd_Web {
 			
 			Files.write(new File(indexPath).toPath(), indexContent, StandardCharsets.UTF_8);
 			
-			count++;
 			String paddedCount = String.format("%02d", count);
+			count++;
 			
 			File originFile = new File(conf.imagesFolder.getAbsolutePath() + "/jp_" + paddedCount + ".png");
 			File targetFile = new File(conf.webFolder.getAbsolutePath() + "/" + seriesRef + "/images/" + seriesRef + "_" + ref + ".png");
@@ -101,8 +106,6 @@ public class Cotd_Web {
 			System.out.println("* Copying image: " + originFile.getName() + ", to : " + targetFile.getName());
 			FileUtils.copyFile(originFile, targetFile);
 		}
-		
-		//Cotd_Web.createEmptyIndex();
 	}
 	
 	public static void duplicateParallelCard(String seriesId, String cardId, String newCardId, String newRarity) throws Exception{
@@ -135,10 +138,10 @@ public class Cotd_Web {
 		
 		System.out.println("* Create Empty Index");
 		
-		String seriesId = "w54";
-		String seriesFullId = "BD/W54-T";
-		String productType = "Trial Deck Plus";
-		String seriesName = "BanG Dream! Girls Band Party! [Roselia]";
+		String seriesId = "we29";
+		String seriesFullId = "HLL/WE29-";
+		String productType = "Extra Booster";
+		String seriesName = "Hina Logi ~From Luck & Logic~ Vol. 2";
 		
 		Cotd_Conf conf = Cotd_Conf.getInstance();
 		
@@ -157,7 +160,7 @@ public class Cotd_Web {
 		newFileContent.add("<table border=2 width=100%>");
 		
 		int count = 1;
-		for(int i = 1; i <= 10; i++){
+		for(int i = 1; i <= 5; i++){
 			
 			newFileContent.add("<tr>");
 			
