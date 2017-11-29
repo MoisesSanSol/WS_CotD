@@ -12,10 +12,14 @@ import org.apache.commons.io.FileUtils;
 public class Cotd_Web {
 
 	public static void main(String[] args) throws Exception{
-		// TODO Auto-generated method stub
+		
+		System.out.println("*** Starting ***");
 
-		Cotd_Web.generateWebContentFromTemporal();
 		//Cotd_Web.createEmptyIndex();
+		
+		Cotd_Web.generateWebContentFromTemporal();
+
+		System.out.println("*** Finished ***");
 	}
 	
 	public static void generateWebContentFromTemporal() throws Exception{
@@ -41,9 +45,21 @@ public class Cotd_Web {
 			String id = fullId.split(" ")[0];
 			String ref = id.split("-")[1];
 			String seriesRef = id.split("-")[0].split("/")[1].toLowerCase();
-			String caract1 = fileContent.remove(0);
-			String caract = caract1 + ", " + fileContent.remove(0);
-			fileContent.remove(0);
+			String caract = fileContent.remove(0);
+			if(caract.startsWith("Personaje")){
+				caract = caract + " " + fileContent.remove(0);
+				fileContent.remove(0);
+			}
+			else if(caract.startsWith("Evento")){
+				fileContent.remove(0);
+			}
+			else{
+				String next = fileContent.remove(0);
+				if(!next.equals("")){
+					caract = caract + "<br>" + next;
+					fileContent.remove(0);
+				}
+			}
 			
 			String seriesWebPath = conf.webFolder.getPath() + "\\" +  seriesRef + "\\";
 			String templatePath = seriesWebPath + "cards\\template.html";
@@ -55,6 +71,13 @@ public class Cotd_Web {
 			templateContent.set(17, templateContent.get(17).replace("[Nombre]", name));
 			templateContent.set(22, fullId);
 			templateContent.set(27, caract.replace("&", "&amp;").replace(">", "&gt;").replace("<", "&lt;"));
+			
+			String producto = templateContent.get(7);
+			if(ref.startsWith("T")){
+				producto.replace("Booster Pack", "Trial Deck Plus");
+				templateContent.set(7, producto.replace("Booster Pack", "Trial Deck Plus"));
+			}
+			
 			templateContent.remove(32);
 
 			List<String> cardContent = new ArrayList<String>();
@@ -137,11 +160,11 @@ public class Cotd_Web {
 	public static void createEmptyIndex() throws Exception{
 		
 		System.out.println("* Create Empty Index");
-		
-		String seriesId = "we29";
-		String seriesFullId = "HLL/WE29-";
-		String productType = "Extra Booster";
-		String seriesName = "Hina Logi ~From Luck & Logic~ Vol. 2";
+
+		String seriesId = "s52";
+		String seriesFullId = "GL/S52-";
+		String productType = "Booster Pack";
+		String seriesName = "Tengen Toppa Gurren Lagann";
 		
 		Cotd_Conf conf = Cotd_Conf.getInstance();
 		
@@ -160,7 +183,7 @@ public class Cotd_Web {
 		newFileContent.add("<table border=2 width=100%>");
 		
 		int count = 1;
-		for(int i = 1; i <= 5; i++){
+		for(int i = 1; i <= 10; i++){
 			
 			newFileContent.add("<tr>");
 			

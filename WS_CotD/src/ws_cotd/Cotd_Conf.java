@@ -21,10 +21,12 @@ public class Cotd_Conf {
 	public File referencesFolder;
 	
 	// Files:
+	public File abilitiesFile;
 	public File fromImagesFile;
 	public File fromGlobalFile;
 	public File fromOutakuyaFile;
 	public File temporalFile;
+	public File resultFile;
 	public File currentSeriesFile;
 	
 	// Urls:
@@ -82,6 +84,12 @@ public class Cotd_Conf {
 			String fromGlobalFileStr = prop.getProperty("fromGlobalFile");
 			String fromGlobalFilePath = this.mainFolder.getAbsolutePath() + "\\" + fromGlobalFileStr;
 			this.fromGlobalFile = new File(fromGlobalFilePath);
+			String abilitiesFileStr = prop.getProperty("abilitiesFile");
+			String abilitiesFilePath = this.mainFolder.getAbsolutePath() + "\\" + abilitiesFileStr;
+			this.abilitiesFile = new File(abilitiesFilePath);
+			String resultFileStr = prop.getProperty("resultFile");
+			String resultFilePath = this.mainFolder.getAbsolutePath() + "\\" + resultFileStr;
+			this.resultFile = new File(resultFilePath);
 			
 			// Urls
 			this.wsJpCotdUrl = prop.getProperty("wsJpCotdUrl");
