@@ -1,5 +1,6 @@
 package ws_cotd;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -19,10 +20,15 @@ public class Cotd_Web {
 		
 		Cotd_Web.generateWebContentFromTemporal();
 
+		Desktop.getDesktop().open(Cotd_Conf.getInstance().webFolder);
+		
 		System.out.println("*** Finished ***");
 	}
 	
 	public static void generateWebContentFromTemporal() throws Exception{
+		
+		System.out.println("** Generate Web Content From Temporal");
+		
 		Cotd_Conf conf = Cotd_Conf.getInstance();
 		
 		List<String> fileContent = new ArrayList<>(Files.readAllLines(conf.temporalFile.toPath(), StandardCharsets.UTF_8));
@@ -60,6 +66,8 @@ public class Cotd_Web {
 					fileContent.remove(0);
 				}
 			}
+			
+			System.out.println("* Parsed card: " + name + " " + id);
 			
 			String seriesWebPath = conf.webFolder.getPath() + "\\" +  seriesRef + "\\";
 			String templatePath = seriesWebPath + "cards\\template.html";
