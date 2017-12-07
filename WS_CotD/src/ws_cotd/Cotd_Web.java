@@ -9,6 +9,10 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 public class Cotd_Web {
 
@@ -20,6 +24,8 @@ public class Cotd_Web {
 		
 		Cotd_Web.generateWebContentFromTemporal();
 
+		//Cotd_Web.getIndexColors("w54");
+		
 		Desktop.getDesktop().open(Cotd_Conf.getInstance().webFolder);
 		
 		System.out.println("*** Finished ***");
@@ -121,7 +127,7 @@ public class Cotd_Web {
 		
 			for(int i = 0; i < indexContent.size(); i++){
 				if(indexContent.get(i).endsWith(ref)){
-					String newLine = fecha + "<a href='./cards/" + seriesRef + "_" + ref + ".html'><img src='./images/" + seriesRef + "_" + ref + ".png' width=100% height=auto></img></a>" + id;
+					String newLine = fecha + "<a href='./cards/" + seriesRef + "_" + ref + ".html'><img src='./images/" + seriesRef + "_" + ref + ".png' width=100% height=auto id='" + seriesRef + "_" + ref + "'></img></a>" + id;
 					indexContent.set(i, newLine);
 				}
 			}
@@ -200,7 +206,7 @@ public class Cotd_Web {
 				String paddedCount = String.format("%02d", count);;
 				
 				newFileContent.add("<td width=10%  align=center>");
-				newFileContent.add("<img src='../images_default/no_image.png' width=100% height=auto id='" + seriesId + "_" + paddedCount + "'></img>" + seriesFullId + paddedCount);
+				newFileContent.add("<img src='../images_default/no_image.png' width=100% height=auto id='pending_" + seriesId + "_" + paddedCount + "'></img>" + seriesFullId + paddedCount);
 				newFileContent.add("</td>");
 				
 				count++;
@@ -213,6 +219,44 @@ public class Cotd_Web {
 		newFileContent.add("</body>");
 		
 		Files.write(newFile.toPath(), newFileContent, StandardCharsets.UTF_8);
+	}
+	
+	private static void getIndexColors(String seriesRef) throws Exception{
+		
+		Cotd_Conf conf = Cotd_Conf.getInstance();
+		String seriesWebPath = conf.webFolder.getPath() + "\\" +  seriesRef + "\\";
+		String indexPath = seriesWebPath + "index.html";
+		//List<String> indexContent = new ArrayList<>(Files.readAllLines(new File(indexPath).toPath(), StandardCharsets.UTF_8));
+		Document doc = Jsoup.parse(new File(indexPath), "UTF-8");
+		
+		//System.out.println(doc.html());
+		
+		Elements images = doc.select("img");
+		for(Element image : images){
+			
+			String id = image.attr("id");
+			if(!id.contains("T")){
+				if(id.startsWith("pending")){
+					System.out.println(id.split("_")[2] + ": " + image.attr("src"));
+				}
+				else{
+					File card = new File(seriesWebPath + "\\cards\\" + id + ".html");
+					System.out.println(id.split("_")[1] + ": " + Cotd_Web.getCardColors(card));
+				}
+			}
+		}
+	}
+	
+	private static String getCardColors(File card) throws Exception{
+		
+		String color = "desconocido";
+		
+		List<String> cardContent = new ArrayList<>(Files.readAllLines(card.toPath(), StandardCharsets.UTF_8));
+
+		String typeLine = cardContent.get(28);
+		color = typeLine.replaceAll("^.+? ", "").replaceAll("^(.+?), .+", "$1");
+		
+		return color;
 	}
 	
 }
