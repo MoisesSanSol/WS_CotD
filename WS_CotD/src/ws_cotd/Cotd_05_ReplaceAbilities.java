@@ -21,17 +21,20 @@ public class Cotd_05_ReplaceAbilities {
 		Cotd_05_ReplaceAbilities main = new Cotd_05_ReplaceAbilities();
 		
 		main.replaceAbility();
-		Cotd_Utilities.openFileInNotepad(main.conf.resultFile);
+		Cotd_Utilities.openFileInNotepad(main.conf.temporalFile);
 		
 		System.out.println("*** Finished ***");
 	}
 	
 	private void replaceAbility() throws Exception{
 		
-		System.out.println("** Replace Abilities -> Results File");
+		System.out.println("** Replace Abilities -> Temporal File");
 		
 		List<String> abilitiesContent = new ArrayList<>(Files.readAllLines(conf.abilitiesFile.toPath(), StandardCharsets.UTF_8));
 		List<String> temporalContent = new ArrayList<>(Files.readAllLines(conf.temporalFile.toPath(), StandardCharsets.UTF_8));
+		
+		//Back up at result (yes, it is messed up, but I am so used to work with Temporal I don't care)
+		Files.write(conf.resultFile.toPath(), temporalContent, StandardCharsets.UTF_8);
 		
 		HashMap<String,String> abilityPairs = new HashMap<String,String>(); 
 		
@@ -52,7 +55,7 @@ public class Cotd_05_ReplaceAbilities {
 			}
 		}
 		
-		Files.write(conf.resultFile.toPath(), temporalContent, StandardCharsets.UTF_8);
+		Files.write(conf.temporalFile.toPath(), temporalContent, StandardCharsets.UTF_8);
 	}
 	
 }

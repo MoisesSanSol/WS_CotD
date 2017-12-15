@@ -54,6 +54,8 @@ public class Cotd_04_CreateAbilityList {
 			abilitiesContent.add("");
 		}
 		
+		abilitiesContent.add("LÚL"); //Forcing notepad++ to use actual UTF-8 encoding
+		
 		Files.write(conf.abilitiesFile.toPath(), abilitiesContent, StandardCharsets.UTF_8);
 	}
 }
