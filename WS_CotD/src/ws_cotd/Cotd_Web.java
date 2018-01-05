@@ -47,7 +47,7 @@ public class Cotd_Web {
 			linea = fileContent.remove(0);
 		}
 		
-		int count = 1;
+		int count = 2;
 		
 		while(!fileContent.isEmpty()){
 			
@@ -60,6 +60,7 @@ public class Cotd_Web {
 			String caract = fileContent.remove(0);
 			if(caract.startsWith("Personaje")){
 				caract = caract + " " + fileContent.remove(0);
+				caract = caract.replace("&", "&amp;").replace(">", "&gt;").replace("<", "&lt;");
 				fileContent.remove(0);
 			}
 			else if(caract.startsWith("Evento")){
@@ -68,7 +69,7 @@ public class Cotd_Web {
 			else{
 				String next = fileContent.remove(0);
 				if(!next.equals("")){
-					caract = caract + "<br>" + next;
+					caract = caract + "\r\n<br>\r\n" + next;
 					fileContent.remove(0);
 				}
 			}
@@ -84,7 +85,7 @@ public class Cotd_Web {
 			templateContent.set(12, templateContent.get(12).replace("[Ref]", ref));
 			templateContent.set(17, templateContent.get(17).replace("[Nombre]", name));
 			templateContent.set(22, fullId);
-			templateContent.set(27, caract.replace("&", "&amp;").replace(">", "&gt;").replace("<", "&lt;"));
+			templateContent.set(27, caract);
 			
 			String producto = templateContent.get(7);
 			if(ref.startsWith("T")){
@@ -96,11 +97,22 @@ public class Cotd_Web {
 
 			List<String> cardContent = new ArrayList<String>();
 			
+			boolean referenciado = false;
+			boolean referenciador = false;
+			
 			String habLinea = fileContent.remove(0);
 			while(!habLinea.startsWith("-")){
 				cardContent.add(habLinea);
 				habLinea = fileContent.remove(0);
 			}
+			
+			if(habLinea.startsWith("-#")) {
+				referenciado = true;
+			}
+			else if(habLinea.startsWith("-%")) {
+				referenciador = true;
+			}
+			
 			cardContent.remove(cardContent.size()-1);
 			Collections.reverse(cardContent);
 			
@@ -116,6 +128,20 @@ public class Cotd_Web {
 			String file = seriesRef + "_" + ref + ".html";
 			
 			templateContent.add(0,"<meta charset=\"utf-8\">");
+			
+			if(caract.startsWith("Climax") || referenciado) {
+				String referencias = "<tr>\r\n<td>\r\n* Esta carta es referenciada en las habilidades de ''\r\n";
+				referencias = referencias + "<a href='./" + seriesRef + "_" + ref + ".html'>" + name + "</a>\r\n";
+				referencias = referencias + "<a href='./lel.html'></a>\r\n</td>\r\n</tr>";
+				templateContent.set(templateContent.indexOf("[Referencias]"), referencias);
+			}
+			else if (referenciador) {
+				String referencias = "<a href='./" + seriesRef + "_" + ref + ".html'>" + name + "</a>\r\n";
+				templateContent.set(templateContent.indexOf("[Referencias]"), referencias);
+			}
+			else {
+				templateContent.remove(templateContent.indexOf("[Referencias]"));
+			}
 			
 			String cardsPath = seriesWebPath + "cards\\"; 
 			
