@@ -68,7 +68,20 @@ public class Cotd_03b_CreateTemporalFileFromImages {
 				if(cardTextFromGlobal){
 					ArrayList<String> cardText = cardsText.remove(0);
 					while(!cardText.isEmpty()){
-						temporalContent.add("*" + cardText.remove(0));
+						String cardTextLine = cardText.remove(0);
+						if(cardTextLine.startsWith("Trait")){
+							temporalContent.remove(temporalContent.size()-1);
+							temporalContent.remove(temporalContent.size()-1);
+							temporalContent.add(cardTextLine);
+							temporalContent.add("");
+						}
+						else if(cardTextLine.startsWith("Card")){
+							temporalContent.add("@" + cardTextLine);
+							temporalContent.add("");
+						}
+						else{
+							temporalContent.add("*" + cardTextLine);
+						}
 					}
 				}else{
 					temporalContent.add("* Abilities go here");
@@ -112,6 +125,10 @@ public class Cotd_03b_CreateTemporalFileFromImages {
 		while(!fromGlobalContent.isEmpty()){
 			ArrayList<String> cardText = new ArrayList<String>();
 			String textLine = fromGlobalContent.remove(0);
+			if(textLine.matches(".+\\((.+?)\\/(.+)\\).*")){
+				cardText.add(textLine.replaceAll(".+\\((.+?)\\/(.+)\\).*", "Traits: <<$1>> y <<$2>>."));
+			}
+			
 			while(!textLine.equals("-")){
 				cardText.add(textLine);
 				textLine = fromGlobalContent.remove(0);

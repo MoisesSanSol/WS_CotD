@@ -47,7 +47,7 @@ public class Cotd_Web {
 			linea = fileContent.remove(0);
 		}
 		
-		int count = 2;
+		int count = 1;
 		
 		while(!fileContent.isEmpty()){
 			
@@ -132,11 +132,11 @@ public class Cotd_Web {
 			if(caract.startsWith("Climax") || referenciado) {
 				String referencias = "<tr>\r\n<td>\r\n* Esta carta es referenciada en las habilidades de ''\r\n";
 				referencias = referencias + "<a href='./" + seriesRef + "_" + ref + ".html'>" + name + "</a>\r\n";
-				referencias = referencias + "<a href='./lel.html'></a>\r\n</td>\r\n</tr>";
+				//referencias = referencias + "<a href='./lel.html'></a>\r\n</td>\r\n</tr>";
 				templateContent.set(templateContent.indexOf("[Referencias]"), referencias);
 			}
 			else if (referenciador) {
-				String referencias = "<a href='./" + seriesRef + "_" + ref + ".html'>" + name + "</a>\r\n";
+				String referencias = "<a href='./" + seriesRef + "_" + ref + ".html'>" + name + "</a>";
 				templateContent.set(templateContent.indexOf("[Referencias]"), referencias);
 			}
 			else {
@@ -284,5 +284,4 @@ public class Cotd_Web {
 		
 		return color;
 	}
-	
 }
