@@ -132,7 +132,7 @@ public class Cotd_Web {
 			if(caract.startsWith("Climax") || referenciado) {
 				String referencias = "<tr>\r\n<td>\r\n* Esta carta es referenciada en las habilidades de ''\r\n";
 				referencias = referencias + "<a href='./" + seriesRef + "_" + ref + ".html'>" + name + "</a>\r\n";
-				//referencias = referencias + "<a href='./lel.html'></a>\r\n</td>\r\n</tr>";
+				referencias = referencias + "</td>\r\n</tr>";
 				templateContent.set(templateContent.indexOf("[Referencias]"), referencias);
 			}
 			else if (referenciador) {
