@@ -32,6 +32,7 @@ public class Cotd_05_ReplaceAbilities {
 		
 		List<String> abilitiesContent = new ArrayList<>(Files.readAllLines(conf.abilitiesFile.toPath(), StandardCharsets.UTF_8));
 		List<String> temporalContent = new ArrayList<>(Files.readAllLines(conf.temporalFile.toPath(), StandardCharsets.UTF_8));
+		abilitiesContent.remove(0); //Removing UTF-8 enforcing line
 		
 		//Back up at result (yes, it is messed up, but I am so used to work with Temporal I don't care)
 		Files.write(conf.resultFile.toPath(), temporalContent, StandardCharsets.UTF_8);

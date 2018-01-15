@@ -31,7 +31,9 @@ public class Cotd_04_CreateAbilityList {
 		System.out.println("** Generate Abilities File");
 		
 		ArrayList<String> abilities = new ArrayList<String>();
-		ArrayList<String> abilitiesContent = new ArrayList<String>();  
+		ArrayList<String> abilitiesContent = new ArrayList<String>();
+		abilitiesContent.add("LÚL"); //Forcing notepad++ to use actual UTF-8 encoding
+		
 		List<String> temporalContent = new ArrayList<>(Files.readAllLines(conf.temporalFile.toPath(), StandardCharsets.UTF_8));
 		
 		temporalContent.remove(0);
@@ -53,8 +55,6 @@ public class Cotd_04_CreateAbilityList {
 			abilitiesContent.add("");
 			abilitiesContent.add("");
 		}
-		
-		abilitiesContent.add("LÚL"); //Forcing notepad++ to use actual UTF-8 encoding
 		
 		Files.write(conf.abilitiesFile.toPath(), abilitiesContent, StandardCharsets.UTF_8);
 	}

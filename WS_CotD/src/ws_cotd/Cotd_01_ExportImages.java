@@ -54,13 +54,14 @@ public class Cotd_01_ExportImages {
 
 	private void parseWsJpCotD() throws Exception {
 		Document doc = Jsoup.connect(this.conf.wsJpCotdUrl).maxBodySize(0).get();
-		Elements images = doc.select("div.center img");
+		
+		Elements images = doc.select("div.center > img");
 
 		int count = 1;
 		
 		for(Element image : images){
-			String imageUrl = image.attr("abs:src");
-			System.out.println("Scrapping img: " + image.attr("abs:src"));
+			String imageUrl = image.attr("abs:data-lazy-src");
+			System.out.println("Scrapping img: " + imageUrl);
 			String paddedCount = String.format("%02d", count);
 			String imageName = "/jp_" + paddedCount + ".png";
 			File targetImageFile = new File(this.conf.imagesFolder.getAbsolutePath() + imageName);
@@ -72,7 +73,10 @@ public class Cotd_01_ExportImages {
 	}
 	
 	private void parseWsJpExtraCotd() throws Exception {
-		Document doc = Jsoup.connect(this.conf.wsJpExtraCotdUrl).maxBodySize(0).get();
+		
+		//Ws-tcg has updated their web
+		
+		/*Document doc = Jsoup.connect(this.conf.wsJpExtraCotdUrl).maxBodySize(0).get();
 		Elements images = doc.select("div.center img");
 
 		int count = 1;
@@ -92,7 +96,7 @@ public class Cotd_01_ExportImages {
 			}
 			Thread.sleep(1000);
 			count++;
-		}
+		}*/
 	}
 
 	private void cleanImagesFolder() throws Exception {

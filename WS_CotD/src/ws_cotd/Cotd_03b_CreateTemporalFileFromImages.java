@@ -125,8 +125,11 @@ public class Cotd_03b_CreateTemporalFileFromImages {
 		while(!fromGlobalContent.isEmpty()){
 			ArrayList<String> cardText = new ArrayList<String>();
 			String textLine = fromGlobalContent.remove(0);
-			if(textLine.matches(".+\\((.+?)\\/(.+)\\).*")){
-				cardText.add(textLine.replaceAll(".+\\((.+?)\\/(.+)\\).*", "Traits: <<$1>> y <<$2>>."));
+			if(textLine.matches(".+\\((.+?)\\).+?\\((.+?)\\/(.+)\\).*")){
+				cardText.add(textLine.replaceAll(".+\\((.+?)\\).+?\\((.+?)\\/(.+)\\).*", "Traits: <<$2>> y <<$3>>."));
+			}
+			else if(textLine.matches(".+\\((.+?)\\).+?\\((.+?)\\).*")){
+				cardText.add(textLine.replaceAll(".+\\((.+?)\\).+?\\((.+?)\\).*", "Traits: <<$2>>."));
 			}
 			
 			while(!textLine.equals("-")){
