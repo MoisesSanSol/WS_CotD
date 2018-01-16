@@ -55,7 +55,7 @@ public class Cotd_01_ExportImages {
 	private void parseWsJpCotD() throws Exception {
 		Document doc = Jsoup.connect(this.conf.wsJpCotdUrl).maxBodySize(0).get();
 		
-		Elements images = doc.select("div.center > img");
+		Elements images = doc.select("div.entry-content img.lazy");
 
 		int count = 1;
 		
