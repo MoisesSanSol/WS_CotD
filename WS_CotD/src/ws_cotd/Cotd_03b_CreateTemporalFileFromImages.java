@@ -4,11 +4,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
-import org.apache.commons.text.StringEscapeUtils;
 
 public class Cotd_03b_CreateTemporalFileFromImages {
 
@@ -47,10 +44,11 @@ public class Cotd_03b_CreateTemporalFileFromImages {
 		
 		seriesHeader = currentSeriesContent.remove(0);
 		seriesId = currentSeriesContent.remove(0);
-		temporalContent.add(seriesHeader);
-		temporalContent.add("");
-		temporalContent.add("# Name goes here");
-		temporalContent.add(seriesId);
+		ArrayList<String> cardHeader = new ArrayList<String>();
+		cardHeader.add(seriesHeader);
+		cardHeader.add("");
+		cardHeader.add("# Name goes here");
+		cardHeader.add(seriesId);
 		
 		List<String> fromImagesContent = new ArrayList<>(Files.readAllLines(conf.fromImagesFile.toPath(), StandardCharsets.UTF_8));
 		
@@ -66,25 +64,14 @@ public class Cotd_03b_CreateTemporalFileFromImages {
 			if(line.startsWith("-")){
 				temporalContent.add("");
 				if(cardTextFromGlobal){
-					ArrayList<String> cardText = cardsText.remove(0);
-					while(!cardText.isEmpty()){
-						String cardTextLine = cardText.remove(0);
-						if(cardTextLine.startsWith("Trait")){
-							temporalContent.remove(temporalContent.size()-1);
-							temporalContent.remove(temporalContent.size()-1);
-							temporalContent.add(cardTextLine);
-							temporalContent.add("");
-						}
-						else if(cardTextLine.startsWith("Card")){
-							temporalContent.add("@" + cardTextLine);
-							temporalContent.add("");
-						}
-						else{
-							temporalContent.add("*" + cardTextLine);
-						}
-					}
+					ArrayList<String> cardText = this.parseCardTextFromGlobal(cardsText.remove(0), cardHeader);
+					temporalContent.addAll(cardText);
+					cardHeader.clear();
 				}else{
+					temporalContent.addAll(cardHeader);
+					temporalContent.add("");
 					temporalContent.add("* Abilities go here");
+					cardHeader.clear();
 				}
 				temporalContent.add("");
 				if(line.startsWith("---")){
@@ -94,18 +81,18 @@ public class Cotd_03b_CreateTemporalFileFromImages {
 					if(line.startsWith("--")){
 						seriesHeader = currentSeriesContent.remove(0);
 						seriesId = currentSeriesContent.remove(0);
-						temporalContent.add(seriesHeader);
+						cardHeader.add(seriesHeader);
 					}
 					else{
-						temporalContent.add("-");
+						cardHeader.add("-");
 					}
-					temporalContent.add("");
-					temporalContent.add("# Name goes here");
-					temporalContent.add(seriesId);
+					cardHeader.add("");
+					cardHeader.add("# Name goes here");
+					cardHeader.add(seriesId);
 				}
 			}
 			else{
-				temporalContent.add(line);
+				cardHeader.add(line);
 			}
 
 		}
@@ -125,13 +112,6 @@ public class Cotd_03b_CreateTemporalFileFromImages {
 		while(!fromGlobalContent.isEmpty()){
 			ArrayList<String> cardText = new ArrayList<String>();
 			String textLine = fromGlobalContent.remove(0);
-			if(textLine.matches(".+\\((.+?)\\).+?\\((.+?)\\/(.+)\\).*")){
-				cardText.add(textLine.replaceAll(".+\\((.+?)\\).+?\\((.+?)\\/(.+)\\).*", "Traits: <<$2>> y <<$3>>."));
-			}
-			else if(textLine.matches(".+\\((.+?)\\).+?\\((.+?)\\).*")){
-				cardText.add(textLine.replaceAll(".+\\((.+?)\\).+?\\((.+?)\\).*", "Traits: <<$2>>."));
-			}
-			
 			while(!textLine.equals("-")){
 				cardText.add(textLine);
 				textLine = fromGlobalContent.remove(0);
@@ -140,5 +120,31 @@ public class Cotd_03b_CreateTemporalFileFromImages {
 		}
 		
 		return cardsText;
+	}
+	
+	private ArrayList<String> parseCardTextFromGlobal(ArrayList<String> globalCardText, ArrayList<String> header){
+		
+		ArrayList<String> cardText = new ArrayList<String>();
+		
+		String firstGlobalLine = globalCardText.get(0);
+		
+		if(firstGlobalLine.matches(".+\\((.+?)\\) (.+?) \\((.+?)\\/(.+)\\).*")){
+			header.set(2, "# Name goes here: " + firstGlobalLine.replaceAll(".+\\((.+?)\\) (.+?) \\((.+?)\\/(.+)\\).*", "$2"));
+			header.set(3, header.get(3) + " " + firstGlobalLine.replaceAll(".+\\((.+?)\\) (.+?) \\((.+?)\\/(.+)\\).*", "$1"));
+			header.set(5, firstGlobalLine.replaceAll(".+\\((.+?)\\) .+? \\((.+?)\\/(.+)\\).*", "Traits: <<$2>> y <<$3>>."));
+			globalCardText.remove(0);
+		}
+		else if(firstGlobalLine.matches(".+\\((.+?)\\) (.+?) \\((.+?)\\).*")){
+			header.set(2, "# Name goes here: " + firstGlobalLine.replaceAll(".+\\((.+?)\\) (.+?) \\((.+?)\\).*", "$2"));
+			header.set(3, header.get(3) + " " + firstGlobalLine.replaceAll(".+\\((.+?)\\) (.+?) \\((.+?)\\).*", "$1"));
+			header.set(5, firstGlobalLine.replaceAll(".+\\((.+?)\\) .+? \\((.+?)\\).*", "Traits: <<$2>>."));
+			globalCardText.remove(0);
+		}
+		
+		cardText.addAll(header);
+		cardText.add("");
+		cardText.addAll(globalCardText);
+		
+		return cardText;
 	}
 }
