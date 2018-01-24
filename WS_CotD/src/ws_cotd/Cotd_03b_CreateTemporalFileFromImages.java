@@ -143,8 +143,10 @@ public class Cotd_03b_CreateTemporalFileFromImages {
 		
 		cardText.addAll(header);
 		cardText.add("");
-		cardText.addAll(globalCardText);
 		
+		for(String abilityLine : globalCardText){
+			cardText.add("* " + abilityLine);
+		}
 		return cardText;
 	}
 }
