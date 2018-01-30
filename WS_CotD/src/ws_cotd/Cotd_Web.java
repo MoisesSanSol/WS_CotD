@@ -171,40 +171,14 @@ public class Cotd_Web {
 		}
 	}
 	
-	public static void duplicateParallelCard(String seriesId, String cardId, String newCardId, String newRarity) throws Exception{
-		System.out.println("** Duplicate Parallel Card");
-		
-		Cotd_Conf conf = Cotd_Conf.getInstance();
-		
-		File currentFile = new File(conf.webFolder.getAbsolutePath() + "/" + seriesId + "/cards/" + seriesId + "_" + cardId + ".html");
-		File newFile = new File(conf.webFolder.getAbsolutePath() + "/" + seriesId + "/cards/" + seriesId + "_" + newCardId +".html");
-		
-		List<String> currentFileContent = new ArrayList<>(Files.readAllLines(currentFile.toPath(), StandardCharsets.UTF_8));
-		List<String> newFileContent = new ArrayList<>(currentFileContent);
-		
-		String idLine = currentFileContent.get(23);
-		String[] idLineSplit = idLine.split(" ");
-		String newOldIdLine = idLine + " (<a href='./" + seriesId + "_" + newCardId + ".html'>" + newRarity + "</a>)";
-		String newIdLine = idLineSplit[0] + " " + newRarity + " (<a href='./" + seriesId + "_" + cardId + ".html'>" + idLineSplit[1] + "</a>)";
-		
-		currentFileContent.set(23, newOldIdLine);
-		newFileContent.set(23, newIdLine);
-		
-		newFileContent.set(13, "<img src='../images/" + seriesId + "_" + newCardId + ".png'></img>");
-		
-		Files.write(currentFile.toPath(), currentFileContent, StandardCharsets.UTF_8);
-		Files.write(newFile.toPath(), newFileContent, StandardCharsets.UTF_8);
-		
-	}
-	
 	public static void createEmptyIndex() throws Exception{
 		
 		System.out.println("* Create Empty Index");
 
-		String seriesId = "s52";
-		String seriesFullId = "GL/S52-";
+		String seriesId = "w56";
+		String seriesFullId = "SHS/W56-";
 		String productType = "Booster Pack";
-		String seriesName = "Tengen Toppa Gurren Lagann";
+		String seriesName = "[Saekano] How to Raise a Boring Girlfriend";
 		
 		Cotd_Conf conf = Cotd_Conf.getInstance();
 		
@@ -229,7 +203,7 @@ public class Cotd_Web {
 			
 			for(int j = 1; j <= 10; j++){
 				
-				String paddedCount = String.format("%02d", count);;
+				String paddedCount = String.format("%03d", count);;
 				
 				newFileContent.add("<td width=10%  align=center>");
 				newFileContent.add("<img src='../images_default/no_image.png' width=100% height=auto id='pending_" + seriesId + "_" + paddedCount + "'></img>" + seriesFullId + paddedCount);

@@ -36,7 +36,7 @@ public class Cotd_03b_CreateTemporalFileFromImages {
 		temporalContent.add("****************************************");
 		String dateLine = "Cartas del día " + new SimpleDateFormat("dd/MM/yyyy").format(new Date()) + ":";
 		temporalContent.add(dateLine);
-		temporalContent.add("");
+		//temporalContent.add("");
 		
 		List<String> currentSeriesContent = new ArrayList<>(Files.readAllLines(conf.currentSeriesFile.toPath(), StandardCharsets.UTF_8));
 		String seriesHeader = "";
@@ -73,7 +73,7 @@ public class Cotd_03b_CreateTemporalFileFromImages {
 					temporalContent.add("* Abilities go here");
 					cardHeader.clear();
 				}
-				temporalContent.add("");
+				//temporalContent.add("");
 				if(line.startsWith("---")){
 					// Do nothing
 				}
