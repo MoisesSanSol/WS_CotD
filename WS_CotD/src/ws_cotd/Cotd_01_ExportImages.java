@@ -26,7 +26,8 @@ public class Cotd_01_ExportImages {
 		main.cleanImagesFolder();
 		//main.parseWsEnCotD();
 		main.parseWsJpCotD();
-		main.parseWsJpExtraCotd();
+		//main.parseWsJpCotD("");
+		//main.parseWsJpExtraCotd();
 		
 		Cotd_Utilities.openDefaultFolders();
 		
@@ -53,7 +54,14 @@ public class Cotd_01_ExportImages {
 	}*/
 
 	private void parseWsJpCotD() throws Exception {
-		Document doc = Jsoup.connect(this.conf.wsJpCotdUrl).maxBodySize(0).get();
+		
+		this.parseWsJpCotD(this.conf.wsJpCotdUrl);
+		
+	}
+	
+	private void parseWsJpCotD(String url) throws Exception {
+		
+		Document doc = Jsoup.connect(url).maxBodySize(0).get();
 		
 		Elements images = doc.select("div.entry-content img.lazy");
 
