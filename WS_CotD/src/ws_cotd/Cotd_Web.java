@@ -153,7 +153,7 @@ public class Cotd_Web {
 		
 			for(int i = 0; i < indexContent.size(); i++){
 				if(indexContent.get(i).endsWith(ref)){
-					String newLine = fecha + "<a href='./cards/" + seriesRef + "_" + ref + ".html'><img src='./images/" + seriesRef + "_" + ref + ".png' width=100% height=auto id='" + seriesRef + "_" + ref + "'></img></a>" + id;
+					String newLine = fecha + "<a href='./cards/" + seriesRef + "_" + ref + ".html'><img src='./images/" + seriesRef + "_" + ref + ".png' width=100% height=auto id='" + seriesRef + "_" + ref + "'></img></a>" + fullId;
 					indexContent.set(i, newLine);
 				}
 			}
