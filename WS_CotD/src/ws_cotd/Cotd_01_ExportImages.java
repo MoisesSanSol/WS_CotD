@@ -63,12 +63,12 @@ public class Cotd_01_ExportImages {
 		
 		Document doc = Jsoup.connect(url).maxBodySize(0).get();
 		
-		Elements images = doc.select("div.entry-content img.lazy");
+		Elements images = doc.select("div.entry-content img.aligncenter");
 
 		int count = 1;
 		
 		for(Element image : images){
-			String imageUrl = image.attr("abs:data-lazy-src");
+			String imageUrl = image.attr("abs:src");
 			System.out.println("Scrapping img: " + imageUrl);
 			String paddedCount = String.format("%02d", count);
 			String imageName = "/jp_" + paddedCount + ".png";
