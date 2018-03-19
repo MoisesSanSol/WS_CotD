@@ -24,8 +24,6 @@ public class Cotd_Web {
 		
 		Cotd_Web.generateWebContentFromTemporal();
 
-		//Cotd_Web.getIndexColors("w54");
-		
 		Desktop.getDesktop().open(Cotd_Conf.getInstance().webFolder);
 		
 		System.out.println("*** Finished ***");
@@ -48,6 +46,7 @@ public class Cotd_Web {
 		}
 		
 		int count = 1;
+		int size = 100;
 		
 		while(!fileContent.isEmpty()){
 			
@@ -158,6 +157,8 @@ public class Cotd_Web {
 				}
 			}
 			
+			indexContent = Cotd_Web.getUpdatedIndexWithCompletionCount(indexContent, size);
+			
 			Files.write(new File(indexPath).toPath(), indexContent, StandardCharsets.UTF_8);
 			
 			String paddedCount = String.format("%02d", count);
@@ -221,7 +222,7 @@ public class Cotd_Web {
 		Files.write(newFile.toPath(), newFileContent, StandardCharsets.UTF_8);
 	}
 	
-	private static void getIndexColors(String seriesRef) throws Exception{
+	/*private static void getIndexColors(String seriesRef) throws Exception{
 		
 		Cotd_Conf conf = Cotd_Conf.getInstance();
 		String seriesWebPath = conf.webFolder.getPath() + "\\" +  seriesRef + "\\";
@@ -257,5 +258,136 @@ public class Cotd_Web {
 		color = typeLine.replaceAll("^.+? ", "").replaceAll("^(.+?), .+", "$1");
 		
 		return color;
+	}*/
+	
+	
+	private static void updateCompletionCount(String indexPath, int size) throws Exception{
+		
+		System.out.println("** Update Completion Count");
+		
+		List<String> indexContent = new ArrayList<>(Files.readAllLines(new File(indexPath).toPath(), StandardCharsets.UTF_8));
+	
+		int countC = 0;
+		int countU = 0;
+		int countR = 0;
+		int countRR = 0;
+		int countCC = 0;
+		int countCR = 0;
+		
+		for(int i = 0; i < indexContent.size(); i++){
+			if(indexContent.get(i).endsWith(" C")){
+				countC++;
+			}
+			if(indexContent.get(i).endsWith(" U")){
+				countU++;
+			}
+			if(indexContent.get(i).endsWith(" R")){
+				countR++;
+			}
+			if(indexContent.get(i).endsWith(" RR")){
+				countRR++;
+			}
+			if(indexContent.get(i).endsWith(" CC")){
+				countCC++;
+			}
+			if(indexContent.get(i).endsWith(" CR")){
+				countCR++;
+			}
+		}
+		
+		System.out.println("* Count RR: " + countRR);
+		int iRR = indexContent.indexOf("<td align=center id='RR_Count'>");
+		indexContent.set(iRR + 1, String.valueOf(countRR));
+		
+		System.out.println("* Count R: " + countR);
+		int iR = indexContent.indexOf("<td align=center id='R_Count'>");
+		indexContent.set(iR + 1, String.valueOf(countR));
+		
+		System.out.println("* Count U: " + countU);
+		int iU = indexContent.indexOf("<td align=center id='U_Count'>");
+		indexContent.set(iU + 1, String.valueOf(countU));
+		
+		System.out.println("* Count C: " + countC);
+		int iC = indexContent.indexOf("<td align=center id='C_Count'>");
+		indexContent.set(iC + 1, String.valueOf(countC));
+		
+		System.out.println("* Count CR: " + countCR);
+		int iCR = indexContent.indexOf("<td align=center id='CR_Count'>");
+		indexContent.set(iCR + 1, String.valueOf(countCR));
+		
+		System.out.println("* Count CC: " + countCC);
+		int iCC = indexContent.indexOf("<td align=center id='CC_Count'>");
+		indexContent.set(iCC + 1, String.valueOf(countCC));
+		
+		int totalCount = countRR + countR + countU + countC + countCR + countCC;
+		System.out.println("* Total Count: " + totalCount);
+		int iTC = indexContent.indexOf("<td align=center id='Total_Count'>");
+		indexContent.set(iTC + 1, String.valueOf(totalCount) + "/" + String.valueOf(size));
+		
+		Files.write(new File(indexPath).toPath(), indexContent, StandardCharsets.UTF_8);
+	}
+	
+	private static List<String> getUpdatedIndexWithCompletionCount(List<String> indexContent, int size) throws Exception{
+		
+		//System.out.println("** Get Updated Index Completion Count");
+		
+		int countC = 0;
+		int countU = 0;
+		int countR = 0;
+		int countRR = 0;
+		int countCC = 0;
+		int countCR = 0;
+		
+		for(int i = 0; i < indexContent.size(); i++){
+			if(indexContent.get(i).endsWith(" C")){
+				countC++;
+			}
+			if(indexContent.get(i).endsWith(" U")){
+				countU++;
+			}
+			if(indexContent.get(i).endsWith(" R")){
+				countR++;
+			}
+			if(indexContent.get(i).endsWith(" RR")){
+				countRR++;
+			}
+			if(indexContent.get(i).endsWith(" CC")){
+				countCC++;
+			}
+			if(indexContent.get(i).endsWith(" CR")){
+				countCR++;
+			}
+		}
+		
+		//System.out.println("* Count RR: " + countRR);
+		int iRR = indexContent.indexOf("<td align=center id='RR_Count'>");
+		indexContent.set(iRR + 1, String.valueOf(countRR));
+		
+		//System.out.println("* Count R: " + countR);
+		int iR = indexContent.indexOf("<td align=center id='R_Count'>");
+		indexContent.set(iR + 1, String.valueOf(countR));
+		
+		//System.out.println("* Count U: " + countU);
+		int iU = indexContent.indexOf("<td align=center id='U_Count'>");
+		indexContent.set(iU + 1, String.valueOf(countU));
+		
+		//System.out.println("* Count C: " + countC);
+		int iC = indexContent.indexOf("<td align=center id='C_Count'>");
+		indexContent.set(iC + 1, String.valueOf(countC));
+		
+		//System.out.println("* Count CR: " + countCR);
+		int iCR = indexContent.indexOf("<td align=center id='CR_Count'>");
+		indexContent.set(iCR + 1, String.valueOf(countCR));
+		
+		//System.out.println("* Count CC: " + countCC);
+		int iCC = indexContent.indexOf("<td align=center id='CC_Count'>");
+		indexContent.set(iCC + 1, String.valueOf(countCC));
+		
+		int totalCount = countRR + countR + countU + countC + countCR + countCC;
+		//System.out.println("* Total Count: " + totalCount);
+		int iTC = indexContent.indexOf("<td align=center id='Total_Count'>");
+		indexContent.set(iTC + 1, String.valueOf(totalCount) + "/" + String.valueOf(size));
+		
+		return indexContent;
 	}
 }
