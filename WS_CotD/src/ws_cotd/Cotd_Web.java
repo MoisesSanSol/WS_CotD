@@ -331,62 +331,65 @@ public class Cotd_Web {
 		
 		//System.out.println("** Get Updated Index Completion Count");
 		
-		int countC = 0;
-		int countU = 0;
-		int countR = 0;
-		int countRR = 0;
-		int countCC = 0;
-		int countCR = 0;
+		if(indexContent.indexOf("Recuento") > 0) {
 		
-		for(int i = 0; i < indexContent.size(); i++){
-			if(indexContent.get(i).endsWith(" C")){
-				countC++;
+			int countC = 0;
+			int countU = 0;
+			int countR = 0;
+			int countRR = 0;
+			int countCC = 0;
+			int countCR = 0;
+			
+			for(int i = 0; i < indexContent.size(); i++){
+				if(indexContent.get(i).endsWith(" C")){
+					countC++;
+				}
+				if(indexContent.get(i).endsWith(" U")){
+					countU++;
+				}
+				if(indexContent.get(i).endsWith(" R")){
+					countR++;
+				}
+				if(indexContent.get(i).endsWith(" RR")){
+					countRR++;
+				}
+				if(indexContent.get(i).endsWith(" CC")){
+					countCC++;
+				}
+				if(indexContent.get(i).endsWith(" CR")){
+					countCR++;
+				}
 			}
-			if(indexContent.get(i).endsWith(" U")){
-				countU++;
-			}
-			if(indexContent.get(i).endsWith(" R")){
-				countR++;
-			}
-			if(indexContent.get(i).endsWith(" RR")){
-				countRR++;
-			}
-			if(indexContent.get(i).endsWith(" CC")){
-				countCC++;
-			}
-			if(indexContent.get(i).endsWith(" CR")){
-				countCR++;
-			}
+			
+			//System.out.println("* Count RR: " + countRR);
+			int iRR = indexContent.indexOf("<td align=center id='RR_Count'>");
+			indexContent.set(iRR + 1, String.valueOf(countRR));
+			
+			//System.out.println("* Count R: " + countR);
+			int iR = indexContent.indexOf("<td align=center id='R_Count'>");
+			indexContent.set(iR + 1, String.valueOf(countR));
+			
+			//System.out.println("* Count U: " + countU);
+			int iU = indexContent.indexOf("<td align=center id='U_Count'>");
+			indexContent.set(iU + 1, String.valueOf(countU));
+			
+			//System.out.println("* Count C: " + countC);
+			int iC = indexContent.indexOf("<td align=center id='C_Count'>");
+			indexContent.set(iC + 1, String.valueOf(countC));
+			
+			//System.out.println("* Count CR: " + countCR);
+			int iCR = indexContent.indexOf("<td align=center id='CR_Count'>");
+			indexContent.set(iCR + 1, String.valueOf(countCR));
+			
+			//System.out.println("* Count CC: " + countCC);
+			int iCC = indexContent.indexOf("<td align=center id='CC_Count'>");
+			indexContent.set(iCC + 1, String.valueOf(countCC));
+			
+			int totalCount = countRR + countR + countU + countC + countCR + countCC;
+			//System.out.println("* Total Count: " + totalCount);
+			int iTC = indexContent.indexOf("<td align=center id='Total_Count'>");
+			indexContent.set(iTC + 1, String.valueOf(totalCount) + "/" + String.valueOf(size));
 		}
-		
-		//System.out.println("* Count RR: " + countRR);
-		int iRR = indexContent.indexOf("<td align=center id='RR_Count'>");
-		indexContent.set(iRR + 1, String.valueOf(countRR));
-		
-		//System.out.println("* Count R: " + countR);
-		int iR = indexContent.indexOf("<td align=center id='R_Count'>");
-		indexContent.set(iR + 1, String.valueOf(countR));
-		
-		//System.out.println("* Count U: " + countU);
-		int iU = indexContent.indexOf("<td align=center id='U_Count'>");
-		indexContent.set(iU + 1, String.valueOf(countU));
-		
-		//System.out.println("* Count C: " + countC);
-		int iC = indexContent.indexOf("<td align=center id='C_Count'>");
-		indexContent.set(iC + 1, String.valueOf(countC));
-		
-		//System.out.println("* Count CR: " + countCR);
-		int iCR = indexContent.indexOf("<td align=center id='CR_Count'>");
-		indexContent.set(iCR + 1, String.valueOf(countCR));
-		
-		//System.out.println("* Count CC: " + countCC);
-		int iCC = indexContent.indexOf("<td align=center id='CC_Count'>");
-		indexContent.set(iCC + 1, String.valueOf(countCC));
-		
-		int totalCount = countRR + countR + countU + countC + countCR + countCC;
-		//System.out.println("* Total Count: " + totalCount);
-		int iTC = indexContent.indexOf("<td align=center id='Total_Count'>");
-		indexContent.set(iTC + 1, String.valueOf(totalCount) + "/" + String.valueOf(size));
 		
 		return indexContent;
 	}
