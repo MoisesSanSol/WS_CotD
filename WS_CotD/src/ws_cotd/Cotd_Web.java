@@ -22,9 +22,11 @@ public class Cotd_Web {
 
 		//Cotd_Web.createEmptyIndex();
 		
-		Cotd_Web.generateWebContentFromTemporal();
+		//Cotd_Web.generateWebContentFromTemporal();
 
-		Desktop.getDesktop().open(Cotd_Conf.getInstance().webFolder);
+		//Desktop.getDesktop().open(Cotd_Conf.getInstance().webFolder);
+		
+		Cotd_Web.updateNoImageColors("w58", null);
 		
 		System.out.println("*** Finished ***");
 	}
@@ -222,109 +224,112 @@ public class Cotd_Web {
 		Files.write(newFile.toPath(), newFileContent, StandardCharsets.UTF_8);
 	}
 	
-	/*private static void getIndexColors(String seriesRef) throws Exception{
+	private static void updateNoImageColors(String seriesRef, boolean[] colors) throws Exception{
+		
+		System.out.println("** Update No Image Colors");
 		
 		Cotd_Conf conf = Cotd_Conf.getInstance();
 		String seriesWebPath = conf.webFolder.getPath() + "\\" +  seriesRef + "\\";
 		String indexPath = seriesWebPath + "index.html";
-		//List<String> indexContent = new ArrayList<>(Files.readAllLines(new File(indexPath).toPath(), StandardCharsets.UTF_8));
-		Document doc = Jsoup.parse(new File(indexPath), "UTF-8");
 		
-		//System.out.println(doc.html());
+		ArrayList<String> indexContent = new ArrayList<String>(Files.readAllLines(new File(indexPath).toPath(), StandardCharsets.UTF_8));
+	
+		String currentColor = "Amarillo";
+		ArrayList<Integer> currentIndexes = new ArrayList<Integer>();
+		ArrayList<Integer> amarillo = new ArrayList<Integer>();
+		/*ArrayList<Integer> amarilloVerde = new ArrayList<Integer>();
+		ArrayList<Integer> verde = new ArrayList<Integer>();
+		ArrayList<Integer> verdeRojo = new ArrayList<Integer>();*/
+		ArrayList<Integer> amarilloRojo = new ArrayList<Integer>();
+		ArrayList<Integer> rojo = new ArrayList<Integer>();
+		ArrayList<Integer> rojoAzul = new ArrayList<Integer>();
+		ArrayList<Integer> azul = new ArrayList<Integer>();
 		
-		Elements images = doc.select("img");
-		for(Element image : images){
-			
-			String id = image.attr("id");
-			if(!id.contains("T")){
-				if(id.startsWith("pending")){
-					System.out.println(id.split("_")[2] + ": " + image.attr("src"));
+		for (int i = 0; i < indexContent.size(); i++){
+			String line = indexContent.get(i);
+			if(line.contains("img")){
+				System.out.println("** Image for: " + line.substring(line.lastIndexOf(">") + 1));
+				if(line.contains("href")){
+					String href = line.replaceAll(".+href='\\./(.+?)'.+", "$1");
+					File cardPage = new File(seriesWebPath + href);
+					String cardColor = Cotd_Web.getCardColor(cardPage);
+					System.out.println("* Color: " + cardColor);
+					if(cardColor.equals("Amarillo") && currentColor.equals("Amarillo")){
+						amarillo.addAll(currentIndexes);
+						currentIndexes.clear();
+					}
+					else if(cardColor.equals("Rojo") && currentColor.equals("Amarillo")){
+						amarilloRojo.addAll(currentIndexes);
+						currentColor = "Rojo";
+						currentIndexes.clear();
+					}
+					else if(cardColor.equals("Rojo") && currentColor.equals("Rojo")){
+						rojo.addAll(currentIndexes);
+						currentIndexes.clear();
+					}
+					else if(cardColor.equals("Azul") && currentColor.equals("Rojo")){
+						rojoAzul.addAll(currentIndexes);
+						currentColor = "Azul";
+						currentIndexes.clear();
+					}
 				}
 				else{
-					File card = new File(seriesWebPath + "\\cards\\" + id + ".html");
-					System.out.println(id.split("_")[1] + ": " + Cotd_Web.getCardColors(card));
+					System.out.println("* No Color.");
+					currentIndexes.add(i);
 				}
 			}
 		}
-	}
-	
-	private static String getCardColors(File card) throws Exception{
-		
-		String color = "desconocido";
-		
-		List<String> cardContent = new ArrayList<>(Files.readAllLines(card.toPath(), StandardCharsets.UTF_8));
-
-		String typeLine = cardContent.get(28);
-		color = typeLine.replaceAll("^.+? ", "").replaceAll("^(.+?), .+", "$1");
-		
-		return color;
-	}*/
-	
-	
-	private static void updateCompletionCount(String indexPath, int size) throws Exception{
-		
-		System.out.println("** Update Completion Count");
-		
-		List<String> indexContent = new ArrayList<>(Files.readAllLines(new File(indexPath).toPath(), StandardCharsets.UTF_8));
-	
-		int countC = 0;
-		int countU = 0;
-		int countR = 0;
-		int countRR = 0;
-		int countCC = 0;
-		int countCR = 0;
-		
-		for(int i = 0; i < indexContent.size(); i++){
-			if(indexContent.get(i).endsWith(" C")){
-				countC++;
-			}
-			if(indexContent.get(i).endsWith(" U")){
-				countU++;
-			}
-			if(indexContent.get(i).endsWith(" R")){
-				countR++;
-			}
-			if(indexContent.get(i).endsWith(" RR")){
-				countRR++;
-			}
-			if(indexContent.get(i).endsWith(" CC")){
-				countCC++;
-			}
-			if(indexContent.get(i).endsWith(" CR")){
-				countCR++;
+		azul.addAll(currentIndexes);
+		for (int i = 0; i < indexContent.size(); i++){
+			String line = indexContent.get(i);
+			if(line.contains("img")){
+				if(amarillo.contains(i)){
+					indexContent.set(i, line.replaceAll("no_image.*?\\.", "no_image_y."));
+				}
+				else if(amarilloRojo.contains(i)){
+					indexContent.set(i, line.replaceAll("no_image.*?\\.", "no_image_yr."));
+				}
+				else if(rojo.contains(i)){
+					indexContent.set(i, line.replaceAll("no_image.*?\\.", "no_image_r."));
+				}
+				else if(rojoAzul.contains(i)){
+					indexContent.set(i, line.replaceAll("no_image.*?\\.", "no_image_rb."));
+				}
+				else if(azul.contains(i)){
+					indexContent.set(i, line.replaceAll("no_image.*?\\.", "no_image_b."));
+				}
 			}
 		}
-		
-		System.out.println("* Count RR: " + countRR);
-		int iRR = indexContent.indexOf("<td align=center id='RR_Count'>");
-		indexContent.set(iRR + 1, String.valueOf(countRR));
-		
-		System.out.println("* Count R: " + countR);
-		int iR = indexContent.indexOf("<td align=center id='R_Count'>");
-		indexContent.set(iR + 1, String.valueOf(countR));
-		
-		System.out.println("* Count U: " + countU);
-		int iU = indexContent.indexOf("<td align=center id='U_Count'>");
-		indexContent.set(iU + 1, String.valueOf(countU));
-		
-		System.out.println("* Count C: " + countC);
-		int iC = indexContent.indexOf("<td align=center id='C_Count'>");
-		indexContent.set(iC + 1, String.valueOf(countC));
-		
-		System.out.println("* Count CR: " + countCR);
-		int iCR = indexContent.indexOf("<td align=center id='CR_Count'>");
-		indexContent.set(iCR + 1, String.valueOf(countCR));
-		
-		System.out.println("* Count CC: " + countCC);
-		int iCC = indexContent.indexOf("<td align=center id='CC_Count'>");
-		indexContent.set(iCC + 1, String.valueOf(countCC));
-		
-		int totalCount = countRR + countR + countU + countC + countCR + countCC;
-		System.out.println("* Total Count: " + totalCount);
-		int iTC = indexContent.indexOf("<td align=center id='Total_Count'>");
-		indexContent.set(iTC + 1, String.valueOf(totalCount) + "/" + String.valueOf(size));
+		/*if(currentColor.equals("Start")){
+		indexContent.set(i, line.replaceAll("no_image.+?\\.", "no_image_y."));
+	}
+	if(currentColor.equals("Azul")){
+		indexContent.set(i, line.replace("no_image.", "no_image_b."));
+	}*/
 		
 		Files.write(new File(indexPath).toPath(), indexContent, StandardCharsets.UTF_8);
+	}
+	
+	private static String getCardColor(File cardPage) throws Exception{
+		String color = "¿No Color?";
+		
+		ArrayList<String> pageContent = new ArrayList<String>(Files.readAllLines(cardPage.toPath(), StandardCharsets.UTF_8));
+		
+		String descLine = pageContent.get(28);
+		if(descLine.contains("Amarillo")){
+			color = "Amarillo";
+		}
+		else if(descLine.contains("Verde")){
+			color = "Verde";
+		}
+		else if(descLine.contains("Rojo")){
+			color = "Rojo";
+		}
+		else if(descLine.contains("Azul")){
+			color = "Azul";
+		}
+		
+		return color;
 	}
 	
 	private static List<String> getUpdatedIndexWithCompletionCount(List<String> indexContent, int size) throws Exception{
