@@ -29,6 +29,12 @@ public class Cotd_01_ExportImages {
 		//main.parseWsJpCotD("");
 		//main.parseWsJpExtraCotd();
 		
+		Cotd_02b_CreateTemplateFromImages extended = new Cotd_02b_CreateTemplateFromImages();
+
+		extended.createTemporalTemplateFile();
+		
+		Cotd_Utilities.openFileInNotepad(main.conf.fromImagesFile);
+		
 		Cotd_Utilities.openDefaultFolders();
 		
 		System.out.println("*** Finished ***");

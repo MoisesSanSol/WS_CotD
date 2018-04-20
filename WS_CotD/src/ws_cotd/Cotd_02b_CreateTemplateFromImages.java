@@ -214,7 +214,7 @@ public class Cotd_02b_CreateTemplateFromImages {
 		return clr;
 	}
 	
-	private void createTemporalTemplateFile() throws Exception{
+	public void createTemporalTemplateFile() throws Exception{
 		
 		System.out.println("** Create Temporal Template File");
 		

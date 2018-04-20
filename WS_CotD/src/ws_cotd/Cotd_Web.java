@@ -22,11 +22,10 @@ public class Cotd_Web {
 
 		//Cotd_Web.createEmptyIndex();
 		
-		//Cotd_Web.generateWebContentFromTemporal();
-
-		//Desktop.getDesktop().open(Cotd_Conf.getInstance().webFolder);
+		Cotd_Web.generateWebContentFromTemporal();
+		Cotd_Web.updateNoImageColors("w53", null);
 		
-		Cotd_Web.updateNoImageColors("w58", null);
+		Desktop.getDesktop().open(Cotd_Conf.getInstance().webFolder);
 		
 		System.out.println("*** Finished ***");
 	}
