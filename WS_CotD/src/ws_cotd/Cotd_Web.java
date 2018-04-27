@@ -23,7 +23,7 @@ public class Cotd_Web {
 		//Cotd_Web.createEmptyIndex();
 		
 		Cotd_Web.generateWebContentFromTemporal();
-		Cotd_Web.updateNoImageColors("w53", null);
+		//Cotd_Web.updateNoImageColors("s53", null);
 		
 		Desktop.getDesktop().open(Cotd_Conf.getInstance().webFolder);
 		
@@ -254,11 +254,11 @@ public class Cotd_Web {
 					String cardColor = Cotd_Web.getCardColor(cardPage);
 					System.out.println("* Color: " + cardColor);
 					if(cardColor.equals("Amarillo") && currentColor.equals("Amarillo")){
-						amarillo.addAll(currentIndexes);
+						//amarillo.addAll(currentIndexes);
 						currentIndexes.clear();
 					}
 					else if(cardColor.equals("Rojo") && currentColor.equals("Amarillo")){
-						amarilloRojo.addAll(currentIndexes);
+						//amarilloRojo.addAll(currentIndexes);
 						currentColor = "Rojo";
 						currentIndexes.clear();
 					}
@@ -267,7 +267,7 @@ public class Cotd_Web {
 						currentIndexes.clear();
 					}
 					else if(cardColor.equals("Azul") && currentColor.equals("Rojo")){
-						rojoAzul.addAll(currentIndexes);
+						//rojoAzul.addAll(currentIndexes);
 						currentColor = "Azul";
 						currentIndexes.clear();
 					}
@@ -278,7 +278,7 @@ public class Cotd_Web {
 				}
 			}
 		}
-		azul.addAll(currentIndexes);
+		//azul.addAll(currentIndexes);
 		for (int i = 0; i < indexContent.size(); i++){
 			String line = indexContent.get(i);
 			if(line.contains("img")){
