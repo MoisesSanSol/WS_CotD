@@ -53,6 +53,7 @@ public class Cotd_Web {
 			
 			fileContent.remove(0); // Salto de linea
 			String name = fileContent.remove(0);
+			String jpName = fileContent.remove(0);
 			String fullId = fileContent.remove(0);
 			String id = fullId.split(" ")[0];
 			String ref = id.split("-")[1];
@@ -83,7 +84,7 @@ public class Cotd_Web {
 			
 			templateContent.set(1, templateContent.get(1).replace("[Card Id]", id));
 			templateContent.set(12, templateContent.get(12).replace("[Ref]", ref));
-			templateContent.set(17, templateContent.get(17).replace("[Nombre]", name));
+			templateContent.set(17, templateContent.get(17).replace("[Nombre]", name + "\r\n<br>" + jpName));
 			templateContent.set(22, fullId);
 			templateContent.set(27, caract);
 			
@@ -246,7 +247,7 @@ public class Cotd_Web {
 		
 		for (int i = 0; i < indexContent.size(); i++){
 			String line = indexContent.get(i);
-			if(line.contains("img")){
+			if(line.contains("img") && !line.contains("TD") && !line.contains("PR")){
 				System.out.println("** Image for: " + line.substring(line.lastIndexOf(">") + 1));
 				if(line.contains("href")){
 					String href = line.replaceAll(".+href='\\./(.+?)'.+", "$1");
@@ -267,7 +268,7 @@ public class Cotd_Web {
 						currentIndexes.clear();
 					}
 					else if(cardColor.equals("Azul") && currentColor.equals("Rojo")){
-						//rojoAzul.addAll(currentIndexes);
+						rojoAzul.addAll(currentIndexes);
 						currentColor = "Azul";
 						currentIndexes.clear();
 					}
@@ -278,7 +279,7 @@ public class Cotd_Web {
 				}
 			}
 		}
-		//azul.addAll(currentIndexes);
+		azul.addAll(currentIndexes);
 		for (int i = 0; i < indexContent.size(); i++){
 			String line = indexContent.get(i);
 			if(line.contains("img")){
@@ -314,7 +315,7 @@ public class Cotd_Web {
 		
 		ArrayList<String> pageContent = new ArrayList<String>(Files.readAllLines(cardPage.toPath(), StandardCharsets.UTF_8));
 		
-		String descLine = pageContent.get(28);
+		String descLine = pageContent.get(29);
 		if(descLine.contains("Amarillo")){
 			color = "Amarillo";
 		}

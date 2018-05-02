@@ -48,6 +48,7 @@ public class Cotd_03b_CreateTemporalFileFromImages {
 		cardHeader.add(seriesHeader);
 		cardHeader.add("");
 		cardHeader.add("# Name goes here");
+		cardHeader.add("# Jp Name goes here");
 		cardHeader.add(seriesId);
 		
 		List<String> fromImagesContent = new ArrayList<>(Files.readAllLines(conf.fromImagesFile.toPath(), StandardCharsets.UTF_8));
@@ -96,6 +97,7 @@ public class Cotd_03b_CreateTemporalFileFromImages {
 			}
 
 		}
+		temporalContent.add("");
 		temporalContent.add("-");
 		
 		Files.write(conf.temporalFile.toPath(), temporalContent, StandardCharsets.UTF_8);
