@@ -13,6 +13,8 @@ public class Cotd_01_ExportImages {
 
 	private Cotd_Conf conf;
 	
+	private String specificPage = "https://ws-tcg.com/events/zenkokutaisen/";
+	
 	public Cotd_01_ExportImages(){
 		this.conf = Cotd_Conf.getInstance();
 	}
@@ -28,7 +30,6 @@ public class Cotd_01_ExportImages {
 		main.parseWsJpCotD();
 		
 		//main.parseWsEnCotD();
-		//main.parseWsJpCotD("");
 		//main.parseWsJpExtraCotd();
 		
 		Cotd_02b_CreateTemplateFromImages extended = new Cotd_02b_CreateTemplateFromImages();
@@ -64,7 +65,12 @@ public class Cotd_01_ExportImages {
 
 	private void parseWsJpCotD() throws Exception {
 		
-		this.parseWsJpCotD(this.conf.wsJpCotdUrl);
+		if(this.specificPage.equals("")){
+			this.parseWsJpCotD(this.conf.wsJpCotdUrl);
+		}
+		else{
+			this.parseWsJpCotD(this.specificPage);
+		}
 		
 	}
 	

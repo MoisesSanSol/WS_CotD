@@ -11,6 +11,8 @@ public class Cotd_03b_CreateTemporalFileFromImages {
 
 	private Cotd_Conf conf;
 	
+	private static boolean useGlobalFile = true;
+	
 	public Cotd_03b_CreateTemporalFileFromImages(){
 		this.conf = Cotd_Conf.getInstance();
 	}
@@ -20,7 +22,7 @@ public class Cotd_03b_CreateTemporalFileFromImages {
 		System.out.println("*** Starting ***");
 		
 		Cotd_03b_CreateTemporalFileFromImages main = new Cotd_03b_CreateTemporalFileFromImages();
-		main.generateTemporalFileFromImages(true);
+		main.generateTemporalFileFromImages(useGlobalFile);
 		
 		Cotd_Utilities.openFileInNotepad(main.conf.temporalFile);
 		
@@ -89,6 +91,7 @@ public class Cotd_03b_CreateTemporalFileFromImages {
 					}
 					cardHeader.add("");
 					cardHeader.add("# Name goes here");
+					cardHeader.add("# Jp Name goes here");
 					cardHeader.add(seriesId);
 				}
 			}
