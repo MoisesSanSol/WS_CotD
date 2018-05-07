@@ -112,4 +112,31 @@ public class CotdWeb_IndexHelper {
 		
 		return indexContent;
 	}
+	
+	public static void createEmptyIndex(String seriesFullId, String seriesName) throws Exception{
+		
+		String indexTemplateFilePath = conf.webFolder.getAbsolutePath() + "\\templates\\indexTemplate.html";
+		File indexTemplateFile = new File(indexTemplateFilePath);
+		ArrayList<String> indexContent = new ArrayList<String>(Files.readAllLines(indexTemplateFile.toPath(), StandardCharsets.UTF_8));
+
+		String seriesId = seriesFullId.split("/")[1].toLowerCase();
+		
+		for(int i = 0; i < indexContent.size(); i++){
+			
+			String line = indexContent.get(i);
+			
+			line = line.replace("SeriesIdRef", seriesId);
+			line = line.replace("SeriesIdFull", seriesFullId);
+			line = line.replace("{Series Name}", seriesName);
+			
+			indexContent.set(i, line);
+		}
+		
+		System.out.println("* Creating Index Page: " + seriesId);
+		
+		String indexFilePath = conf.webFolder.getAbsolutePath() + "/" + seriesId + "/index.html";
+		File indexFile = new File(indexFilePath);
+		Files.write(indexFile.toPath(), indexContent, StandardCharsets.UTF_8);	
+		
+	}
 }

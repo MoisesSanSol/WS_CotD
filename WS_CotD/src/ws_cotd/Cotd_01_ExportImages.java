@@ -13,7 +13,7 @@ public class Cotd_01_ExportImages {
 
 	private Cotd_Conf conf;
 	
-	private String specificPage = "https://ws-tcg.com/events/zenkokutaisen/";
+	private String specificPage = "";
 	
 	public Cotd_01_ExportImages(){
 		this.conf = Cotd_Conf.getInstance();

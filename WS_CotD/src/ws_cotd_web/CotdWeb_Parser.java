@@ -111,6 +111,25 @@ public class CotdWeb_Parser {
 		return series;
 	}
 	
+	public static HashMap<String,String> getSeriesFromCurrentSeries_Base() throws Exception{
+		
+		HashMap<String,String> series = new HashMap<String,String>();
+		
+		ArrayList<String> currentSeriesContent = new ArrayList<String>(Files.readAllLines(CotdWeb_Parser.conf.currentSeriesFile.toPath(), StandardCharsets.UTF_8));
+		
+		String seriesHeader = currentSeriesContent.remove(0);
+		
+		while(!seriesHeader.startsWith("*")) {
+			
+			String seriesFullId = currentSeriesContent.remove(0).split("-")[0];
+			String seriesName = seriesHeader.substring(seriesHeader.indexOf(": ") + 2); 
+			series.put(seriesFullId, seriesName);
+			seriesHeader = currentSeriesContent.remove(0);
+		}
+		
+		return series;
+	}
+	
 	public static String getDateFromTemporal() throws Exception{
 		
 		List<String> fileContent = new ArrayList<>(Files.readAllLines(CotdWeb_Parser.conf.temporalFile.toPath(), StandardCharsets.UTF_8));
