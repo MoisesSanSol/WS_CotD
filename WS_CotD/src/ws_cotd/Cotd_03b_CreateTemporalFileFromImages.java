@@ -135,14 +135,14 @@ public class Cotd_03b_CreateTemporalFileFromImages {
 		
 		if(firstGlobalLine.matches(".+\\((.+?)\\) (.+?) \\((.+?)\\/(.+)\\).*")){
 			header.set(2, "# Name goes here: " + firstGlobalLine.replaceAll(".+\\((.+?)\\) (.+?) \\((.+?)\\/(.+)\\).*", "$2"));
-			header.set(3, header.get(3) + " " + firstGlobalLine.replaceAll(".+\\((.+?)\\) (.+?) \\((.+?)\\/(.+)\\).*", "$1"));
-			header.set(5, firstGlobalLine.replaceAll(".+\\((.+?)\\) .+? \\((.+?)\\/(.+)\\).*", "Traits: <<$2>> y <<$3>>."));
+			header.set(4, header.get(4) + " " + firstGlobalLine.replaceAll(".+\\((.+?)\\) (.+?) \\((.+?)\\/(.+)\\).*", "$1"));
+			header.set(6, firstGlobalLine.replaceAll(".+\\((.+?)\\) .+? \\((.+?)\\/(.+)\\).*", "Traits: <<$2>> y <<$3>>."));
 			globalCardText.remove(0);
 		}
 		else if(firstGlobalLine.matches(".+\\((.+?)\\) (.+?) \\((.+?)\\).*")){
 			header.set(2, "# Name goes here: " + firstGlobalLine.replaceAll(".+\\((.+?)\\) (.+?) \\((.+?)\\).*", "$2"));
-			header.set(3, header.get(3) + " " + firstGlobalLine.replaceAll(".+\\((.+?)\\) (.+?) \\((.+?)\\).*", "$1"));
-			header.set(5, firstGlobalLine.replaceAll(".+\\((.+?)\\) .+? \\((.+?)\\).*", "Traits: <<$2>>."));
+			header.set(4, header.get(4) + " " + firstGlobalLine.replaceAll(".+\\((.+?)\\) (.+?) \\((.+?)\\).*", "$1"));
+			header.set(6, firstGlobalLine.replaceAll(".+\\((.+?)\\) .+? \\((.+?)\\).*", "Traits: <<$2>>."));
 			globalCardText.remove(0);
 		}
 		

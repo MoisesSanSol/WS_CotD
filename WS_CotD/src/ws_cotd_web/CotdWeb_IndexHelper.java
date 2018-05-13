@@ -33,8 +33,13 @@ public class CotdWeb_IndexHelper {
 							currentEntry = content;
 						}
 					}
-					String newEntry = fecha + "<a href='./cards/" + card.fileId + ".html'><img src='./images/" + card.fileId + ".png' width=100% height=auto id='" + card.fileId + "'></img></a>" + card.idLine;
-					indexContent.set(indexContent.indexOf(currentEntry), newEntry);
+					if(!currentEntry.isEmpty()){
+						String newEntry = fecha + "<a href='./cards/" + card.fileId + ".html'><img src='./images/" + card.fileId + ".png' width=100% height=auto id='" + card.fileId + "'></img></a>" + card.idLine;
+						indexContent.set(indexContent.indexOf(currentEntry), newEntry);
+					}
+					else{
+						System.out.println("* Card not found in index: " + card.id);
+					}
 				}
 			}
 
@@ -138,5 +143,49 @@ public class CotdWeb_IndexHelper {
 		File indexFile = new File(indexFilePath);
 		Files.write(indexFile.toPath(), indexContent, StandardCharsets.UTF_8);	
 		
+	}
+	
+	public static String searchIndexDate(CotdWeb_Card card) throws Exception{
+
+		String fecha = "Not Found";
+
+		String indexFilePath = conf.webFolder.getAbsolutePath() + "/" + card.seriesId + "/index.html";
+		File indexFile = new File(indexFilePath);
+
+		ArrayList<String> indexContent = new ArrayList<String>(Files.readAllLines(indexFile.toPath(), StandardCharsets.UTF_8));
+			
+		for(String line : indexContent) {
+			if(line.contains(card.id)) {
+				fecha = line.replaceAll("<+", "");
+			}
+		}
+		return fecha;
+	}
+	
+	public static void updateSeriesIndex_ShiftTdNumbers(String seriesId, int firstNumber) throws Exception{
+
+		String indexFilePath = conf.webFolder.getAbsolutePath() + "/" + seriesId + "/index.html";
+		File indexFile = new File(indexFilePath);
+		ArrayList<String> indexContent = new ArrayList<String>(Files.readAllLines(indexFile.toPath(), StandardCharsets.UTF_8));
+		
+		int count = 1;
+		String paddedCount = String.format("%02d", count);
+		String newPaddedCount = String.format("%02d", firstNumber);
+
+		for(String line : indexContent) {
+			if(line.contains("T" + paddedCount)) {
+				String newLine = line.replace(paddedCount, newPaddedCount);
+				indexContent.set(indexContent.indexOf(line), newLine);
+				count++;
+				firstNumber++;
+				paddedCount = String.format("%02d", count);
+				newPaddedCount = String.format("%02d", firstNumber);
+				
+			}
+		}
+		
+		System.out.println("* Updating Index Page: Shift Td Numbes for " + seriesId);
+		
+		Files.write(indexFile.toPath(), indexContent, StandardCharsets.UTF_8);
 	}
 }
