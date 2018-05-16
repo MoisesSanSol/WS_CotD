@@ -79,6 +79,10 @@ public class CotdWeb_Parser {
 			else if(abilityLine.startsWith("-%")) {
 				card.hasReferences = true;
 			}
+			else if(abilityLine.startsWith("-@")) {
+				card.isReferenced = true;
+				card.hasReferences = true;
+			}
 			
 			card.imageFileId = "jp_" + String.format("%02d", count);
 			count++;

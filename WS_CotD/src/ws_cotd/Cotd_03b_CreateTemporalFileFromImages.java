@@ -114,10 +114,12 @@ public class Cotd_03b_CreateTemporalFileFromImages {
 		
 		List<String> fromGlobalContent = new ArrayList<>(Files.readAllLines(conf.fromGlobalFile.toPath(), StandardCharsets.UTF_8));
 		
+		fromGlobalContent.remove(0); // Delete first series header
+		
 		while(!fromGlobalContent.isEmpty()){
 			ArrayList<String> cardText = new ArrayList<String>();
 			String textLine = fromGlobalContent.remove(0);
-			while(!textLine.equals("-")){
+			while(!textLine.startsWith("-")){
 				cardText.add(textLine);
 				textLine = fromGlobalContent.remove(0);
 			}
