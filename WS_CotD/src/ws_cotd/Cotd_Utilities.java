@@ -31,6 +31,12 @@ public class Cotd_Utilities{
 		desktop.open(conf.referencesFolder);
 	}
 	
+	public static void openFolder(File folder) throws Exception{
+		
+		Desktop desktop = Desktop.getDesktop();
+		desktop.open(folder);
+	}
+	
 	public static String indexDateToNoteDate(String indexDate) throws Exception{
 		
 		SimpleDateFormat inputFormatter = new SimpleDateFormat("dd/MM/yyyy");

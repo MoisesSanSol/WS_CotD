@@ -16,6 +16,7 @@ public class CotdWeb_Main {
 		
 		cards = CotdWeb_CardListHelper.escapeCardsForHtml(cards);
 		cards = CotdWeb_CardListHelper.updateReferences(cards);
+		cards = CotdWeb_CardListHelper.updateNotes(cards);
 		
 		CotdWeb_ImageHelper.copyImages(cards);
 		

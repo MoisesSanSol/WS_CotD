@@ -38,7 +38,13 @@ public class CotdWeb_Parser {
 			card.idLine = temporalContent.remove(0);
 			card.id = card.idLine.split(" ")[0];
 			card.seriesId = card.id.split("-")[0].split("/")[1].toLowerCase();
-			card.fileId = card.seriesId + "_" + card.id.split("-")[1];
+			String cardNumber = card.id.split("-")[1];
+			card.fileId = card.seriesId + "_" + cardNumber;
+			
+			if(cardNumber.length() == 1){
+				System.out.println("* Parsing card: " + card.id + " / " + card.name);
+				throw new Exception("Something has been overlooked in a card id.");
+			}
 			
 			String stats  = temporalContent.remove(0);
 			if(stats.startsWith("Personaje")){
@@ -61,6 +67,11 @@ public class CotdWeb_Parser {
 			ArrayList<String> notes = new ArrayList<String>();
 			
 			String abilityLine = temporalContent.remove(0);
+			if(abilityLine.contains("<>") || abilityLine.contains("''")){
+				System.out.println("* Parsing card: " + card.id + " / " + card.name);
+				System.out.println("* Ability: " + abilityLine);
+				throw new Exception("Something has been overlooked in a card ability.");
+			}
 			while(!abilityLine.startsWith("-")){
 				if(abilityLine.startsWith("#")) {
 					notes.add(abilityLine);

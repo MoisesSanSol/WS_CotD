@@ -19,6 +19,7 @@ public class CotdWeb_Card {
 	
 	boolean isReferenced;
 	boolean hasReferences;
+	boolean needsManualUpdate;
 	
 	public CotdWeb_Card() {
 		this.abilities = new ArrayList<String>();

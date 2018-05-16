@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import ws_cotd.Cotd_Conf;
+import ws_cotd.Cotd_Utilities;
 
 public class CotdWeb_PageHelper {
 
@@ -78,6 +79,12 @@ public class CotdWeb_PageHelper {
 		System.out.println("* Creating Web Page: " + card.fileId);
 		
 		Files.write(pageFile.toPath(), templateContent, StandardCharsets.UTF_8);
+		
+		if(card.needsManualUpdate){
+			System.out.println("* Web Page for card " + card.fileId + " needs to be manually updated.");
+			Cotd_Utilities.openFileInNotepad(pageFile);
+			Cotd_Utilities.openFolder(pageFile.getParentFile());
+		}
 		
 	}
 }
