@@ -8,9 +8,9 @@ import java.util.LinkedHashMap;
 
 import ws_cotd_web.CotdWeb_Parser;
 
-public class Cotd_Parser {
+public class Cotd_CurrentSeries {
 
-	public static LinkedHashMap<String,String> getSeriesFromCurrentSeries_Raw() throws Exception{
+	public static LinkedHashMap<String,String> getCurrentSeries_Raw() throws Exception{
 		
 		LinkedHashMap<String,String> series = new LinkedHashMap<String,String>();
 		

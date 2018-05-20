@@ -63,7 +63,7 @@ public class Cotd_01_ExportImages {
 		}
 	}*/
 
-	private void parseWsJpCotD() throws Exception {
+	public void parseWsJpCotD() throws Exception {
 		
 		if(this.specificPage.equals("")){
 			this.parseWsJpCotD(this.conf.wsJpCotdUrl);
@@ -122,7 +122,7 @@ public class Cotd_01_ExportImages {
 		}*/
 	}
 
-	private void cleanImagesFolder() throws Exception {
+	public void cleanImagesFolder() throws Exception {
 		
 		File[] listOfFiles = this.conf.imagesFolder.listFiles();
 

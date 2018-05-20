@@ -13,7 +13,7 @@ public class Cotd_FromGlobal {
 	public static void createTemplate() throws Exception{
 
 		ArrayList<String> templateContent = new ArrayList<String>();
-		ArrayList<String> series = new ArrayList<String>(Cotd_Parser.getSeriesFromCurrentSeries_Raw().keySet());
+		ArrayList<String> series = new ArrayList<String>(Cotd_CurrentSeries.getCurrentSeries_Raw().keySet());
 		
 		for(String serie : series) {
 			
