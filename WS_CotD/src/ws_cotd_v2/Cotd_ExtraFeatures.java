@@ -1,12 +1,21 @@
 package ws_cotd_v2;
 
+import java.io.File;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+
+import org.apache.commons.io.FileUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import ws_cotd.Cotd_Conf;
 import ws_cotd.Cotd_Utilities;
@@ -21,8 +30,9 @@ public static void main(String[] args) throws Exception{
 		System.out.println("*** Starting ***");
 		
 		//Cotd_ExtraFeatures.pastCotdNotesForSps();
-		Cotd_ExtraFeatures.transferSeriesSeparationFromGlobalToImages();
+		//Cotd_ExtraFeatures.transferSeriesSeparationFromGlobalToImages();
 		//Cotd_ExtraFeatures.insertSeparatorsInFromGlobal();
+		Cotd_ExtraFeatures.fillPowerFromWsblog();
 		
 		System.out.println("*** Finished ***");
 	}
@@ -43,9 +53,9 @@ public static void main(String[] args) throws Exception{
 						+ card.name
 						+ "' ("
 						+ card.id
-						+ ") fue ya carta del d�a el "
+						+ ") fue ya carta del día el "
 						+ noteDate
-						+ ", la de hoy es la versi�n SP.";
+						+ ", la de hoy es la versión SP.";
 				System.out.println(note);
 			}
 		}
@@ -123,4 +133,127 @@ public static void main(String[] args) throws Exception{
 		
 		Files.write(conf.fromGlobalFile.toPath(), fromGlobalContent, StandardCharsets.UTF_8);
 	}
+	
+	
+	public static void fillPowerFromWsblog() throws Exception{
+		
+		ArrayList<String> jpCardNames = Cotd_ExtraFeatures.getJpCardNames();
+		HashMap<String,String> cardPowers = Cotd_ExtraFeatures.getCardPowers(jpCardNames);
+		Cotd_ExtraFeatures.updateTemporalWithPowers(cardPowers);
+	}
+	
+	public static ArrayList<String> getJpCardNames() throws Exception{
+		
+		ArrayList<String> jpCardNames = new ArrayList<String>();
+		
+		Cotd_Conf conf = Cotd_Conf.getInstance();
+		
+		ArrayList<String> temporalContent = new ArrayList<String>(Files.readAllLines(conf.temporalFile.toPath(), StandardCharsets.UTF_8));
+		
+		temporalContent.remove(0); // Separador
+		temporalContent.remove(0); // Fecha
+		
+		String linea = "";
+		while(!linea.startsWith("-")){
+			linea = temporalContent.remove(0);
+		}
+		
+		while(!temporalContent.isEmpty()){
+			
+			temporalContent.remove(0); // Salto de linea
+			temporalContent.remove(0); // Nombre
+			String jpName = temporalContent.remove(0);
+			temporalContent.remove(0); // Id
+			String stats  = temporalContent.remove(0);
+			if(stats.startsWith("Personaje")){
+				jpCardNames.add(jpName);
+				System.out.println("Found card jp name: " + jpName);
+			}
+			String nextLines = temporalContent.remove(0);
+			while(!nextLines.startsWith("-")){
+				nextLines = temporalContent.remove(0);
+			}
+		}
+		return jpCardNames;
+	}
+	
+	public static HashMap<String,String> getCardPowers(ArrayList<String> jpCardNames) throws Exception{
+		
+		HashMap<String,String> cardPowers = new HashMap<String,String>();
+		
+		String wsblogUrl = "http://ws.blog.jp/";
+		
+		Document doc = Jsoup.connect(wsblogUrl).maxBodySize(0).get();
+		
+		//System.out.println(doc.html());
+		
+		for(String jpName : jpCardNames){
+			/* If img divs are broken
+			Element img = doc.select("img[alt=" + jpName + "]").first();
+			if(img != null){
+				System.out.println("Found img for jp name: " + jpName);
+				Element brokenDiv = img.parent().parent();
+				Element statsDiv = brokenDiv.nextElementSibling();
+				System.out.println("Found stat line: " + statsDiv.text());
+				String[] stats = statsDiv.text().split("　"); 
+				String power = stats[0].split("/")[2];
+				System.out.println("Splitted power as: " + power);
+				cardPowers.put(jpName, power);
+			}*/
+			Element bold = doc.select("b:contains(" + jpName + ")").first();
+			if(bold != null){
+				System.out.println("Found bold for jp name: " + jpName);
+				String[] splitNameAndStats = bold.html().split("<br>");
+				String statsLine = splitNameAndStats[1];
+				System.out.println("Found stat line: " + statsLine);
+				String[] stats = statsLine.split("　"); 
+				String power = stats[0].split("/")[2];
+				System.out.println("Splitted power as: " + power);
+				cardPowers.put(jpName, power);
+			}
+		}
+		return cardPowers;
+	}
+	
+	public static void updateTemporalWithPowers(HashMap<String,String> cardPowers) throws Exception{
+		
+		Cotd_Conf conf = Cotd_Conf.getInstance();
+		
+		ArrayList<String> temporalContent = new ArrayList<String>(Files.readAllLines(conf.temporalFile.toPath(), StandardCharsets.UTF_8));
+		ArrayList<String> newTemporalContent = new ArrayList<String>();
+		
+		newTemporalContent.add(temporalContent.remove(0)); // Separador
+		newTemporalContent.add(temporalContent.remove(0)); // Fecha
+
+		String linea = "";
+		while(!linea.startsWith("-")){
+			linea = temporalContent.remove(0);
+			newTemporalContent.add(linea);
+		}
+		
+		while(!temporalContent.isEmpty()){
+			
+			newTemporalContent.add(temporalContent.remove(0)); // Salto de linea
+			newTemporalContent.add(temporalContent.remove(0)); // Nombre
+			String jpName = temporalContent.remove(0);
+			newTemporalContent.add(jpName);
+			newTemporalContent.add(temporalContent.remove(0)); // Id
+			String stats  = temporalContent.remove(0);
+			
+			if(cardPowers.containsKey(jpName)){
+				stats = stats.replace(" 00,", " " + cardPowers.get(jpName) + ",");
+			}
+			
+			newTemporalContent.add(stats);
+			String nextLines = temporalContent.remove(0);
+			newTemporalContent.add(nextLines);
+			while(!nextLines.startsWith("-")){
+				nextLines = temporalContent.remove(0);
+				newTemporalContent.add(nextLines);
+			}
+		}
+		
+		Files.write(conf.temporalFile.toPath(), newTemporalContent, StandardCharsets.UTF_8);
+	}
+	
 }

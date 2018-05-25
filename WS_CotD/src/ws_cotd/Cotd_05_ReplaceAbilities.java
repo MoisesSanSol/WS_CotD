@@ -26,7 +26,7 @@ public class Cotd_05_ReplaceAbilities {
 		System.out.println("*** Finished ***");
 	}
 	
-	private void replaceAbility() throws Exception{
+	public void replaceAbility() throws Exception{
 		
 		System.out.println("** Replace Abilities -> Temporal File");
 		

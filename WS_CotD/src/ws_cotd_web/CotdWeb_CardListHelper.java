@@ -77,7 +77,7 @@ public class CotdWeb_CardListHelper {
 				if(card.notes.get(i).startsWith("##")){
 
 					String referencedCardName = card.notes.get(i).replaceAll(".+?'(.+?)' .+", "$1");
-					String referencedCardId = card.notes.get(i).replaceAll(".+?\\((.+?)\\).+", "$1");
+					String referencedCardId = card.notes.get(i).replaceAll(".+? \\((.+?)\\) .+", "$1");
 					String referencedCardFileId = referencedCardId.split("-")[0].split("/")[1].toLowerCase() + "_" + referencedCardId.split("-")[1];
 					
 					String updatedNote =  "<a href='./" + referencedCardFileId + ".html'>" + referencedCardName + "</a>\r\n";

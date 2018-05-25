@@ -29,7 +29,7 @@ public class Cotd_03b_CreateTemporalFileFromImages {
 		System.out.println("*** Finished ***");
 	}
 	
-	private void generateTemporalFileFromImages(boolean cardTextFromGlobal) throws Exception{
+	public void generateTemporalFileFromImages(boolean cardTextFromGlobal) throws Exception{
 		
 		System.out.println("** Generate Temporal File From Images");
 		

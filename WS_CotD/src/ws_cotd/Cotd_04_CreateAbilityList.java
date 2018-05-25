@@ -26,7 +26,7 @@ public class Cotd_04_CreateAbilityList {
 		System.out.println("*** Finished ***");
 	}
 	
-	private void createAbilityList() throws Exception{
+	public void createAbilityList() throws Exception{
 	
 		System.out.println("** Generate Abilities File");
 		
