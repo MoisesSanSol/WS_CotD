@@ -203,13 +203,19 @@ public static void main(String[] args) throws Exception{
 			Element bold = doc.select("b:contains(" + jpName + ")").first();
 			if(bold != null){
 				System.out.println("Found bold for jp name: " + jpName);
-				String[] splitNameAndStats = bold.html().split("<br>");
-				String statsLine = splitNameAndStats[1];
-				System.out.println("Found stat line: " + statsLine);
-				String[] stats = statsLine.split("　"); 
-				String power = stats[0].split("/")[2];
-				System.out.println("Splitted power as: " + power);
-				cardPowers.put(jpName, power);
+				System.out.println("Bold outer html: " + bold.outerHtml());
+				if(bold.html().matches("\\d+/\\d+/\\d+")){
+					String[] splitNameAndStats = bold.html().split("<br>");
+					String statsLine = splitNameAndStats[1];
+					System.out.println("Found stat line: " + statsLine);
+					String[] stats = statsLine.split("　"); 
+					String power = stats[0].split("/")[2];
+					System.out.println("Splitted power as: " + power);
+					cardPowers.put(jpName, power);
+				}
+				else{
+					System.out.println("This has no stats line.");
+				}
 			}
 		}
 		return cardPowers;

@@ -87,4 +87,29 @@ public class CotdWeb_PageHelper {
 		}
 		
 	}
+	
+	public static String getCardColor(File cardPage) throws Exception{
+		String color = "¿No Color?";
+		
+		ArrayList<String> pageContent = new ArrayList<String>(Files.readAllLines(cardPage.toPath(), StandardCharsets.UTF_8));
+		
+		int index = pageContent.indexOf("<td id='Stats'>");
+		if(index != -1){
+			String statsLine = pageContent.get(index + 1);
+			if(statsLine.contains("Amarillo")){
+				color = "Amarillo";
+			}
+			else if(statsLine.contains("Verde")){
+				color = "Verde";
+			}
+			else if(statsLine.contains("Rojo")){
+				color = "Rojo";
+			}
+			else if(statsLine.contains("Azul")){
+				color = "Azul";
+			}
+		}
+		
+		return color;
+	}
 }

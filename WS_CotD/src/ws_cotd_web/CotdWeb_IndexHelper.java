@@ -4,9 +4,11 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 import ws_cotd.Cotd_Conf;
+import ws_cotd.Cotd_Web;
 
 public class CotdWeb_IndexHelper {
 
@@ -87,32 +89,39 @@ public class CotdWeb_IndexHelper {
 			
 			//System.out.println("* Count RR: " + countRR);
 			int iRR = indexContent.indexOf("<td align=center id='RR_Count'>");
-			indexContent.set(iRR + 1, String.valueOf(countRR));
+			String totalRR_Count = indexContent.get(iRR + 1).split("/")[1];
+			indexContent.set(iRR + 1, String.valueOf(countRR) + "/" + totalRR_Count);
 			
 			//System.out.println("* Count R: " + countR);
 			int iR = indexContent.indexOf("<td align=center id='R_Count'>");
-			indexContent.set(iR + 1, String.valueOf(countR));
+			String totalR_Count = indexContent.get(iR + 1).split("/")[1];
+			indexContent.set(iR + 1, String.valueOf(countR) + "/" + totalR_Count);
 			
 			//System.out.println("* Count U: " + countU);
 			int iU = indexContent.indexOf("<td align=center id='U_Count'>");
-			indexContent.set(iU + 1, String.valueOf(countU));
+			String totalU_Count = indexContent.get(iU + 1).split("/")[1];
+			indexContent.set(iU + 1, String.valueOf(countU) + "/" + totalU_Count);
 			
 			//System.out.println("* Count C: " + countC);
 			int iC = indexContent.indexOf("<td align=center id='C_Count'>");
-			indexContent.set(iC + 1, String.valueOf(countC));
+			String totalC_Count = indexContent.get(iC + 1).split("/")[1];
+			indexContent.set(iC + 1, String.valueOf(countC) + "/" + totalC_Count);
 			
 			//System.out.println("* Count CR: " + countCR);
 			int iCR = indexContent.indexOf("<td align=center id='CR_Count'>");
-			indexContent.set(iCR + 1, String.valueOf(countCR));
+			String totalCR_Count = indexContent.get(iCR + 1).split("/")[1];
+			indexContent.set(iCR + 1, String.valueOf(countCR) + "/" + totalCR_Count);
 			
 			//System.out.println("* Count CC: " + countCC);
 			int iCC = indexContent.indexOf("<td align=center id='CC_Count'>");
-			indexContent.set(iCC + 1, String.valueOf(countCC));
+			String totalCC_Count = indexContent.get(iCC + 1).split("/")[1];
+			indexContent.set(iCC + 1, String.valueOf(countCC) + "/" + totalCC_Count);
 			
 			int totalCount = countRR + countR + countU + countC + countCR + countCC;
 			//System.out.println("* Total Count: " + totalCount);
 			int iTC = indexContent.indexOf("<td align=center id='Total_Count'>");
-			indexContent.set(iTC + 1, String.valueOf(totalCount) + "/" + String.valueOf(size));
+			String total_Count = indexContent.get(iTC + 1).split("/")[1];
+			indexContent.set(iTC + 1, String.valueOf(totalCount) + "/" + total_Count);
 		}
 		
 		return indexContent;
@@ -187,5 +196,138 @@ public class CotdWeb_IndexHelper {
 		System.out.println("* Updating Index Page: Shift Td Numbes for " + seriesId);
 		
 		Files.write(indexFile.toPath(), indexContent, StandardCharsets.UTF_8);
+	}
+	
+	public static HashMap<String,ArrayList<Integer>> getCardColors(String seriesId) throws Exception{
+		
+		HashMap<String,ArrayList<Integer>> colorIndexes = new HashMap<String,ArrayList<Integer>>();
+		
+		ArrayList<Integer> amarillas = new ArrayList<Integer>();
+		ArrayList<Integer> verdes = new ArrayList<Integer>();
+		ArrayList<Integer> rojas = new ArrayList<Integer>();
+		ArrayList<Integer> azules = new ArrayList<Integer>();
+
+		Cotd_Conf conf = Cotd_Conf.getInstance();
+		
+		String seriesWebPath = conf.webFolder.getPath() + "\\" +  seriesId + "\\";
+		String indexPath = seriesWebPath + "index.html";
+		
+		ArrayList<String> indexContent = new ArrayList<String>(Files.readAllLines(new File(indexPath).toPath(), StandardCharsets.UTF_8));
+		
+		for (int i = 0; i < indexContent.size(); i++){
+			
+			String line = indexContent.get(i);
+			
+			if(line.contains("img") && !line.contains("TD") && !line.contains("PR")){
+				
+				//System.out.println("** Image for: " + line.substring(line.lastIndexOf(">") + 1));
+				
+				if(line.contains("href")){
+					
+					String href = line.replaceAll(".+href='\\./(.+?)'.+", "$1");
+					Integer cardNumber =  Integer.parseInt(line.replaceAll(".+href='\\./cards/.+?_(\\d+?).html'.+", "$1"));
+					File cardPage = new File(seriesWebPath + href);
+					
+					String cardColor = CotdWeb_PageHelper.getCardColor(cardPage);
+					System.out.println("* Color: " + cardColor);
+					
+					if(cardColor.equals("Amarillo")){
+						amarillas.add(cardNumber);
+					}
+					else if(cardColor.equals("Verde")){
+						verdes.add(cardNumber);
+					}
+					else if(cardColor.equals("Rojo")){
+						rojas.add(cardNumber);
+					}
+					else if(cardColor.equals("Azul")){
+						azules.add(cardNumber);
+					}
+				}
+			}
+		}
+		
+		colorIndexes.put("Amarillo", amarillas);
+		colorIndexes.put("Verde", verdes);
+		colorIndexes.put("Rojo", rojas);
+		colorIndexes.put("Azul", azules);
+		
+		return colorIndexes;
+	}
+	
+	public static void updateIndexPendingCardsColor(String seriesId) throws Exception{
+		
+		HashMap<String,ArrayList<Integer>> colorIndexes = CotdWeb_IndexHelper.getCardColors("w59");		
+		
+		boolean hayAmarillo = colorIndexes.get("Amarillo").size() > 0;
+		boolean hayVerde = colorIndexes.get("Verde").size() > 0;
+		boolean hayRojo = colorIndexes.get("Rojo").size() > 0;
+		boolean hayAzul = colorIndexes.get("Azul").size() > 0;
+		
+		for(String color : colorIndexes.keySet()){
+			System.out.println("Indexes for color: " + color);
+			for(int index : colorIndexes.get(color)){
+				System.out.println("Index: " + index);
+			}
+		}
+		
+		Cotd_Conf conf = Cotd_Conf.getInstance();
+		
+		String seriesWebPath = conf.webFolder.getPath() + "\\" +  seriesId + "\\";
+		String indexPath = seriesWebPath + "index.html";
+		
+		ArrayList<String> indexContent = new ArrayList<String>(Files.readAllLines(new File(indexPath).toPath(), StandardCharsets.UTF_8));
+		
+		int maxAmarillo = 0;
+		if(hayAmarillo){
+			maxAmarillo = Collections.max(colorIndexes.get("Amarillo"));
+			indexContent = CotdWeb_IndexHelper.updateIndexPendingCardsColor("y", 1, maxAmarillo, indexContent);
+		}
+		int maxVerde = -1;
+		if(hayVerde){
+			int minVerde = Collections.min(colorIndexes.get("Verde"));
+			maxVerde = Collections.max(colorIndexes.get("Verde"));
+			indexContent = CotdWeb_IndexHelper.updateIndexPendingCardsColor("g", minVerde, maxVerde, indexContent);
+			indexContent = CotdWeb_IndexHelper.updateIndexPendingCardsColor("yg", maxAmarillo, minVerde, indexContent);
+		}
+		int minAzul = 100;
+		if(hayAzul){
+			minAzul = Collections.min(colorIndexes.get("Azul"));
+			indexContent = CotdWeb_IndexHelper.updateIndexPendingCardsColor("b", minAzul, 100, indexContent);
+		}
+		int minRojo = -1;
+		if(hayRojo){
+			minRojo = Collections.min(colorIndexes.get("Rojo"));
+			int maxRojo = Collections.max(colorIndexes.get("Rojo"));
+			indexContent = CotdWeb_IndexHelper.updateIndexPendingCardsColor("r", minRojo, maxRojo, indexContent);
+			indexContent = CotdWeb_IndexHelper.updateIndexPendingCardsColor("rb", maxRojo, minAzul, indexContent);
+		}
+		
+		if(hayVerde && hayRojo){
+			indexContent = CotdWeb_IndexHelper.updateIndexPendingCardsColor("gr", maxVerde, minRojo, indexContent);
+		}		
+		
+		if(hayVerde && !hayRojo){
+			indexContent = CotdWeb_IndexHelper.updateIndexPendingCardsColor("grb", maxVerde, minAzul, indexContent);
+		}	
+		
+		Files.write(new File(indexPath).toPath(), indexContent, StandardCharsets.UTF_8);		
+	}
+	
+	public static ArrayList<String> updateIndexPendingCardsColor(String colorRef, int min, int max, ArrayList<String> indexContent) throws Exception{
+		
+		for (int i = 0; i < indexContent.size(); i++){
+			String line = indexContent.get(i);
+			if(line.contains("no_image")){
+				String mainSeriesId = ".+'pending_.+?_(\\d+?)'.+";
+				if(line.matches(mainSeriesId)){
+					Integer cardNumber =  Integer.parseInt(line.replaceAll(mainSeriesId, "$1"));
+					if(cardNumber >= min && cardNumber <= max){
+						indexContent.set(i, line.replaceAll("no_image.*?\\.", "no_image_" + colorRef + "."));
+					}
+				}
+			}
+		}
+		return indexContent;
 	}
 }
