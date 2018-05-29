@@ -186,6 +186,7 @@ public static void main(String[] args) throws Exception{
 		Document doc = Jsoup.connect(wsblogUrl).maxBodySize(0).get();
 		
 		//System.out.println(doc.html());
+		String power = null;
 		
 		for(String jpName : jpCardNames){
 			/* If img divs are broken
@@ -203,20 +204,34 @@ public static void main(String[] args) throws Exception{
 			Element bold = doc.select("b:contains(" + jpName + ")").first();
 			if(bold != null){
 				System.out.println("Found bold for jp name: " + jpName);
-				System.out.println("Bold outer html: " + bold.outerHtml());
-				if(bold.html().matches("\\d+/\\d+/\\d+")){
+				// System.out.println("Bold outer html: " + bold.outerHtml());
+				// Name grouped with stats line
+				if(bold.html().matches(".+?\\d+/\\d+/\\d+.+?")){
 					String[] splitNameAndStats = bold.html().split("<br>");
 					String statsLine = splitNameAndStats[1];
 					System.out.println("Found stat line: " + statsLine);
 					String[] stats = statsLine.split("　"); 
-					String power = stats[0].split("/")[2];
+					power = stats[0].split("/")[2];
 					System.out.println("Splitted power as: " + power);
-					cardPowers.put(jpName, power);
 				}
-				else{
-					System.out.println("This has no stats line.");
+				// Name grouped with img, div sibling of stats line
+				else if(bold.parent().tagName().equals("div") && bold.html().contains("img")){
+					Element statsDiv = bold.parent().nextElementSibling();
+					//System.out.println("statsDiv text: " + statsDiv.text());
+					if(statsDiv.text().matches("\\d+/\\d+/\\d+.+")){
+						String[] stats = statsDiv.text().split("　"); 
+						power = stats[0].split("/")[2];
+					}
 				}
 			}
+			
+			if(power != null){
+				cardPowers.put(jpName, power);
+			}
+			else{
+				System.out.println("This has no stats line (or most probably we were not able to find it).");
+			}
+			
 		}
 		return cardPowers;
 	}

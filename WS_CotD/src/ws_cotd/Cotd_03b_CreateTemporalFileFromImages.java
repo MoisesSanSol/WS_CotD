@@ -147,6 +147,57 @@ public class Cotd_03b_CreateTemporalFileFromImages {
 			header.set(6, firstGlobalLine.replaceAll(".+\\((.+?)\\) .+? \\((.+?)\\).*", "Traits: <<$2>>."));
 			globalCardText.remove(0);
 		}
+		else if(firstGlobalLine.startsWith("CX")){
+			header.set(2, "# Name goes here: " + firstGlobalLine);
+			if(firstGlobalLine.contains("Wind")){
+				header.set(5, "Climax Amarillo, Trigger: 1 Soul, Return.");
+				header.add("(Return: Cuando esta carta es revelada durante un Trigger Check, puedes escoger un personaje de tu oponente y devolverlo a su mano.)");
+				globalCardText.clear();
+				globalCardText.add("[CONT] Todos tus personajes ganan +1000 de Poder y +1 Soul.");
+			}
+			if(firstGlobalLine.contains("Shot")){
+				header.set(5, "Climax Amarillo, Trigger: 1 Soul, Shot.");
+				header.add("(Shot: Cuando el próximo daño hecho por el personaje cuyo Trigger Check reveló esta carta sea cancelado, puedes hacer un daño a tu oponente.)");
+				globalCardText.clear();
+				globalCardText.add("[CONT] Todos tus personajes ganan +1000 de Poder y +1 Soul.");
+			}
+				if(firstGlobalLine.contains("Treasure")){
+				header.set(5, "Climax Verde, Trigger: Treasure.");
+				header.add("(Treasure: Cuando esta carta es revelada durante un Trigger Check, pon esta carta en tu mano, y puedes poner la carta superior de tu Deck en tu Stock.)");
+				globalCardText.clear();
+				globalCardText.add("[CONT] Todos tus personajes ganan +1000 de Poder y +1 Soul.");
+			}
+			if(firstGlobalLine.contains("Bag")){
+				header.set(5, "Climax Verde, Trigger: Pool.");
+				header.add("(Pool: Cuando esta carta es revelada durante un Trigger Check, puedes poner la carta superior de tu Deck en tu Stock.)");
+				globalCardText.clear();
+				globalCardText.add("[CONT] Todos tus personajes ganan +1000 de Poder y +1 Soul.");
+			}
+			if(firstGlobalLine.contains("Gate")){
+				header.set(5, "Climax Rojo, Trigger: Comeback.");
+				header.add("(Comeback: Cuando esta carta es revelada durante un Trigger Check, puedes poner 1 personaje de tu Waiting Room en tu mano.)");
+				globalCardText.clear();
+				globalCardText.add("[CONT] Todos tus personajes ganan +1000 de Poder y +1 Soul.");
+			}
+			if(firstGlobalLine.contains("Standby")){
+				header.set(5, "Climax Rojo, Trigger: Standby, 1 Soul.");
+				header.add("(Standby: Cuando esta carta es revelada durante un Trigger Check, puedes escoger 1 personaje de Nivel igual o inferior a tu Nivel más 1 en tu Waiting Room y ponerlo en cualquier posición de tu Stage en [Rest].)");
+				globalCardText.clear();
+				globalCardText.add("[AUTO] Cuando esta carta es puesta de tu mano en tu área de Climax, realiza el efecto del icono de Trigger 'Standby'.");
+			}
+			if(firstGlobalLine.contains("Book")){
+				header.set(5, "Climax Azul, Trigger: Book.");
+				header.add("(Book: Cuando esta carta es revelada durante un Trigger Check, puedes robar una carta.)");
+				globalCardText.clear();
+				globalCardText.add("[CONT] Todos tus personajes ganan +1000 de Poder y +1 Soul.");
+			}
+			if(firstGlobalLine.contains("Pants")){
+				header.set(5, "Climax Azul, Trigger: Gate, 1 Soul.");
+				header.add("(Gate: Cuando esta carta es revelada durante un Trigger Check, puedes poner 1 Climax de tu Waiting Room en tu mano.)");
+				globalCardText.clear();
+				globalCardText.add("[CONT] Todos tus personajes ganan +1000 de Poder y +1 Soul.");
+			}
+		}
 		
 		cardText.addAll(header);
 		cardText.add("");
