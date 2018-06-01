@@ -229,7 +229,7 @@ public class CotdWeb_IndexHelper {
 					File cardPage = new File(seriesWebPath + href);
 					
 					String cardColor = CotdWeb_PageHelper.getCardColor(cardPage);
-					System.out.println("* Color: " + cardColor);
+					//System.out.println("* Color: " + cardColor);
 					
 					if(cardColor.equals("Amarillo")){
 						amarillas.add(cardNumber);
@@ -257,6 +257,8 @@ public class CotdWeb_IndexHelper {
 	
 	public static void updateIndexPendingCardsColor(String seriesId) throws Exception{
 		
+		System.out.println("Updating index with colors for series: " + seriesId);
+		
 		HashMap<String,ArrayList<Integer>> colorIndexes = CotdWeb_IndexHelper.getCardColors("w59");		
 		
 		boolean hayAmarillo = colorIndexes.get("Amarillo").size() > 0;
@@ -264,12 +266,12 @@ public class CotdWeb_IndexHelper {
 		boolean hayRojo = colorIndexes.get("Rojo").size() > 0;
 		boolean hayAzul = colorIndexes.get("Azul").size() > 0;
 		
-		for(String color : colorIndexes.keySet()){
+		/*for(String color : colorIndexes.keySet()){
 			System.out.println("Indexes for color: " + color);
 			for(int index : colorIndexes.get(color)){
 				System.out.println("Index: " + index);
 			}
-		}
+		}*/
 		
 		Cotd_Conf conf = Cotd_Conf.getInstance();
 		

@@ -33,10 +33,18 @@ public static void main(String[] args) throws Exception{
 		//Cotd_ExtraFeatures.transferSeriesSeparationFromGlobalToImages();
 		//Cotd_ExtraFeatures.insertSeparatorsInFromGlobal();
 		Cotd_ExtraFeatures.fillPowerFromWsblog();
+		Cotd_ExtraFeatures.checkCardsMissingFillInParts();
 		
 		System.out.println("*** Finished ***");
 	}
 	
+	public static void checkCardsMissingFillInParts() throws Exception{
+	
+		// The parser already does this checking.
+		CotdWeb_Parser.getCardsFromTemporal();
+		
+	}
+
 	public static void pastCotdNotesForSps() throws Exception{
 		
 		ArrayList<CotdWeb_Card> cards = CotdWeb_Parser.getCardsFromTemporal();
@@ -204,15 +212,11 @@ public static void main(String[] args) throws Exception{
 			Element bold = doc.select("b:contains(" + jpName + ")").first();
 			if(bold != null){
 				System.out.println("Found bold for jp name: " + jpName);
-				// System.out.println("Bold outer html: " + bold.outerHtml());
+				//System.out.println("Bold html: " + bold.html());
 				// Name grouped with stats line
-				if(bold.html().matches(".+?\\d+/\\d+/\\d+.+?")){
-					String[] splitNameAndStats = bold.html().split("<br>");
-					String statsLine = splitNameAndStats[1];
-					System.out.println("Found stat line: " + statsLine);
-					String[] stats = statsLine.split("　"); 
-					power = stats[0].split("/")[2];
-					System.out.println("Splitted power as: " + power);
+				if(bold.html().matches(".+?\\d+/\\d+/\\d+　.+")){
+					power = bold.html().replaceAll(".+?\\d+/\\d+/(\\d+)　.+", "$1");
+					System.out.println("Found power as: " + power);
 				}
 				// Name grouped with img, div sibling of stats line
 				else if(bold.parent().tagName().equals("div") && bold.html().contains("img")){
@@ -221,6 +225,7 @@ public static void main(String[] args) throws Exception{
 					if(statsDiv.text().matches("\\d+/\\d+/\\d+.+")){
 						String[] stats = statsDiv.text().split("　"); 
 						power = stats[0].split("/")[2];
+						System.out.println("Found power as: " + power);
 					}
 				}
 			}

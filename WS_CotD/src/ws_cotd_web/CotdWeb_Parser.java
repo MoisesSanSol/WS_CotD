@@ -47,6 +47,11 @@ public class CotdWeb_Parser {
 			}
 			
 			String stats  = temporalContent.remove(0);
+			if(stats.contains(" 00,")){
+				System.out.println("* Parsing card: " + card.id + " / " + card.name);
+				System.out.println("* Stats: " + stats);
+				throw new Exception("Power has been overlooked in card stats.");
+			}
 			if(stats.startsWith("Personaje")){
 				stats = stats + " " + temporalContent.remove(0);
 				temporalContent.remove(0);
