@@ -1,8 +1,10 @@
 package ws_cotd_web;
 
+import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -156,6 +158,24 @@ public class CotdWeb_Parser {
 		fileContent.remove(0); // Separador
 
 		return fileContent.remove(0).replace("Cartas del día ", "").replace(":", "");
+	}
+
+	public static ArrayList<String> getAbilityListFromWeb(String seriesId) throws Exception{
+		
+		ArrayList<String> abilities = new ArrayList<String>();
+		
+		File seriesWebFolder = new File(CotdWeb_Parser.conf.webFolder.getAbsolutePath() + "\\" + seriesId + "\\cards");
+
+		for(File file : seriesWebFolder.listFiles()){
+			abilities.addAll(CotdWeb_PageHelper.getCardAbilities(file));
+		}
+		
+		Collections.sort(abilities);
+		
+		for(String ability : abilities){
+			System.out.println(ability);
+		}
+		return abilities;
 	}
 	
 }

@@ -61,6 +61,11 @@ public class CotdWeb_CardListHelper {
 		return line.replace("&", "&amp;").replace(">", "&gt;").replace("<", "&lt;");
 	}
 	
+	public static String escapeFromHtml(String line) throws Exception{
+		
+		return line.replace("&amp;", "&").replace("&gt;", ">").replace("&lt;", "<");
+	}
+	
 	public static ArrayList<String> escapeForHtml(ArrayList<String> lines) throws Exception{
 		
 		for(int i = 0; i < lines.size(); i++) {

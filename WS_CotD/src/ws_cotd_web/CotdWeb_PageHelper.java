@@ -4,7 +4,12 @@ import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 import ws_cotd.Cotd_Conf;
 import ws_cotd.Cotd_Utilities;
@@ -111,5 +116,24 @@ public class CotdWeb_PageHelper {
 		}
 		
 		return color;
+	}
+	
+	public static ArrayList<String> getCardAbilities(File cardPage) throws Exception{
+		
+		ArrayList<String> abilities = new ArrayList<String>();
+		
+		Document doc = Jsoup.parse(cardPage, "UTF-8", "irrelevant");
+		
+		Element stats = doc.select("#Stats").first();
+		Element abilitiesDom = stats.parent().nextElementSibling();
+		
+		String[] abilitiesSplit = abilitiesDom.html().replaceAll("</?td>", "").split("<br>");
+		
+		for(String ability : abilitiesSplit){
+			ability = ability.replaceAll("<.+?>", "");
+			abilities.add(CotdWeb_CardListHelper.escapeFromHtml(ability));
+		}
+		
+		return abilities;
 	}
 }
