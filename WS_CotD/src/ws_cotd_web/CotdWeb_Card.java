@@ -12,6 +12,7 @@ public class CotdWeb_Card {
 	public String name;
 	public String jpName;
 	public String idLine;
+	public String rarity;
 	public String statsLine;
 	public ArrayList<String> abilities;
 	public ArrayList<String> notes;

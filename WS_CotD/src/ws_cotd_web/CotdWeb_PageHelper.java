@@ -24,13 +24,63 @@ public class CotdWeb_PageHelper {
 		CotdWeb_PageHelper.series = CotdWeb_Parser.getSeriesFromCurrentSeries();
 		
 		for(CotdWeb_Card card : cards){
-			CotdWeb_PageHelper.createCardPage(card);
+			if(card.rarity.equals("SR")){
+				CotdWeb_PageHelper.createParallelCardPage(card);
+			}
+			else{
+				CotdWeb_PageHelper.createCardPage(card);
+			}
 		}
 	}
 	
+	public static void createParallelCardPage(CotdWeb_Card card) throws Exception{
+		
+		String originalFileId = card.fileId.replaceAll("S$", "");
+		String originalId = card.id.replaceAll("S$", "");
+		
+		String originalPageFilePath = conf.webFolder.getAbsolutePath() + "/" + card.seriesId + "/cards/" + originalFileId + ".html";
+		File originalPageFile = new File(originalPageFilePath);
+		
+		ArrayList<String> originalContent = new ArrayList<String>(Files.readAllLines(originalPageFile.toPath(), StandardCharsets.UTF_8));
+		ArrayList<String> parallelContent = (ArrayList<String>)originalContent.clone();
+		
+		int titleIndex = originalContent.indexOf(originalId);
+		parallelContent.set(titleIndex, card.id);
+		
+		int imgIndex = originalContent.indexOf("<img src='../images/" + originalFileId + ".png'></img>");
+		parallelContent.set(imgIndex, "<img src='../images/" + card.fileId + ".png'></img>");
+		
+		int idIndex = originalContent.indexOf("<td id='idLine'>") + 1;
+		String originalIdLine = originalContent.get(idIndex);
+		String originalRarity = originalIdLine.split(" ")[1];
+
+		int indexIndex = originalContent.indexOf("<a href='../index.html'>Colección Completa</a>");
+		if(indexIndex == -1){
+			indexIndex = originalContent.indexOf("<a href='../index.html#trialDeck'>Colección Completa</a>");
+		}
+		parallelContent.set(indexIndex, "<a href='../index.html#paralelas'>Colección Completa</a>");
+		
+		String originalUrl = "(<a href='./" + originalFileId + ".html'>" + originalRarity + "</a>)";
+		String newUrl = "(<a href='./" + card.fileId + ".html'>" + card.rarity + "</a>)";
+		
+		originalContent.set(idIndex, originalId + " " + originalRarity + " " + newUrl);
+		parallelContent.set(idIndex, card.idLine + " " + originalUrl);
+		
+		System.out.println("* Updating Web Page: " + card.fileId);
+		
+		Files.write(originalPageFile.toPath(), originalContent, StandardCharsets.UTF_8);
+		
+		String newPageFilePath = conf.webFolder.getAbsolutePath() + "/" + card.seriesId + "/cards/" + card.fileId + ".html";
+		File newPageFile = new File(newPageFilePath);
+
+		System.out.println("* Creating Web Page: " + card.fileId);
+		
+		Files.write(newPageFile.toPath(), parallelContent, StandardCharsets.UTF_8);
+	}
+
 	public static void createCardPage(CotdWeb_Card card) throws Exception{
 		
-		String templateFilePath = CotdWeb_PageHelper.conf.webFolder.getAbsolutePath() + "\\templates\\cardTemplate.html";
+		String templateFilePath = CotdWeb_PageHelper.conf.webFolder.getAbsolutePath() + "\\webPageTemplates\\cardTemplate.html";
 		File templateFile = new File(templateFilePath);
 		
 		ArrayList<String> templateContent = new ArrayList<String>(Files.readAllLines(templateFile.toPath(), StandardCharsets.UTF_8));
@@ -78,9 +128,14 @@ public class CotdWeb_PageHelper {
 			templateContent.remove(templateContent.indexOf("[Notas]"));
 		}
 		
+		if(card.rarity.equals("TD")){
+			int indexIndex = templateContent.indexOf("<a href='../index.html'>Colección Completa</a>");
+			templateContent.set(indexIndex, "<a href='../index.html#trialDeck'>Colección Completa</a>");
+		}
+		
 		String pageFilePath = conf.webFolder.getAbsolutePath() + "/" + card.seriesId + "/cards/" + card.fileId + ".html";
 		File pageFile = new File(pageFilePath);
-
+		
 		System.out.println("* Creating Web Page: " + card.fileId);
 		
 		Files.write(pageFile.toPath(), templateContent, StandardCharsets.UTF_8);
@@ -98,7 +153,7 @@ public class CotdWeb_PageHelper {
 		
 		ArrayList<String> pageContent = new ArrayList<String>(Files.readAllLines(cardPage.toPath(), StandardCharsets.UTF_8));
 		
-		int index = pageContent.indexOf("<td id='Stats'>");
+		int index = pageContent.indexOf("<td id='stats'>");
 		if(index != -1){
 			String statsLine = pageContent.get(index + 1);
 			if(statsLine.contains("Amarillo")){
@@ -124,16 +179,66 @@ public class CotdWeb_PageHelper {
 		
 		Document doc = Jsoup.parse(cardPage, "UTF-8", "irrelevant");
 		
-		Element stats = doc.select("#Stats").first();
+		Element stats = doc.select("#stats").first();
 		Element abilitiesDom = stats.parent().nextElementSibling();
 		
 		String[] abilitiesSplit = abilitiesDom.html().replaceAll("</?td>", "").split("<br>");
 		
 		for(String ability : abilitiesSplit){
 			ability = ability.replaceAll("<.+?>", "");
-			abilities.add(CotdWeb_CardListHelper.escapeFromHtml(ability));
+			abilities.add(CotdWeb_CardListHelper.escapeFromHtml(ability).trim());
 		}
 		
 		return abilities;
+	}
+	
+	public static ArrayList<String> getCardStats(File cardPage) throws Exception{
+		
+		ArrayList<String> stats = new ArrayList<String>();
+		
+		Document doc = Jsoup.parse(cardPage, "UTF-8", "irrelevant");
+		
+		Element statsDom = doc.select("#stats").first();
+		
+		String[] statsSplit = statsDom.html().replaceAll("</?td>", "").split("<br>");
+		
+		for(String statLine : statsSplit){
+			statLine = statLine.replaceAll("<.+?>", "");
+			statLine = statLine.replaceAll(", Traits", ",\r\nTraits");
+			stats.add(CotdWeb_CardListHelper.escapeFromHtml(statLine).trim());
+		}
+		
+		return stats;
+	}
+	
+	public static ArrayList<String> getCardName(File cardPage) throws Exception{
+		
+		ArrayList<String> names = new ArrayList<String>();
+		
+		Document doc = Jsoup.parse(cardPage, "UTF-8", "irrelevant");
+		
+		Element namesDom = doc.select("#name").first();
+		
+		String[] namesSplit = namesDom.html().replaceAll("</?td>", "").split("<br>");
+		
+		for(String name : namesSplit){
+			name = name.replaceAll("<.+?>", "");
+			names.add(CotdWeb_CardListHelper.escapeFromHtml(name).trim());
+		}
+		
+		return names;
+	}
+	
+	public static String getIdLine(File cardPage) throws Exception{
+		
+		String idLine;
+		
+		Document doc = Jsoup.parse(cardPage, "UTF-8", "irrelevant");
+		
+		Element idDom = doc.select("#idLine").first();
+		
+		idLine = CotdWeb_CardListHelper.escapeFromHtml(idDom.text().trim());
+		
+		return idLine;
 	}
 }

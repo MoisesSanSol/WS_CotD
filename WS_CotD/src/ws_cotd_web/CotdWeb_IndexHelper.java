@@ -30,17 +30,19 @@ public class CotdWeb_IndexHelper {
 				if(card.seriesId.equals(seriesId)) {
 					
 					String currentEntry = "";
+					String newEntry = fecha + "<a href='./cards/" + card.fileId + ".html'><img src='./images/" + card.fileId + ".png' width=100% height=auto id='" + card.fileId + "'></img></a>" + card.idLine;
 					for(String content : indexContent) {
 						if(content.contains(card.fileId)) {
 							currentEntry = content;
 						}
 					}
 					if(!currentEntry.isEmpty()){
-						String newEntry = fecha + "<a href='./cards/" + card.fileId + ".html'><img src='./images/" + card.fileId + ".png' width=100% height=auto id='" + card.fileId + "'></img></a>" + card.idLine;
 						indexContent.set(indexContent.indexOf(currentEntry), newEntry);
 					}
 					else{
 						System.out.println("* Card not found in index: " + card.id);
+						System.out.println("* New Line for Reference: ");
+						System.out.println(newEntry);
 					}
 				}
 			}
@@ -129,7 +131,7 @@ public class CotdWeb_IndexHelper {
 	
 	public static void createEmptyIndex(String seriesFullId, String seriesName) throws Exception{
 		
-		String indexTemplateFilePath = conf.webFolder.getAbsolutePath() + "\\templates\\indexTemplate.html";
+		String indexTemplateFilePath = conf.webFolder.getAbsolutePath() + "\\webPageTemplates\\indexTemplate.html";
 		File indexTemplateFile = new File(indexTemplateFilePath);
 		ArrayList<String> indexContent = new ArrayList<String>(Files.readAllLines(indexTemplateFile.toPath(), StandardCharsets.UTF_8));
 
@@ -218,7 +220,7 @@ public class CotdWeb_IndexHelper {
 			
 			String line = indexContent.get(i);
 			
-			if(line.contains("img") && !line.contains("TD") && !line.contains("PR")){
+			if(line.contains("img") && !line.contains("TD") && !line.contains("PR") && !line.contains("SR") && !line.contains("RRR") && !line.contains("SP")){
 				
 				//System.out.println("** Image for: " + line.substring(line.lastIndexOf(">") + 1));
 				

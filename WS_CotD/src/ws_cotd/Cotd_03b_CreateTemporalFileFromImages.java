@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import ws_cotd_v2.Cotd_FromGlobal;
+
 public class Cotd_03b_CreateTemporalFileFromImages {
 
 	private Cotd_Conf conf;
@@ -129,7 +131,7 @@ public class Cotd_03b_CreateTemporalFileFromImages {
 		return cardsText;
 	}
 	
-	private ArrayList<String> parseCardTextFromGlobal(ArrayList<String> globalCardText, ArrayList<String> header){
+	private ArrayList<String> parseCardTextFromGlobal(ArrayList<String> globalCardText, ArrayList<String> header) throws Exception{
 		
 		ArrayList<String> cardText = new ArrayList<String>();
 		
@@ -146,6 +148,16 @@ public class Cotd_03b_CreateTemporalFileFromImages {
 			header.set(4, header.get(4) + " " + firstGlobalLine.replaceAll(".*\\((.+?)\\) (.+?) \\((.+?)\\).*", "$1"));
 			header.set(6, firstGlobalLine.replaceAll(".*\\((.+?)\\) .+? \\((.+?)\\).*", "Traits: <<$2>>."));
 			globalCardText.remove(0);
+		}
+		else if(firstGlobalLine.startsWith("SR")){
+			ArrayList<String> auxHeader = new ArrayList<String>();
+			auxHeader.add(header.get(0));
+			auxHeader.add(header.get(1));
+			String cardId = firstGlobalLine.split(" ")[1];
+			header.clear();
+			header.addAll(auxHeader);
+			header.addAll(Cotd_FromGlobal.getParallelCard(cardId));
+			globalCardText.clear();
 		}
 		else if(firstGlobalLine.startsWith("CX")){
 			header.set(2, "# Name goes here: " + firstGlobalLine);

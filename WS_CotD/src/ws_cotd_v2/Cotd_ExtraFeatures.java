@@ -25,19 +25,6 @@ import ws_cotd_web.CotdWeb_Parser;
 
 public class Cotd_ExtraFeatures {
 
-public static void main(String[] args) throws Exception{
-		
-		System.out.println("*** Starting ***");
-		
-		//Cotd_ExtraFeatures.pastCotdNotesForSps();
-		//Cotd_ExtraFeatures.transferSeriesSeparationFromGlobalToImages();
-		//Cotd_ExtraFeatures.insertSeparatorsInFromGlobal();
-		Cotd_ExtraFeatures.fillPowerFromWsblog();
-		Cotd_ExtraFeatures.checkCardsMissingFillInParts();
-		
-		System.out.println("*** Finished ***");
-	}
-	
 	public static void checkCardsMissingFillInParts() throws Exception{
 	
 		// The parser already does this checking.
@@ -50,6 +37,17 @@ public static void main(String[] args) throws Exception{
 		ArrayList<CotdWeb_Card> cards = CotdWeb_Parser.getCardsFromTemporal();
 		
 		for(CotdWeb_Card card : cards){
+			
+		}
+		
+	}
+	
+	public static void pastCotdNotesForParallels() throws Exception{
+		
+		ArrayList<CotdWeb_Card> cards = CotdWeb_Parser.getCardsFromTemporal();
+		
+		for(CotdWeb_Card card : cards){
+			
 			if(card.idLine.contains("SP")){
 				
 				card.id = card.id.replaceAll("SS?P", "");
@@ -66,9 +64,43 @@ public static void main(String[] args) throws Exception{
 						+ ", la de hoy es la versión SP.";
 				System.out.println(note);
 			}
+
+			if(card.idLine.contains("RRR")){
+				
+				card.id = card.id.replaceAll("R$", "");
+				
+				String indexDate = CotdWeb_IndexHelper.searchIndexDate(card);
+				String noteDate = Cotd_Utilities.indexDateToNoteDate(indexDate);
+				
+				String note = "# '"
+						+ card.name
+						+ "' ("
+						+ card.id
+						+ ") fue ya carta del día el "
+						+ noteDate
+						+ ", la de hoy es la versión RRR.";
+				System.out.println(note);
+			}
+			
+			if(card.idLine.contains("SR")){
+				
+				card.id = card.id.replaceAll("S$", "");
+				
+				String indexDate = CotdWeb_IndexHelper.searchIndexDate(card);
+				String noteDate = Cotd_Utilities.indexDateToNoteDate(indexDate);
+				
+				String note = "# '"
+						+ card.name
+						+ "' ("
+						+ card.id
+						+ ") fue ya carta del día el "
+						+ noteDate
+						+ ", la de hoy es la versión SR.";
+				System.out.println(note);
+			}
 		}
 		
-	}
+	}	
 
 	public static void transferSeriesSeparationFromGlobalToImages() throws Exception{
 		
