@@ -99,7 +99,6 @@ public class Cotd_ExtraFeatures {
 				System.out.println(note);
 			}
 		}
-		
 	}	
 
 	public static void transferSeriesSeparationFromGlobalToImages() throws Exception{
@@ -251,7 +250,7 @@ public class Cotd_ExtraFeatures {
 					System.out.println("Found power as: " + power);
 				}
 				// Name grouped with img, div sibling of stats line
-				else if(bold.parent().tagName().equals("div") && bold.html().contains("img")){
+				else if(bold.parent().tagName().equals("div")){
 					Element statsDiv = bold.parent().nextElementSibling();
 					//System.out.println("statsDiv text: " + statsDiv.text());
 					if(statsDiv.text().matches("\\d+/\\d+/\\d+.+")){

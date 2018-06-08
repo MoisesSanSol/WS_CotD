@@ -173,6 +173,24 @@ public class CotdWeb_IndexHelper {
 		return fecha;
 	}
 	
+	public static String searchIndexDate(String cardId) throws Exception{
+
+		String fecha = "Not Found";
+
+		String seriesId = cardId.split("-")[0].split("/")[1].toLowerCase();
+		String indexFilePath = conf.webFolder.getAbsolutePath() + "/" + seriesId + "/index.html";
+		File indexFile = new File(indexFilePath);
+
+		ArrayList<String> indexContent = new ArrayList<String>(Files.readAllLines(indexFile.toPath(), StandardCharsets.UTF_8));
+			
+		for(String line : indexContent) {
+			if(line.contains(cardId)) {
+				fecha = line.replaceAll("<+", "");
+			}
+		}
+		return fecha;
+	}
+	
 	public static void updateSeriesIndex_ShiftTdNumbers(String seriesId, int firstNumber) throws Exception{
 
 		String indexFilePath = conf.webFolder.getAbsolutePath() + "/" + seriesId + "/index.html";
