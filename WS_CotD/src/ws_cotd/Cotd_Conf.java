@@ -19,6 +19,7 @@ public class Cotd_Conf {
 	public File mainFolder;
 	public File webFolder;
 	public File referencesFolder;
+	public File webTemplatesFolder;
 	
 	// Files:
 	public File abilitiesFile;
@@ -67,6 +68,8 @@ public class Cotd_Conf {
 			this.webFolder = new File(webFolderStr);
 			String referencesFolderStr = prop.getProperty("referencesFolder");
 			this.referencesFolder = new File(referencesFolderStr);
+			String webTemplatesFolderStr = prop.getProperty("webTemplatesFolder");
+			this.webTemplatesFolder = new File(webTemplatesFolderStr);
 			
 			// Files
 			String temporalStr = prop.getProperty("temporalFile");

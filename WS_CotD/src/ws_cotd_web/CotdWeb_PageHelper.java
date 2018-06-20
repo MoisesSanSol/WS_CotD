@@ -80,7 +80,7 @@ public class CotdWeb_PageHelper {
 
 	public static void createCardPage(CotdWeb_Card card) throws Exception{
 		
-		String templateFilePath = CotdWeb_PageHelper.conf.webFolder.getAbsolutePath() + "\\webPageTemplates\\cardTemplate.html";
+		String templateFilePath = CotdWeb_PageHelper.conf.webTemplatesFolder.getAbsolutePath() + "\\cardTemplate.html";
 		File templateFile = new File(templateFilePath);
 		
 		ArrayList<String> templateContent = new ArrayList<String>(Files.readAllLines(templateFile.toPath(), StandardCharsets.UTF_8));

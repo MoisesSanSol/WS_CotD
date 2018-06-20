@@ -131,7 +131,7 @@ public class CotdWeb_IndexHelper {
 	
 	public static void createEmptyIndex(String seriesFullId, String seriesName) throws Exception{
 		
-		String indexTemplateFilePath = conf.webFolder.getAbsolutePath() + "\\webPageTemplates\\indexTemplate.html";
+		String indexTemplateFilePath = conf.webTemplatesFolder.getAbsolutePath() + "\\indexTemplate.html";
 		File indexTemplateFile = new File(indexTemplateFilePath);
 		ArrayList<String> indexContent = new ArrayList<String>(Files.readAllLines(indexTemplateFile.toPath(), StandardCharsets.UTF_8));
 
