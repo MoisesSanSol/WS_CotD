@@ -23,7 +23,7 @@ public class CotdWeb_Main {
 		CotdWeb_PageHelper.createCardPages(cards);
 		
 		CotdWeb_IndexHelper.updateSeriesIndex(cards);
-		CotdWeb_IndexHelper.updateIndexPendingCardsColor("w59");
+		CotdWeb_IndexHelper.updateIndexPendingCardsColor();
 		
 		System.out.println("*** Finished ***");
 	}

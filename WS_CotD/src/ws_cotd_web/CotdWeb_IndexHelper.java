@@ -275,11 +275,30 @@ public class CotdWeb_IndexHelper {
 		return colorIndexes;
 	}
 	
-	public static void updateIndexPendingCardsColor(String seriesId) throws Exception{
+	public static void updateIndexPendingCardsColor() throws Exception{
+		
+		Cotd_Conf conf = Cotd_Conf.getInstance();
+		
+		ArrayList<String> seriesColorsContent = new ArrayList<String>(Files.readAllLines(conf.seriesColors.toPath(), StandardCharsets.UTF_8));
+		
+		for(String seriesColors : seriesColorsContent) {
+			
+			String seriesId = seriesColors.split("\t")[0];
+			String colors = seriesColors.split("\t")[1];
+			boolean tieneAmarillo = colors.contains("Y");
+			boolean tieneVerde = colors.contains("G");
+			boolean tieneRojo = colors.contains("R");
+			boolean tieneAzul = colors.contains("B");
+			
+			CotdWeb_IndexHelper.updateIndexPendingCardsColor(seriesId, tieneAmarillo, tieneVerde, tieneRojo, tieneAzul);
+		}
+	}
+	
+	public static void updateIndexPendingCardsColor(String seriesId, boolean tieneAmarillo, boolean tieneVerde, boolean tieneRojo, boolean tieneAzul) throws Exception{
 		
 		System.out.println("Updating index with colors for series: " + seriesId);
 		
-		HashMap<String,ArrayList<Integer>> colorIndexes = CotdWeb_IndexHelper.getCardColors("w59");		
+		HashMap<String,ArrayList<Integer>> colorIndexes = CotdWeb_IndexHelper.getCardColors(seriesId);		
 		
 		boolean hayAmarillo = colorIndexes.get("Amarillo").size() > 0;
 		boolean hayVerde = colorIndexes.get("Verde").size() > 0;
@@ -325,13 +344,24 @@ public class CotdWeb_IndexHelper {
 			indexContent = CotdWeb_IndexHelper.updateIndexPendingCardsColor("rb", maxRojo, minAzul, indexContent);
 		}
 		
-		if(hayVerde && hayRojo){
-			indexContent = CotdWeb_IndexHelper.updateIndexPendingCardsColor("gr", maxVerde, minRojo, indexContent);
-		}		
-		
-		if(hayVerde && !hayRojo){
-			indexContent = CotdWeb_IndexHelper.updateIndexPendingCardsColor("grb", maxVerde, minAzul, indexContent);
-		}	
+		if(tieneVerde) {
+			if(!hayVerde && hayRojo){
+				indexContent = CotdWeb_IndexHelper.updateIndexPendingCardsColor("ygr", maxAmarillo, minRojo, indexContent);
+			}
+			
+			if(hayVerde && hayRojo){
+				indexContent = CotdWeb_IndexHelper.updateIndexPendingCardsColor("gr", maxVerde, minRojo, indexContent);
+			}		
+			
+			if(hayVerde && !hayRojo){
+				indexContent = CotdWeb_IndexHelper.updateIndexPendingCardsColor("grb", maxVerde, minAzul, indexContent);
+			}
+		}
+		else {
+			if(hayRojo) {
+				indexContent = CotdWeb_IndexHelper.updateIndexPendingCardsColor("yr", maxAmarillo, minRojo, indexContent);
+			}
+		}
 		
 		Files.write(new File(indexPath).toPath(), indexContent, StandardCharsets.UTF_8);		
 	}

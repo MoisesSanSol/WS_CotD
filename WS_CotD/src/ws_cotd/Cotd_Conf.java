@@ -20,6 +20,7 @@ public class Cotd_Conf {
 	public File webFolder;
 	public File referencesFolder;
 	public File webTemplatesFolder;
+	public File resourcesFolder;
 	
 	// Files:
 	public File abilitiesFile;
@@ -29,6 +30,7 @@ public class Cotd_Conf {
 	public File temporalFile;
 	public File resultFile;
 	public File currentSeriesFile;
+	public File seriesColors;
 	
 	// Urls:
 	public String wsJpCotdUrl;
@@ -70,6 +72,8 @@ public class Cotd_Conf {
 			this.referencesFolder = new File(referencesFolderStr);
 			String webTemplatesFolderStr = prop.getProperty("webTemplatesFolder");
 			this.webTemplatesFolder = new File(webTemplatesFolderStr);
+			String resourcesFolderStr = prop.getProperty("resourcesFolder");
+			this.resourcesFolder = new File(resourcesFolderStr);
 			
 			// Files
 			String temporalStr = prop.getProperty("temporalFile");
@@ -79,7 +83,7 @@ public class Cotd_Conf {
 			String fromOutakuyaFilePath = this.mainFolder.getAbsolutePath() + "\\" + fromOutakuyaFileStr;
 			this.fromOutakuyaFile = new File(fromOutakuyaFilePath);
 			String currentSeriesFileStr = prop.getProperty("currentSeriesFile");
-			String currentSeriesFilePath = this.mainFolder.getAbsolutePath() + "\\" + currentSeriesFileStr;
+			String currentSeriesFilePath = this.resourcesFolder.getAbsolutePath() + "\\" + currentSeriesFileStr;
 			this.currentSeriesFile = new File(currentSeriesFilePath);
 			String fromImagesFileStr = prop.getProperty("fromImagesFile");
 			String fromImagesFilePath = this.mainFolder.getAbsolutePath() + "\\" + fromImagesFileStr;
@@ -93,6 +97,9 @@ public class Cotd_Conf {
 			String resultFileStr = prop.getProperty("resultFile");
 			String resultFilePath = this.mainFolder.getAbsolutePath() + "\\" + resultFileStr;
 			this.resultFile = new File(resultFilePath);
+			String seriesColorsStr = prop.getProperty("seriesColors");
+			String seriesColorsPath = this.resourcesFolder.getAbsolutePath() + "\\" + seriesColorsStr;
+			this.seriesColors = new File(seriesColorsPath);
 			
 			// Urls
 			this.wsJpCotdUrl = prop.getProperty("wsJpCotdUrl");
