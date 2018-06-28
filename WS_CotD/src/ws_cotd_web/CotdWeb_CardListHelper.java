@@ -92,24 +92,6 @@ public class CotdWeb_CardListHelper {
 					card.notes.set(i, updatedNote);
 					card.needsManualUpdate = true;
 				}
-			}
-		}
-		
-		for(CotdWeb_Card card : cards){
-			for(int i = 0; i < card.notes.size(); i++) {
-				if(card.notes.get(i).startsWith("##")){
-
-					String referencedCardName = card.notes.get(i).replaceAll(".+?'(.+?)' .+", "$1");
-					String referencedCardId = card.notes.get(i).replaceAll(".+? \\((.+?)\\) .+", "$1");
-					String referencedCardFileId = referencedCardId.split("-")[0].split("/")[1].toLowerCase() + "_" + referencedCardId.split("-")[1];
-					
-					String updatedNote =  "<a href='./" + referencedCardFileId + ".html'>" + referencedCardName + "</a>\r\n";
-					updatedNote = updatedNote + "* Esta carta es referenciada en las habilidades de '";
-					updatedNote = updatedNote + "<a href='./" + card.fileId + ".html'>" + card.name + "</a>'";
-
-					card.notes.set(i, updatedNote);
-					card.needsManualUpdate = true;
-				}
 				if(card.notes.get(i).startsWith("#hotc")){
 
 					String referencedCardName = card.notes.get(i).replaceAll("#hotc '(.+?)' \\(.+?\\) .+? '.+?'\\.", "$1");
