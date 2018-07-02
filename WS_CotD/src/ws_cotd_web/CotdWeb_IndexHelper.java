@@ -55,6 +55,39 @@ public class CotdWeb_IndexHelper {
 		}
 	}
 	
+	public static void updateSeriesIndex_AfterRelease(String seriesId, ArrayList<String> cardFileIds) throws Exception{
+
+		String indexFilePath = conf.webFolder.getAbsolutePath() + "/" + seriesId + "/index.html";
+		File indexFile = new File(indexFilePath);
+		ArrayList<String> indexContent = new ArrayList<String>(Files.readAllLines(indexFile.toPath(), StandardCharsets.UTF_8));
+			
+		for(String cardFileId : cardFileIds) {
+				
+			String currentEntry = "";
+			String newEntry = "Tras Salida" + "<img src='./images/" + cardFileId + "_yyt.jpg' width=100% height=auto id='" + cardFileId + "'  style='filter:grayscale(100%);'></img>";
+			for(String content : indexContent) {
+				if(content.contains(cardFileId)) {
+					currentEntry = content;
+					newEntry = newEntry + content.replaceAll(".+>", "");
+				}
+			}
+			if(!currentEntry.isEmpty()){
+				indexContent.set(indexContent.indexOf(currentEntry), newEntry);
+			}
+			else{
+				System.out.println("* Card not found in index: " + cardFileId);
+				System.out.println("* New Line for Reference: ");
+				System.out.println(newEntry);
+			}
+		}
+
+		indexContent = CotdWeb_IndexHelper.getUpdatedIndexWithCompletionCount(indexContent, 100);
+		
+		System.out.println("* Updating Index Page: " + seriesId);
+		
+		Files.write(indexFile.toPath(), indexContent, StandardCharsets.UTF_8);
+	}
+	
 	public static ArrayList<String> getUpdatedIndexWithCompletionCount(ArrayList<String> indexContent, int size) throws Exception{
 		
 		//System.out.println("** Get Updated Index Completion Count");

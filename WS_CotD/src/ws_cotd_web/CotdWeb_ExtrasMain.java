@@ -6,7 +6,8 @@ public class CotdWeb_ExtrasMain {
 		
 		System.out.println("*** Starting ***");
 		
-		CotdWeb_Parser.getAbilityListFromWeb("");
+		//CotdWeb_Parser.getAbilityListFromWeb("");
+		//CotdWeb_ImageHelper.fillMissingImagesAfterRelease_Yyt("seriesId", "yytsSeriesPageId");
 		
 		System.out.println("*** Finished ***");
 
