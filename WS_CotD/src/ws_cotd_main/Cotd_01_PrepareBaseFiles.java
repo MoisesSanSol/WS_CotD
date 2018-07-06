@@ -5,11 +5,14 @@ import ws_cotd.Cotd_02b_CreateTemplateFromImages;
 import ws_cotd.Cotd_Conf;
 import ws_cotd.Cotd_Utilities;
 import ws_cotd_v2.Cotd_FromGlobal;
+import ws_cotd_v2.Cotd_ImageHelper;
 
 public class Cotd_01_PrepareBaseFiles {
 
 	boolean flowControl_DownloadImages = true;
 	boolean flowControl_OpenFiles = true;
+	
+	String alternativeUrl = ""; 
 	
 	private Cotd_Conf conf;
 
@@ -29,7 +32,16 @@ public class Cotd_01_PrepareBaseFiles {
 		
 		if(main.flowControl_DownloadImages){
 			importedMainA.cleanImagesFolder();
-			importedMainA.parseWsJpCotD();
+			if(main.alternativeUrl.isEmpty()){
+				importedMainA.parseWsJpCotD();
+			}
+			else{
+				if(main.alternativeUrl.contains("products")){
+					Cotd_ImageHelper imageHelper = new Cotd_ImageHelper();
+					imageHelper.targetUrl = main.alternativeUrl;
+					imageHelper.parseWsJpProductPage();
+				}
+			}
 		}
 		importedMainB.createTemporalTemplateFile();
 		
