@@ -21,8 +21,7 @@ public class Cotd_ImageHelper {
 		
 		System.out.println("*** Starting ***");
 		
-		Cotd_ImageHelper main = new Cotd_ImageHelper();
-		main.parseWsJpProductPage();
+		//Cotd_ImageHelper main = new Cotd_ImageHelper();
 		
 		System.out.println("*** Finished ***");
 	}
@@ -51,6 +50,35 @@ public class Cotd_ImageHelper {
 				Thread.sleep(1000);
 				count++;
 			}
+		}
+	}
+	
+	public void parseWsJpExtraCotdPage() throws Exception {
+
+		System.out.println("Parsing Jp Ws-Tcg Extra Cotd Page: " + this.conf.wsJpExtraCotdUrl);
+
+		Document doc = Jsoup.connect(this.conf.wsJpExtraCotdUrl).maxBodySize(0).get();
+		
+		Cotd_Out.println(doc.outerHtml());
+		
+		Elements images = doc.select("div.entry-content img.aligncenter");
+
+		int count = 1;
+		
+		for(Element image : images){
+			
+			String imageUrl = image.attr("abs:src");
+			System.out.println("Scrapping img: " + imageUrl);
+			
+			String paddedCount = String.format("%02d", count);
+			String imageName = "/jp_" + paddedCount + "_2.png";
+			File targetImageFile = new File(this.conf.imagesFolder.getAbsolutePath() + imageName);
+			
+			System.out.println("Saving img: " + imageName);
+			FileUtils.copyURLToFile(new URL(imageUrl), targetImageFile);
+			
+			Thread.sleep(1000);
+			count++;
 		}
 	}
 	

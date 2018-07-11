@@ -32,7 +32,7 @@ public class CotdWeb_IndexHelper {
 					String currentEntry = "";
 					String newEntry = fecha + "<a href='./cards/" + card.fileId + ".html'><img src='./images/" + card.fileId + ".png' width=100% height=auto id='" + card.fileId + "'></img></a>" + card.idLine;
 					for(String content : indexContent) {
-						if(content.contains(card.fileId)) {
+						if(content.contains(card.fileId + "'")) {
 							currentEntry = content;
 						}
 					}
@@ -66,7 +66,7 @@ public class CotdWeb_IndexHelper {
 			String currentEntry = "";
 			String newEntry = "Tras Salida" + "<img src='./images/" + cardFileId + "_yyt.jpg' width=100% height=auto id='" + cardFileId + "'  style='filter:grayscale(100%);'></img>";
 			for(String content : indexContent) {
-				if(content.contains(cardFileId)) {
+				if(content.contains(cardFileId + "'")) {
 					currentEntry = content;
 					newEntry = newEntry + content.replaceAll(".+>", "");
 				}

@@ -225,9 +225,10 @@ public class Cotd_ExtraFeatures {
 		Document doc = Jsoup.connect(wsblogUrl).maxBodySize(0).get();
 		
 		//System.out.println(doc.html());
-		String power = null;
 		
 		for(String jpName : jpCardNames){
+			
+			String power = null;
 			/* If img divs are broken
 			Element img = doc.select("img[alt=" + jpName + "]").first();
 			if(img != null){

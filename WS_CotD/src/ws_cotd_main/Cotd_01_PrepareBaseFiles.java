@@ -9,7 +9,9 @@ import ws_cotd_v2.Cotd_ImageHelper;
 
 public class Cotd_01_PrepareBaseFiles {
 
+	boolean flowControl_CleanImages = true;
 	boolean flowControl_DownloadImages = true;
+	boolean flowControl_CreateTemplate = true;
 	boolean flowControl_OpenFiles = true;
 	
 	String alternativeUrl = ""; 
@@ -30,29 +32,38 @@ public class Cotd_01_PrepareBaseFiles {
 		Cotd_01_ExportImages importedMainA = new Cotd_01_ExportImages();
 		Cotd_02b_CreateTemplateFromImages importedMainB = new Cotd_02b_CreateTemplateFromImages();
 		
-		if(main.flowControl_DownloadImages){
+		if(main.flowControl_CleanImages){
 			importedMainA.cleanImagesFolder();
+		}
+		
+		if(main.flowControl_DownloadImages){
+			Cotd_ImageHelper imageHelper = new Cotd_ImageHelper();
+						
 			if(main.alternativeUrl.isEmpty()){
 				importedMainA.parseWsJpCotD();
+				imageHelper.parseWsJpExtraCotdPage();
 			}
 			else{
 				if(main.alternativeUrl.contains("products")){
-					Cotd_ImageHelper imageHelper = new Cotd_ImageHelper();
 					imageHelper.targetUrl = main.alternativeUrl;
 					imageHelper.parseWsJpProductPage();
 				}
 			}
 		}
+		
 		importedMainB.createTemporalTemplateFile();
 		
 		// Previous version used until cleanup - End
-		
-		Cotd_FromGlobal.createTemplate();
+
+		if(main.flowControl_CreateTemplate){
+			Cotd_FromGlobal.createTemplate();
+		}
 		
 		// Automated file and folder opening
-		
-		Cotd_Utilities.openFileInNotepad(main.conf.fromGlobalFile);
-		Cotd_Utilities.openDefaultFolders();
+		if(main.flowControl_OpenFiles){
+			Cotd_Utilities.openFileInNotepad(main.conf.fromGlobalFile);
+			Cotd_Utilities.openDefaultFolders();
+		}
 		
 		System.out.println("*** Finished ***");
 	}

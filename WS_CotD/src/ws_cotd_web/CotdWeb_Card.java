@@ -1,9 +1,12 @@
 package ws_cotd_web;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class CotdWeb_Card {
+public class CotdWeb_Card implements Serializable{
 
+	private static final long serialVersionUID = 1L;
+	
 	public String seriesId;
 	public String id;
 	public String fileId;
@@ -21,6 +24,7 @@ public class CotdWeb_Card {
 	boolean isReferenced;
 	boolean hasReferences;
 	boolean needsManualUpdate;
+	boolean isParallel;
 	
 	public CotdWeb_Card() {
 		this.abilities = new ArrayList<String>();

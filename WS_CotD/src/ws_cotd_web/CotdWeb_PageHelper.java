@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.SerializationUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -24,7 +26,7 @@ public class CotdWeb_PageHelper {
 		CotdWeb_PageHelper.series = CotdWeb_Parser.getSeriesFromCurrentSeries();
 		
 		for(CotdWeb_Card card : cards){
-			if(card.rarity.equals("SR") || card.rarity.equals("RRR") || card.rarity.equals("SP")){
+			if(card.rarity.equals("SR") || card.rarity.equals("RRR") || card.rarity.equals("SP") || card.isParallel){
 				CotdWeb_PageHelper.createParallelCardPage(card);
 			}
 			else{
@@ -35,8 +37,8 @@ public class CotdWeb_PageHelper {
 	
 	public static void createParallelCardPage(CotdWeb_Card card) throws Exception{
 		
-		String originalFileId = card.fileId.replaceAll("SP?$", "").replaceAll("R$", "");
-		String originalId = card.id.replaceAll("SP?$", "").replaceAll("R$", "");
+		String originalFileId = card.fileId.replaceAll("SP?$", "").replaceAll("R$", "").replaceAll("H$", "").replaceAll("SPM$", "").replaceAll("BDR$", "");
+		String originalId = card.id.replaceAll("SP?$", "").replaceAll("R$", "").replaceAll("H$", "").replaceAll("SPM$", "").replaceAll("BDR", "");
 		
 		String originalPageFilePath = conf.webFolder.getAbsolutePath() + "/" + card.seriesId + "/cards/" + originalFileId + ".html";
 		File originalPageFile = new File(originalPageFilePath);
@@ -63,7 +65,7 @@ public class CotdWeb_PageHelper {
 		String originalUrl = "(<a href='./" + originalFileId + ".html'>" + originalRarity + "</a>)";
 		String newUrl = "(<a href='./" + card.fileId + ".html'>" + card.rarity + "</a>)";
 		
-		originalContent.set(idIndex, originalId + " " + originalRarity + " " + newUrl);
+		originalContent.set(idIndex, originalIdLine + " " + newUrl);
 		parallelContent.set(idIndex, card.idLine + " " + originalUrl);
 		
 		System.out.println("* Updating Web Page: " + card.fileId);

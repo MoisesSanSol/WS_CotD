@@ -8,6 +8,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.lang3.SerializationUtils;
+
 import ws_cotd.Cotd_Conf;
 
 public class CotdWeb_Parser {
@@ -49,7 +51,13 @@ public class CotdWeb_Parser {
 				throw new Exception("Something has been overlooked in a card id.");
 			}
 			
-			String stats  = temporalContent.remove(0);
+			String stats = temporalContent.remove(0);
+			
+			ArrayList<String> sameDayParallels = new ArrayList<String>();
+			while(stats.startsWith(card.id)){
+				sameDayParallels.add(stats);
+				stats  = temporalContent.remove(0);
+			}
 			if(stats.contains(" 00,")){
 				System.out.println("* Parsing card: " + card.id + " / " + card.name);
 				System.out.println("* Stats: " + stats);
@@ -109,6 +117,20 @@ public class CotdWeb_Parser {
 			System.out.println("* Parsed card: " + card.id + " / " + card.name);
 			
 			cards.add(card);
+			int parallelCount = 2;
+			for(String parrallelIdLine : sameDayParallels){
+				CotdWeb_Card newCard = (CotdWeb_Card)SerializationUtils.clone(card);
+				newCard.idLine = parrallelIdLine;
+				newCard.id = parrallelIdLine.split(" ")[0];
+				newCard.rarity = parrallelIdLine.split(" ")[1];
+				String parrallelCardNumber = parrallelIdLine.split(" ")[0].split("-")[1];
+				newCard.fileId = card.seriesId + "_" + parrallelCardNumber;
+				newCard.imageFileId = card.imageFileId + "_" + parallelCount;
+				parallelCount++;
+				newCard.isParallel = true;
+				CotdWeb_PageHelper.createParallelCardPage(newCard);
+				cards.add(newCard);
+			}
 		}
 		
 		return cards;
