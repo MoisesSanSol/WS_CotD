@@ -128,7 +128,6 @@ public class CotdWeb_Parser {
 				newCard.imageFileId = card.imageFileId + "_" + parallelCount;
 				parallelCount++;
 				newCard.isParallel = true;
-				CotdWeb_PageHelper.createParallelCardPage(newCard);
 				cards.add(newCard);
 			}
 		}

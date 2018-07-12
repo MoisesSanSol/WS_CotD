@@ -223,7 +223,7 @@ public class Cotd_02b_CreateTemplateFromImages {
 		FileFilter filter = new FileFilter() {
             @Override
             public boolean accept(File pathname) {
-               return !pathname.getName().endsWith("_2.png");
+               return !pathname.getName().endsWith("_extra.png");
             }
         };
 		File[] imageFiles = conf.imagesFolder.listFiles(filter);

@@ -21,10 +21,10 @@ public class CotdWeb_Card implements Serializable{
 	public ArrayList<String> notes;
 	public ArrayList<String> references;
 	
-	boolean isReferenced;
-	boolean hasReferences;
-	boolean needsManualUpdate;
-	boolean isParallel;
+	public boolean isReferenced;
+	public boolean hasReferences;
+	public boolean needsManualUpdate;
+	public boolean isParallel;
 	
 	public CotdWeb_Card() {
 		this.abilities = new ArrayList<String>();

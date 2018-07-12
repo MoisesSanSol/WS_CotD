@@ -71,7 +71,7 @@ public class Cotd_ImageHelper {
 			System.out.println("Scrapping img: " + imageUrl);
 			
 			String paddedCount = String.format("%02d", count);
-			String imageName = "/jp_" + paddedCount + "_2.png";
+			String imageName = "/jp_" + paddedCount + "_extra.png";
 			File targetImageFile = new File(this.conf.imagesFolder.getAbsolutePath() + imageName);
 			
 			System.out.println("Saving img: " + imageName);

@@ -204,6 +204,9 @@ public class Cotd_ExtraFeatures {
 			String jpName = temporalContent.remove(0);
 			temporalContent.remove(0); // Id
 			String stats  = temporalContent.remove(0);
+			while(!(stats.startsWith("Personaje") || stats.startsWith("Climax") || stats.startsWith("Evento"))){
+				stats  = temporalContent.remove(0);
+			}
 			if(stats.startsWith("Personaje")){
 				jpCardNames.add(jpName);
 				System.out.println("Found card jp name: " + jpName);
@@ -297,7 +300,10 @@ public class Cotd_ExtraFeatures {
 			newTemporalContent.add(jpName);
 			newTemporalContent.add(temporalContent.remove(0)); // Id
 			String stats  = temporalContent.remove(0);
-			
+			while(!(stats.startsWith("Personaje") || stats.startsWith("Climax") || stats.startsWith("Evento"))){
+				newTemporalContent.add(stats);
+				stats  = temporalContent.remove(0);
+			}
 			if(cardPowers.containsKey(jpName)){
 				stats = stats.replace(" 00,", " " + cardPowers.get(jpName) + ",");
 			}
@@ -314,4 +320,24 @@ public class Cotd_ExtraFeatures {
 		Files.write(conf.temporalFile.toPath(), newTemporalContent, StandardCharsets.UTF_8);
 	}
 	
+	public static void updateParallelImageFileNames() throws Exception{
+		
+		ArrayList<CotdWeb_Card> cards = CotdWeb_Parser.getCardsFromTemporal();
+		
+		int parallelCount = 1;
+		
+		for(CotdWeb_Card card : cards){
+			if(card.isParallel){
+				String paddedCount = String.format("%02d", parallelCount);
+				
+				File originFile = new File(Cotd_Conf.getInstance().imagesFolder.getAbsolutePath() + "/jp_" + paddedCount + "_extra.png");
+				File targetFile = new File(Cotd_Conf.getInstance().imagesFolder.getAbsolutePath() + "/" + card.imageFileId + ".png");
+				
+				System.out.println("* Renaming image: " + originFile.getName() + ", to : " + targetFile.getName());
+				
+				originFile.renameTo(targetFile);
+				parallelCount++;
+			}
+		}
+	}
 }

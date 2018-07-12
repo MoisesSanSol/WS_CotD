@@ -19,6 +19,7 @@ public class Cotd_05_ExtraFeatures {
 		
 		Cotd_ExtraFeatures.fillPowerFromWsblog();
 		Cotd_ExtraFeatures.checkCardsMissingFillInParts();
+		Cotd_ExtraFeatures.updateParallelImageFileNames();
 		
 		System.out.println("*** Finished ***");
 	}
