@@ -1,7 +1,11 @@
 package ws_cotd_v2;
 
+import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URL;
+
+import javax.imageio.ImageIO;
 
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
@@ -80,6 +84,23 @@ public class Cotd_ImageHelper {
 			Thread.sleep(1000);
 			count++;
 		}
+	}
+	
+	
+	public void createImageThumb(File originalImage) throws Exception{
+
+		BufferedImage bufferedImage = ImageIO.read(originalImage);
+		
+		BufferedImage newBufferedImage = new BufferedImage(bufferedImage.getWidth(),
+				bufferedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+		newBufferedImage.createGraphics().drawImage(bufferedImage, 0, 0, Color.WHITE, null);
+		
+		String thumbPath = originalImage.getAbsolutePath().replaceAll("\\.png$", ".jpg");
+		
+		File thumbFile = new File(thumbPath);
+		
+		ImageIO.write(newBufferedImage, "jpg", thumbFile);
+		Cotd_Out.println("Image " + originalImage.getName() + " resized to " + thumbFile.getName());
 	}
 	
 }

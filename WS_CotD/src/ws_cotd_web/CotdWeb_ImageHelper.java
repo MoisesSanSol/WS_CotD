@@ -1,8 +1,10 @@
 package ws_cotd_web;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
@@ -11,12 +13,15 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import ws_cotd.Cotd_Conf;
+import ws_cotd_v2.Cotd_ImageHelper;
 
 public class CotdWeb_ImageHelper {
 
 	public static Cotd_Conf conf = Cotd_Conf.getInstance();
 	
 	public static void copyImages(ArrayList<CotdWeb_Card> cards) throws Exception{
+		
+		Cotd_ImageHelper imageHelper = new Cotd_ImageHelper();
 		
 		for(CotdWeb_Card card : cards) {
 			
@@ -26,6 +31,8 @@ public class CotdWeb_ImageHelper {
 			System.out.println("* Copying image: " + originFile.getName() + ", to : " + targetFile.getName());
 			
 			FileUtils.copyFile(originFile, targetFile);
+			
+			imageHelper.createImageThumb(targetFile);
 		}
 	}
 	
@@ -83,4 +90,34 @@ public class CotdWeb_ImageHelper {
 		
 		CotdWeb_IndexHelper.updateSeriesIndex_AfterRelease(seriesId, newCardFileIds);
 	}
+	
+	
+	public static void createImageThumbs_FullFolders() throws Exception{
+		
+		Cotd_ImageHelper imageHelper = new Cotd_ImageHelper();
+		
+		FileFilter filter = new FileFilter() {
+            @Override
+            public boolean accept(File pathname) {
+               return pathname.getName().endsWith(".png");
+            }
+        };
+        
+        HashMap<String,String> series = CotdWeb_Parser.getSeriesFromCurrentSeries();
+
+		for(String seriesId : series.keySet()) {
+
+			String seriesFolderPath = conf.webFolder.getAbsolutePath() + "/" + seriesId + "/images/";
+			File seriesFolder = new File(seriesFolderPath);
+			
+			File[] imageFiles = seriesFolder.listFiles(filter);
+	
+			for(File imageFile : imageFiles){
+				
+				imageHelper.createImageThumb(imageFile);
+	
+			}
+		}
+	}
+	
 }

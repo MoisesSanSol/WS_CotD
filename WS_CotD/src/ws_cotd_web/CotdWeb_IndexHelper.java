@@ -30,7 +30,7 @@ public class CotdWeb_IndexHelper {
 				if(card.seriesId.equals(seriesId)) {
 					
 					String currentEntry = "";
-					String newEntry = fecha + "<a href='./cards/" + card.fileId + ".html'><img src='./images/" + card.fileId + ".png' width=100% height=auto id='" + card.fileId + "'></img></a>" + card.idLine;
+					String newEntry = fecha + "<a href='./cards/" + card.fileId + ".html'><img src='./images/" + card.fileId + ".jpg' width=100% height=auto id='" + card.fileId + "'></img></a>" + card.idLine;
 					for(String content : indexContent) {
 						if(content.contains(card.fileId + "'")) {
 							currentEntry = content;
