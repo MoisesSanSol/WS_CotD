@@ -11,7 +11,8 @@ public class Cotd_01_PrepareBaseFiles {
 
 	boolean flowControl_CleanImages = true;
 	boolean flowControl_DownloadImages = true;
-	boolean flowControl_CreateTemplate = true;
+	boolean flowControl_CreateGlobalTemplate = true;
+	boolean flowControl_CreateImagesTemplate = true;
 	boolean flowControl_OpenFiles = true;
 	
 	String alternativeUrl = ""; 
@@ -51,11 +52,12 @@ public class Cotd_01_PrepareBaseFiles {
 			}
 		}
 		
-		importedMainB.createTemporalTemplateFile();
-		
+		if(main.flowControl_CreateImagesTemplate){
+			importedMainB.createTemporalTemplateFile();
+		}
 		// Previous version used until cleanup - End
 
-		if(main.flowControl_CreateTemplate){
+		if(main.flowControl_CreateGlobalTemplate){
 			Cotd_FromGlobal.createTemplate();
 		}
 		

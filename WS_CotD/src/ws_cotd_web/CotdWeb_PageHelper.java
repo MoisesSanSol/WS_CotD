@@ -37,8 +37,8 @@ public class CotdWeb_PageHelper {
 	
 	public static void createParallelCardPage(CotdWeb_Card card) throws Exception{
 		
-		String originalFileId = card.fileId.replaceAll("SP?$", "").replaceAll("R$", "").replaceAll("H$", "").replaceAll("SPM$", "").replaceAll("BDR$", "");
-		String originalId = card.id.replaceAll("SP?$", "").replaceAll("R$", "").replaceAll("H$", "").replaceAll("SPM$", "").replaceAll("BDR", "");
+		String originalFileId = card.fileId.replaceAll("SP?$", "").replaceAll("(BD)?R$", "").replaceAll("H$", "").replaceAll("SPM$", "");
+		String originalId = card.id.replaceAll("SP?$", "").replaceAll("(BD)?R$", "").replaceAll("H$", "").replaceAll("SPM$", "");
 		
 		String originalPageFilePath = conf.webFolder.getAbsolutePath() + "/" + card.seriesId + "/cards/" + originalFileId + ".html";
 		File originalPageFile = new File(originalPageFilePath);

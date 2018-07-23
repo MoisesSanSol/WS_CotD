@@ -25,6 +25,9 @@ import ws_cotd_web.CotdWeb_Parser;
 
 public class Cotd_ExtraFeatures {
 
+	public static int parallelRotationCards = 0;
+	public static int parallelRotationExtras = 0;
+	
 	public static void checkCardsMissingFillInParts() throws Exception{
 	
 		// The parser already does this checking.
@@ -338,6 +341,40 @@ public class Cotd_ExtraFeatures {
 				originFile.renameTo(targetFile);
 				parallelCount++;
 			}
+		}
+	}
+	
+	public static void updateParallelImageFileNumbers() throws Exception{
+		
+		int parallelCount = 1; 
+		
+		for(int i = 1; i <= Cotd_ExtraFeatures.parallelRotationCards; i++){
+			for(int j = 0; j < Cotd_ExtraFeatures.parallelRotationExtras; j++){
+
+				String paddedCount = String.format("%02d", parallelCount);
+				int newNumber =  i + (j * Cotd_ExtraFeatures.parallelRotationCards);
+				String paddedNewNumber = String.format("%02d", newNumber);
+				
+				File originFile = new File(Cotd_Conf.getInstance().imagesFolder.getAbsolutePath() + "/jp_" + paddedNewNumber + "_extra.png");
+				File targetFile = new File(Cotd_Conf.getInstance().imagesFolder.getAbsolutePath() + "/jp_" + paddedCount + "_aux.png");
+				
+				Cotd_Out.println("* Renaming image: " + originFile.getName() + ", to : " + targetFile.getName());
+				
+				originFile.renameTo(targetFile);
+				parallelCount++;
+			}
+		}
+		
+		for(int aux = 1; aux < parallelCount; aux++){
+			
+			String paddedAuxCount = String.format("%02d", aux);
+			
+			File originFile = new File(Cotd_Conf.getInstance().imagesFolder.getAbsolutePath() + "/jp_" + paddedAuxCount + "_aux.png");
+			File targetFile = new File(Cotd_Conf.getInstance().imagesFolder.getAbsolutePath() + "/jp_" + paddedAuxCount + "_extra.png");
+			
+			Cotd_Out.println("* Renaming image: " + originFile.getName() + ", to : " + targetFile.getName());
+			
+			originFile.renameTo(targetFile);
 		}
 	}
 }

@@ -2,6 +2,7 @@ package ws_cotd;
 
 import java.awt.Desktop;
 import java.io.File;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -39,11 +40,17 @@ public class Cotd_Utilities{
 	
 	public static String indexDateToNoteDate(String indexDate) throws Exception{
 		
+		String noteDate = indexDate;
+		
 		SimpleDateFormat inputFormatter = new SimpleDateFormat("dd/MM/yyyy");
 		SimpleDateFormat outputFormatter = new SimpleDateFormat("d 'de' MMMM", new Locale("es", "ES"));
-		
-		Date date = inputFormatter.parse(indexDate);
-		String noteDate = outputFormatter.format(date);
+		try{
+			Date date = inputFormatter.parse(indexDate);
+			noteDate = outputFormatter.format(date);
+		}
+		catch(ParseException pe){
+			System.out.println("Unparseable date: " + indexDate);
+		}
 		
 		return noteDate;
 	}
