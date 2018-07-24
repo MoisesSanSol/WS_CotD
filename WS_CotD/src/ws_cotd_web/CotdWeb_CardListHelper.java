@@ -50,6 +50,9 @@ public class CotdWeb_CardListHelper {
 		for(CotdWeb_Card card : cards){
 			card.name = CotdWeb_CardListHelper.escapeForHtml(card.name);
 			card.statsLine = CotdWeb_CardListHelper.escapeForHtml(card.statsLine);
+			if(card.statsLine.startsWith("Climax")){
+				card.statsLine.replace("&lt;br&gt;", "<br>");
+			}
 			card.abilities = CotdWeb_CardListHelper.escapeForHtml(card.abilities);
 		}
 		
