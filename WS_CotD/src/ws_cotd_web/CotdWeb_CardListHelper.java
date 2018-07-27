@@ -12,7 +12,8 @@ public class CotdWeb_CardListHelper {
 		
 		for(CotdWeb_Card card : cards){
 			if(card.isReferenced){
-				String anchor =  "<a href='./" + card.fileId + ".html'>" + card.name + "</a>";
+				String originalFileId = card.fileId.replaceAll("SP?$", "").replaceAll("(BD)?R$", "").replaceAll("H$", "").replaceAll("SPM$", "");
+				String anchor =  "<a href='./" + originalFileId + ".html'>" + card.name + "</a>";
 				referenceAnchors.put(card.name, anchor);
 				references.put(card.name, new ArrayList<String>());
 			}
@@ -20,11 +21,12 @@ public class CotdWeb_CardListHelper {
 		
 		for(CotdWeb_Card card : cards){
 			if(card.hasReferences){
-				String anchor =  "<a href='./" + card.fileId + ".html'>" + card.name + "</a>";
+				String originalFileId = card.fileId.replaceAll("SP?$", "").replaceAll("(BD)?R$", "").replaceAll("H$", "").replaceAll("SPM$", "");
+				String anchor =  "<a href='./" + originalFileId + ".html'>" + card.name + "</a>";
 				for(String ability : card.abilities){
 					String updatedAbility = ability;
 					for(String referenced : referenceAnchors.keySet()) {
-						if(updatedAbility.contains(referenced)){
+						if(updatedAbility.contains("'" + referenced + "'")){
 							updatedAbility = updatedAbility.replace(referenced, referenceAnchors.get(referenced));
 							if(!references.get(referenced).contains(anchor)){
 								references.get(referenced).add(anchor);
@@ -51,7 +53,7 @@ public class CotdWeb_CardListHelper {
 			card.name = CotdWeb_CardListHelper.escapeForHtml(card.name);
 			card.statsLine = CotdWeb_CardListHelper.escapeForHtml(card.statsLine);
 			if(card.statsLine.startsWith("Climax")){
-				card.statsLine.replace("&lt;br&gt;", "<br>");
+				card.statsLine = card.statsLine.replace("&lt;br&gt;", "<br>");
 			}
 			card.abilities = CotdWeb_CardListHelper.escapeForHtml(card.abilities);
 		}

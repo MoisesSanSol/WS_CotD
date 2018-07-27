@@ -108,7 +108,7 @@ public class CotdWeb_PageHelper {
 			String references = "<tr>\r\n<td>\r\n* Esta carta es referenciada en las habilidades de '";
 			references = references + card.references.remove(0) + "'\r\n";
 			while(!card.references.isEmpty()) {
-				references = references + "\r\n<br>\r\n* Esta carta es referenciada en las habilidades de '" + card.references.remove(0) + "'\r\n";;
+				references = references + "<br>\r\n* Esta carta es referenciada en las habilidades de '" + card.references.remove(0) + "'\r\n";
 			}
 			references = references + "</td>\r\n</tr>";
 			templateContent.set(templateContent.indexOf("[Referencias]"), references);
