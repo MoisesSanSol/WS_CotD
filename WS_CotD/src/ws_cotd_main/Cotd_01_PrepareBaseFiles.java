@@ -64,6 +64,7 @@ public class Cotd_01_PrepareBaseFiles {
 		// Automated file and folder opening
 		if(main.flowControl_OpenFiles){
 			Cotd_Utilities.openFileInNotepad(main.conf.fromGlobalFile);
+			Cotd_Utilities.openFileInNotepad(main.conf.currentSeriesFile);
 			Cotd_Utilities.openDefaultFolders();
 		}
 		
