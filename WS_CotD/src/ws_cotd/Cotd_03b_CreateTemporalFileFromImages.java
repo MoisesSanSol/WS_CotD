@@ -179,6 +179,16 @@ public class Cotd_03b_CreateTemporalFileFromImages {
 			header.addAll(Cotd_FromGlobal.getParallelCard(cardId, "SP SP"));
 			globalCardText.clear();
 		}
+		else if(firstGlobalLine.startsWith("SEC")){
+			ArrayList<String> auxHeader = new ArrayList<String>();
+			auxHeader.add(header.get(0));
+			auxHeader.add(header.get(1));
+			String cardId = firstGlobalLine.split(" ")[1];
+			header.clear();
+			header.addAll(auxHeader);
+			header.addAll(Cotd_FromGlobal.getParallelCard(cardId, "SEC SEC"));
+			globalCardText.clear();
+		}
 		else if(firstGlobalLine.startsWith("CX")){
 			header.set(2, "# Name goes here: " + firstGlobalLine);
 			if(firstGlobalLine.contains("Wind")){

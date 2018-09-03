@@ -228,7 +228,7 @@ public class Cotd_ExtraFeatures {
 		
 		String wsblogUrl = "http://ws.blog.jp/";
 		
-		Document doc = Jsoup.connect(wsblogUrl).maxBodySize(0).get();
+		Document doc = Jsoup.connect(wsblogUrl).userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36").maxBodySize(0).get();
 		
 		//System.out.println(doc.html());
 		
