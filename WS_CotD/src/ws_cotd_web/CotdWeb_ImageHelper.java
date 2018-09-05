@@ -120,4 +120,27 @@ public class CotdWeb_ImageHelper {
 		}
 	}
 	
+	public static void reEnumerateImageFiles(){
+		
+		FileFilter filter = new FileFilter() {
+            @Override
+            public boolean accept(File pathname) {
+               return !pathname.getName().endsWith("_extra.png");
+            }
+        };
+		File[] imageFiles = conf.imagesFolder.listFiles(filter);
+
+		int count = 1;
+		
+		for(File imageFile : imageFiles){
+			String paddedCount = String.format("%02d", count);
+			String imageName = "/jp_" + paddedCount + ".png";
+			File targetImageFile = new File(conf.imagesFolder.getAbsolutePath() + imageName);
+			System.out.println("Renaming file: " + imageFile.getName() + " to " + imageName);
+			imageFile.renameTo(targetImageFile);
+			count++;
+		}
+		
+	}
+	
 }

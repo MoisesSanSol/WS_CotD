@@ -3,7 +3,9 @@ package ws_cotd_v2;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileFilter;
 import java.net.URL;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
@@ -21,15 +23,6 @@ public class Cotd_ImageHelper {
 
 	private Cotd_Conf conf;
 	
-	public static void main(String[] args) throws Exception {
-		
-		System.out.println("*** Starting ***");
-		
-		//Cotd_ImageHelper main = new Cotd_ImageHelper();
-		
-		System.out.println("*** Finished ***");
-	}
-	
 	public Cotd_ImageHelper(){
 		this.conf = Cotd_Conf.getInstance();
 	}
@@ -43,7 +36,8 @@ public class Cotd_ImageHelper {
 		int count = 1;
 		
 		for(Element image : images){
-			String imageUrl = image.attr("abs:src");
+			String imageUrl = image.attr("abs:src").replace(" ","%20");
+
 			System.out.println("Scrapping img: " + imageUrl);
 			if(!imageUrl.contains("supply")){
 				String paddedCount = String.format("%02d", count);

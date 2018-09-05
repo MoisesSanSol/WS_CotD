@@ -26,7 +26,7 @@ public class CotdWeb_PageHelper {
 		CotdWeb_PageHelper.series = CotdWeb_Parser.getSeriesFromCurrentSeries();
 		
 		for(CotdWeb_Card card : cards){
-			if(card.rarity.equals("SR") || card.rarity.equals("RRR") || card.rarity.equals("SP") || card.isParallel){
+			if(card.rarity.equals("SR") || card.rarity.equals("RRR") || card.rarity.equals("SP") || card.rarity.equals("FXR") || card.isParallel){
 				CotdWeb_PageHelper.createParallelCardPage(card);
 			}
 			else{
@@ -37,8 +37,8 @@ public class CotdWeb_PageHelper {
 	
 	public static void createParallelCardPage(CotdWeb_Card card) throws Exception{
 		
-		String originalFileId = card.fileId.replaceAll("SP?$", "").replaceAll("(BD)?R$", "").replaceAll("H$", "").replaceAll("SPM$", "");
-		String originalId = card.id.replaceAll("SP?$", "").replaceAll("(BD)?R$", "").replaceAll("H$", "").replaceAll("SPM$", "");
+		String originalFileId = card.fileId.replaceAll("SP?$", "").replaceAll("(BD)?R$", "").replaceAll("H$", "").replaceAll("SPM$", "").replaceAll("FX$", "");
+		String originalId = card.id.replaceAll("SP?$", "").replaceAll("(BD)?R$", "").replaceAll("H$", "").replaceAll("SPM$", "").replaceAll("FX$", "");
 		
 		String originalPageFilePath = conf.webFolder.getAbsolutePath() + "/" + card.seriesId + "/cards/" + originalFileId + ".html";
 		File originalPageFile = new File(originalPageFilePath);

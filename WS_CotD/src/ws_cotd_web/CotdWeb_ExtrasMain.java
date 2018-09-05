@@ -9,6 +9,7 @@ public class CotdWeb_ExtrasMain {
 		//CotdWeb_Parser.getAbilityListFromWeb("");
 		//CotdWeb_ImageHelper.fillMissingImagesAfterRelease_Yyt("seriesId", "yytsSeriesPageId");
 		//CotdWeb_ImageHelper.createImageThumbs_FullFolders();
+		//CotdWeb_ImageHelper.reEnumerateImageFiles();
 		
 		System.out.println("*** Finished ***");
 
