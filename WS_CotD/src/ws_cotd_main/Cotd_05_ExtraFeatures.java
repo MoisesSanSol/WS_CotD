@@ -5,7 +5,8 @@ import ws_cotd_v2.Cotd_ExtraFeatures;
 
 public class Cotd_05_ExtraFeatures {
 
-	boolean flowControl_FillInPowers = true;
+	boolean flowControl_FillInPowers = false;
+	boolean flowControl_UpdateNames = true;
 	boolean flowControl_CheckCards = true;
 	boolean flowControl_RenumberParallels = false;
 	boolean flowControl_RenameParallels = true;
@@ -24,6 +25,10 @@ public class Cotd_05_ExtraFeatures {
 		
 		if(main.flowControl_FillInPowers){
 			Cotd_ExtraFeatures.fillPowerFromWsblog();
+		}
+		
+		if(main.flowControl_UpdateNames){
+			Cotd_ExtraFeatures.updateTemporalNamesFromFile();;
 		}
 		
 		if(main.flowControl_CheckCards){

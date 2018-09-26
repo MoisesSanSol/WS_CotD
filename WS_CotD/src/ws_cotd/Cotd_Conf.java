@@ -31,6 +31,7 @@ public class Cotd_Conf {
 	public File resultFile;
 	public File currentSeriesFile;
 	public File seriesColors;
+	public File nameReplacements;
 	
 	// Urls:
 	public String wsJpCotdUrl;
@@ -101,6 +102,9 @@ public class Cotd_Conf {
 			String seriesColorsStr = prop.getProperty("seriesColors");
 			String seriesColorsPath = this.resourcesFolder.getAbsolutePath() + "\\" + seriesColorsStr;
 			this.seriesColors = new File(seriesColorsPath);
+			String nameReplacementsStr = prop.getProperty("nameReplacements");
+			String nameReplacementsPath = this.resourcesFolder.getAbsolutePath() + "\\" + nameReplacementsStr;
+			this.nameReplacements = new File(nameReplacementsPath);
 			
 			// Urls
 			this.wsJpCotdUrl = prop.getProperty("wsJpCotdUrl");

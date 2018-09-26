@@ -1,6 +1,8 @@
 package ws_cotd_v2;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -8,14 +10,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
+import java.util.Properties;
 
-import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import ws_cotd.Cotd_Conf;
 import ws_cotd.Cotd_Utilities;
@@ -376,5 +375,62 @@ public class Cotd_ExtraFeatures {
 			
 			originFile.renameTo(targetFile);
 		}
+	}
+	
+	public static void updateTemporalNames(HashMap<String,String> names) throws Exception{
+		
+		Cotd_Conf conf = Cotd_Conf.getInstance();
+		
+		ArrayList<String> temporalContent = new ArrayList<String>(Files.readAllLines(conf.temporalFile.toPath(), StandardCharsets.UTF_8));
+		ArrayList<String> newTemporalContent = new ArrayList<String>();
+		
+		newTemporalContent.add(temporalContent.remove(0)); // Separador
+		newTemporalContent.add(temporalContent.remove(0)); // Fecha
+
+		String linea = "";
+		while(!linea.startsWith("-")){
+			linea = temporalContent.remove(0);
+			newTemporalContent.add(linea);
+		}
+		
+		while(!temporalContent.isEmpty()){
+			
+			newTemporalContent.add(temporalContent.remove(0)); // Salto de linea
+			
+			String name = temporalContent.remove(0); // Nombre
+
+			for(String namePattern : names.keySet()) {
+				name = name.replace(namePattern, names.get(namePattern));
+			}
+			newTemporalContent.add(name);
+			String nextLines = temporalContent.remove(0);
+			newTemporalContent.add(nextLines);
+			while(!nextLines.startsWith("-")){
+				nextLines = temporalContent.remove(0);
+				newTemporalContent.add(nextLines);
+			}
+		}
+		
+		Files.write(conf.temporalFile.toPath(), newTemporalContent, StandardCharsets.UTF_8);
+		
+	}
+	
+	public static void updateTemporalNamesFromFile() throws Exception{
+		
+		Cotd_Conf conf = Cotd_Conf.getInstance();
+		HashMap<String,String> names = new HashMap<String,String>();
+		
+		Properties namesProps = new Properties();
+			
+		InputStream namesInput = new FileInputStream(conf.nameReplacements);
+		namesProps.load(namesInput);
+
+		for(Object nameObj : namesProps.keySet()){
+			String name = (String)nameObj;
+			String replacement = namesProps.getProperty(name);
+			names.put(name, replacement);
+		}
+		
+		Cotd_ExtraFeatures.updateTemporalNames(names);
 	}
 }

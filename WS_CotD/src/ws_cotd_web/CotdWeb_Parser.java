@@ -83,16 +83,19 @@ public class CotdWeb_Parser {
 			ArrayList<String> notes = new ArrayList<String>();
 			
 			String abilityLine = temporalContent.remove(0);
-			if(abilityLine.contains("<>") || abilityLine.contains("''")){
-				System.out.println("* Parsing card: " + card.id + " / " + card.name);
-				System.out.println("* Ability: " + abilityLine);
-				throw new Exception("Something has been overlooked in a card ability.");
-			}
+
 			while(!abilityLine.startsWith("-")){
 				if(abilityLine.startsWith("#")) {
 					notes.add(abilityLine);
 				}
 				else if(!abilityLine.isEmpty()){
+					
+					if(abilityLine.contains("<>") || abilityLine.contains("''")){
+						System.out.println("* Parsing card: " + card.id + " / " + card.name);
+						System.out.println("* Ability: " + abilityLine);
+						throw new Exception("Something has been overlooked in a card ability.");
+					}
+					
 					abilities.add(abilityLine);
 				}
 				abilityLine = temporalContent.remove(0);
