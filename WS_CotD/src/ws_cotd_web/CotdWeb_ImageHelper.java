@@ -88,7 +88,45 @@ public class CotdWeb_ImageHelper {
 			}
 		}
 		
-		CotdWeb_IndexHelper.updateSeriesIndex_AfterRelease(seriesId, newCardFileIds);
+		CotdWeb_IndexHelper.updateSeriesIndex_AfterRelease(seriesId, newCardFileIds, "yyt");
+	}
+	
+	public static void fillMissingImagesAfterRelease_Wstcg(String seriesFullId) throws Exception{
+		
+		System.out.println("** Download Wstcg Images: Fill Set Gaps");
+
+		ArrayList<String> cardIds = CotdWeb_CardListHelper.listMissingCards_BoosterPack(seriesFullId);
+		ArrayList<String> newCardFileIds = new ArrayList<String>();
+
+		String seriesId = cardIds.get(0).split("/")[1].split("-")[0].toLowerCase();
+		String imagesFolderPath = conf.webFolder.getAbsolutePath() + "/" + seriesId + "/images/";
+
+		int count = 1;
+		
+		for(String cardId : cardIds) {
+			
+			String url = conf.wsJpCardUrl + cardId;
+			
+			Document doc = Jsoup.connect(url).maxBodySize(0).get();
+			Element image = doc.select("td.graphic img").first();
+			
+			String imageUrl = image.attr("abs:src");
+			System.out.println("Scrapping img: " + imageUrl);
+			String paddedCount = String.format("%02d", count);
+
+			String fileId = seriesId + "_" + cardId.split("-")[1];
+			newCardFileIds.add(fileId);
+			
+			File targetImageFile = new File(imagesFolderPath + fileId + "_wstcg.jpg");
+			
+			System.out.println("Saving img: " + fileId);
+			FileUtils.copyURLToFile(new URL(imageUrl), targetImageFile);
+			
+			Thread.sleep(1000);
+			count++;
+		}
+		
+		CotdWeb_IndexHelper.updateSeriesIndex_AfterRelease(seriesId, newCardFileIds, "wstcg");
 	}
 	
 	

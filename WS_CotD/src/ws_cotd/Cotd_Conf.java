@@ -35,6 +35,7 @@ public class Cotd_Conf {
 	// Urls:
 	public String wsJpCotdUrl;
 	public String wsJpExtraCotdUrl;
+	public String wsJpCardUrl;
 	public String outakuyaUrl;
 
 	private Cotd_Conf(){
@@ -104,6 +105,7 @@ public class Cotd_Conf {
 			// Urls
 			this.wsJpCotdUrl = prop.getProperty("wsJpCotdUrl");
 			this.wsJpExtraCotdUrl = prop.getProperty("wsJpExtraCotdUrl");
+			this.wsJpCardUrl = prop.getProperty("wsJpCardUrl");
 			this.outakuyaUrl = prop.getProperty("outakuyaUrl");
 
 			

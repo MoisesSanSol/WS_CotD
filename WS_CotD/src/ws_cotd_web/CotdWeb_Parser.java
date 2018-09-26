@@ -40,7 +40,7 @@ public class CotdWeb_Parser {
 			card.name = temporalContent.remove(0);
 			card.jpName = temporalContent.remove(0);
 			card.idLine = temporalContent.remove(0);
-			card.id = card.idLine.split(" ")[0];
+			card.id = card.idLine.split(" ")[0].replaceAll("a$", "");
 			card.rarity = card.idLine.split(" ")[1];
 			card.seriesId = card.id.split("-")[0].split("/")[1].toLowerCase();
 			String cardNumber = card.id.split("-")[1];

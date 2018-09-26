@@ -1,7 +1,6 @@
 package ws_cotd_web;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import ws_cotd.Cotd_Conf;

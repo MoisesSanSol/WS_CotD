@@ -1,7 +1,10 @@
 package ws_cotd_web;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import ws_cotd.Cotd_Conf;
 
 public class CotdWeb_CardListHelper {
 
@@ -117,5 +120,33 @@ public class CotdWeb_CardListHelper {
 		}
 		
 		return cards;
+	}
+	
+	
+	public static ArrayList<String> listMissingCards_BoosterPack(String seriesFullId){
+		
+		ArrayList<String> missingCards = new ArrayList<String>();
+		
+		String seriesId = seriesFullId.split("/")[1].toLowerCase();
+		
+		String cardsFolderPath = Cotd_Conf.getInstance().webFolder.getAbsolutePath() + "/" + seriesId + "/cards/";
+		
+		for(int i = 1; i <= 100; i++) {
+
+			String id = String.format("%03d", i);
+			String fileId = seriesId + "_" + id;
+			
+			File cardFile = new File(cardsFolderPath + fileId + ".html");
+			
+			if(cardFile.exists()){
+				System.out.println("Card already exists: " + fileId);
+			}
+			else{
+				System.out.println("Missing card: " + fileId);
+				missingCards.add(seriesFullId + "-" + id);
+			}
+		}
+		
+		return missingCards;
 	}
 }

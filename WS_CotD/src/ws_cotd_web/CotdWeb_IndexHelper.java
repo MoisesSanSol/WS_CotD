@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import ws_cotd.Cotd_Conf;
-import ws_cotd.Cotd_Web;
 
 public class CotdWeb_IndexHelper {
 
@@ -55,7 +54,7 @@ public class CotdWeb_IndexHelper {
 		}
 	}
 	
-	public static void updateSeriesIndex_AfterRelease(String seriesId, ArrayList<String> cardFileIds) throws Exception{
+	public static void updateSeriesIndex_AfterRelease(String seriesId, ArrayList<String> cardFileIds, String suffix) throws Exception{
 
 		String indexFilePath = conf.webFolder.getAbsolutePath() + "/" + seriesId + "/index.html";
 		File indexFile = new File(indexFilePath);
@@ -64,7 +63,7 @@ public class CotdWeb_IndexHelper {
 		for(String cardFileId : cardFileIds) {
 				
 			String currentEntry = "";
-			String newEntry = "Tras Salida" + "<img src='./images/" + cardFileId + "_yyt.jpg' width=100% height=auto id='" + cardFileId + "'  style='filter:grayscale(100%);'></img>";
+			String newEntry = "Tras Salida" + "<img src='./images/" + cardFileId + "_" + suffix + ".jpg' width=100% height=auto id='" + cardFileId + "'  style='filter:grayscale(100%);'></img>";
 			for(String content : indexContent) {
 				if(content.contains(cardFileId + "'")) {
 					currentEntry = content;
