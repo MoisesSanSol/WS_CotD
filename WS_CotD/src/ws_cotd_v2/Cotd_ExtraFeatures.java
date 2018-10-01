@@ -3,6 +3,7 @@ package ws_cotd_v2;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -423,7 +424,7 @@ public class Cotd_ExtraFeatures {
 		Properties namesProps = new Properties();
 			
 		InputStream namesInput = new FileInputStream(conf.nameReplacements);
-		namesProps.load(namesInput);
+		namesProps.load(new InputStreamReader(namesInput, StandardCharsets.UTF_8));
 
 		for(Object nameObj : namesProps.keySet()){
 			String name = (String)nameObj;
