@@ -15,6 +15,7 @@ public class CotdWeb_ExtrasMain {
 		//CotdWeb_ImageHelper.createImageThumbs_FullFolders();
 		//CotdWeb_ImageHelper.reEnumerateImageFiles();
 		//CotdWeb_ExtrasMain.completeSeriesWithWsTcg("seriesFullId");
+		CotdWeb_PageHelper.getTemporalFromCardPages();
 		
 		System.out.println("*** Finished ***");
 

@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 
 import org.jsoup.Jsoup;
@@ -301,5 +303,45 @@ public class CotdWeb_PageHelper {
 		cardContent.set(cardContent.size() - 2, navigation);
 		
 		Files.write(cardFile.toPath(), cardContent, StandardCharsets.UTF_8);
+	}
+	
+	public static void getTemporalFromCardPages() throws Exception{
+		
+		HashMap<String,String> series = CotdWeb_Parser.getSeriesFromCurrentSeries();
+
+		for(String seriesId : series.keySet()) {
+
+			ArrayList<String> temporalContent = new ArrayList<String>();
+			
+			temporalContent.add("****************************************");
+			temporalContent.add("Cartas del día Reversed:");
+			temporalContent.add("");
+			temporalContent.add(series.get(seriesId));
+			
+			String cardsFolderPath = conf.webFolder.getAbsolutePath() + "/" + seriesId + "/cards/";
+			File cardsFolder = new File(cardsFolderPath);
+			File[] cardFiles = cardsFolder.listFiles();
+			Arrays.sort(cardFiles);
+			
+			
+			for(File cardPage : cardFiles) {
+			
+				temporalContent.add("");
+				temporalContent.add(CotdWeb_PageHelper.getCardName(cardPage).get(0));
+				temporalContent.add(CotdWeb_PageHelper.getCardName(cardPage).get(1));
+				temporalContent.add(CotdWeb_PageHelper.getCardIdLine(cardPage));
+				temporalContent.addAll(CotdWeb_PageHelper.getCardStats(cardPage));
+				temporalContent.add("");
+				temporalContent.addAll(CotdWeb_PageHelper.getCardAbilities(cardPage));
+				temporalContent.add("");
+				temporalContent.add("-");
+				
+				
+				String reverseTemporalPath = conf.mainFolder.getAbsolutePath() + "/ReverseTemporal.txt";
+				File reverseTemporal = new File(reverseTemporalPath);
+				Files.write(reverseTemporal.toPath(), temporalContent, StandardCharsets.UTF_8);
+
+			}
+		}
 	}
 }
