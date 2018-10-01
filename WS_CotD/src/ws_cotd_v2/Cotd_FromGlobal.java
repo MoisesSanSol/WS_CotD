@@ -45,7 +45,7 @@ public class Cotd_FromGlobal {
 		
 		ArrayList<String> cardNames = CotdWeb_PageHelper.getCardName(cardPageFile);
 		cardData.addAll(cardNames);
-		String cardIdLine = CotdWeb_PageHelper.getIdLine(cardPageFile).replaceAll(" .+", rarity); 
+		String cardIdLine = CotdWeb_PageHelper.getCardIdLine(cardPageFile).replaceAll(" .+", rarity); 
 		cardData.add(cardIdLine);
 		cardData.addAll(CotdWeb_PageHelper.getCardStats(cardPageFile));
 		cardData.add("");

@@ -1,21 +1,15 @@
 package ws_cotd_main;
 
-import ws_cotd.Cotd_Conf;
 import ws_cotd_v2.Cotd_ExtraFeatures;
 
 public class Cotd_05_ExtraFeatures {
 
-	boolean flowControl_FillInPowers = false;
+	boolean flowControl_FillInPowers = true;
 	boolean flowControl_UpdateNames = true;
+	boolean flowControl_DefaultTraits = true;
 	boolean flowControl_CheckCards = true;
 	boolean flowControl_RenumberParallels = false;
 	boolean flowControl_RenameParallels = true;
-	
-	private Cotd_Conf conf;
-	
-	public Cotd_05_ExtraFeatures(){
-		this.conf = Cotd_Conf.getInstance();
-	}
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -28,7 +22,11 @@ public class Cotd_05_ExtraFeatures {
 		}
 		
 		if(main.flowControl_UpdateNames){
-			Cotd_ExtraFeatures.updateTemporalNamesFromFile();;
+			Cotd_ExtraFeatures.updateTemporalNamesFromFile();
+		}
+		
+		if(main.flowControl_DefaultTraits){
+			Cotd_ExtraFeatures.updateDefaultTraits();
 		}
 		
 		if(main.flowControl_CheckCards){

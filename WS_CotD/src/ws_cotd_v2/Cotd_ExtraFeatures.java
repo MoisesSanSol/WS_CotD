@@ -433,4 +433,39 @@ public class Cotd_ExtraFeatures {
 		
 		Cotd_ExtraFeatures.updateTemporalNames(names);
 	}
+	
+	public static void updateAnyReplacement(HashMap<String,String> replacements, File file) throws Exception{
+		
+		ArrayList<String> fileContent = new ArrayList<String>(Files.readAllLines(file.toPath(), StandardCharsets.UTF_8));
+
+		for(int i = 0; i < fileContent.size(); i++){
+			
+			String line = fileContent.get(i);
+			
+			for(String pattern : replacements.keySet()){
+				
+				String replacement = replacements.get(pattern);
+				
+				line = line.replace(pattern, replacement);
+				
+			}
+			
+			fileContent.set(i, line);
+		}
+		
+		Files.write(file.toPath(), fileContent, StandardCharsets.UTF_8);
+	}
+	
+	public static void updateDefaultTraits() throws Exception{
+		
+		Cotd_Conf conf = Cotd_Conf.getInstance();
+		HashMap<String,String> traitReplacement = new HashMap<String,String>();
+		
+		ArrayList<String> traitsFileContent = new ArrayList<String>(Files.readAllLines(conf.traitReplacements.toPath(), StandardCharsets.UTF_8));
+		
+		traitReplacement.put("<<>>", "<<" + traitsFileContent.get(0) + ">>");
+		
+		Cotd_ExtraFeatures.updateAnyReplacement(traitReplacement, conf.temporalFile);
+		
+	}
 }
