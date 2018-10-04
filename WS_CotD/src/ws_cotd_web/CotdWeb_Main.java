@@ -21,9 +21,9 @@ public class CotdWeb_Main {
 		CotdWeb_ImageHelper.copyImages(cards);
 		
 		CotdWeb_PageHelper.createCardPages(cards);
-		CotdWeb_PageHelper.updatePreviousNextLinks();
-		
 		CotdWeb_IndexHelper.updateSeriesIndex(cards);
+		
+		CotdWeb_PageHelper.updatePreviousNextLinks();
 		CotdWeb_IndexHelper.updateIndexPendingCardsColor();
 		
 		System.out.println("*** Finished ***");

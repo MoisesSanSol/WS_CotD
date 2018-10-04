@@ -257,11 +257,62 @@ public class CotdWeb_PageHelper {
 
 			String cardsFolderPath = conf.webFolder.getAbsolutePath() + "/" + seriesId + "/cards/";
 			File cardsFolder = new File(cardsFolderPath);
+			
 			File[] cardFiles = cardsFolder.listFiles(new FilenameFilter() {
 			    public boolean accept(File dir, String name) {
 			        return !name.contains("_T") && name.matches(".+\\d\\.html$");
 			    }
 			});
+			
+			CotdWeb_PageHelper.updatePreviousNextLinks(cardFiles);
+			
+			File[] tdCardFiles = cardsFolder.listFiles(new FilenameFilter() {
+			    public boolean accept(File dir, String name) {
+			        return name.contains("_T") && name.matches(".+\\d\\.html$");
+			    }
+			});
+			
+			CotdWeb_PageHelper.updatePreviousNextLinks(tdCardFiles);
+			
+			/*Arrays.sort(cardFiles);
+			
+			String previousId = cardFiles[0].getName();
+			String previousName = CotdWeb_PageHelper.getCardName(cardFiles[0]).get(0);
+			String nextId = cardFiles[1].getName();
+			String nextName = CotdWeb_PageHelper.getCardName(cardFiles[1]).get(0);
+			
+			CotdWeb_PageHelper.updatePreviousNextLinks(cardFiles[0], null, null, nextId, nextName);
+			
+			for(int i = 1; i < (cardFiles.length-1); i++) {
+				
+				String currentId = nextId;
+				String currentName = nextName;
+				nextId = cardFiles[i+1].getName();
+				nextName =CotdWeb_PageHelper.getCardName(cardFiles[i+1]).get(0);
+				
+				CotdWeb_PageHelper.updatePreviousNextLinks(cardFiles[i], previousId, previousName, nextId, nextName);
+				
+				previousId = currentId;
+				previousName = currentName;
+
+			}
+			
+			CotdWeb_PageHelper.updatePreviousNextLinks(cardFiles[cardFiles.length-1], nextId, nextName, null, null);*/
+		}
+	}
+	
+	public static void updatePreviousNextLinks(File[] cardFiles) throws Exception{
+		/*HashMap<String,String> series = CotdWeb_Parser.getSeriesFromCurrentSeries();
+
+		for(String seriesId : series.keySet()) {
+
+			String cardsFolderPath = conf.webFolder.getAbsolutePath() + "/" + seriesId + "/cards/";
+			File cardsFolder = new File(cardsFolderPath);
+			File[] cardFiles = cardsFolder.listFiles(new FilenameFilter() {
+			    public boolean accept(File dir, String name) {
+			        return !name.contains("_T") && name.matches(".+\\d\\.html$");
+			    }
+			});*/
 			Arrays.sort(cardFiles);
 			
 			String previousId = cardFiles[0].getName();
@@ -286,18 +337,25 @@ public class CotdWeb_PageHelper {
 			}
 			
 			CotdWeb_PageHelper.updatePreviousNextLinks(cardFiles[cardFiles.length-1], nextId, nextName, null, null);
-		}
+		//}
 	}
 	
 	public static void updatePreviousNextLinks(File cardFile, String previousId, String previousName, String nextId, String nextName) throws Exception{
 		ArrayList<String> cardContent = new ArrayList<String>(Files.readAllLines(cardFile.toPath(), StandardCharsets.UTF_8));
 		
 		String navigation = "<a href='../index.html'>Colección Completa</a>";
+		
 		if(previousId != null){
 			navigation = navigation + "<br><a href='./" + previousId +"'>Anterior: " + previousName + "</a>";
+			if(previousId.contains("_T")){
+				navigation = navigation.replace("index.html'", "index.html#trialDeck'");
+			}
 		}
 		if(nextId != null){
 			navigation = navigation + "<br><a href='./" + nextId +"'>Siguiente: " + nextName + "</a>";
+			if(nextId.contains("_T")){
+				navigation = navigation.replace("index.html'", "index.html#trialDeck'");
+			}
 		}
 		
 		cardContent.set(cardContent.size() - 2, navigation);
