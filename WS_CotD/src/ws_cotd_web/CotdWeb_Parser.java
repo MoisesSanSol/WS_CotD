@@ -45,6 +45,7 @@ public class CotdWeb_Parser {
 			card.seriesId = card.id.split("-")[0].split("/")[1].toLowerCase();
 			String cardNumber = card.id.split("-")[1];
 			card.fileId = card.seriesId + "_" + cardNumber;
+			card.calculateBaseIds();
 			
 			if(cardNumber.length() == 1){
 				System.out.println("* Parsing card: " + card.id + " / " + card.name);
@@ -130,7 +131,7 @@ public class CotdWeb_Parser {
 				newCard.fileId = card.seriesId + "_" + parrallelCardNumber;
 				newCard.imageFileId = card.imageFileId + "_" + parallelCount;
 				parallelCount++;
-				newCard.isParallel = true;
+				newCard.calculateBaseIds();
 				cards.add(newCard);
 			}
 		}
@@ -169,8 +170,8 @@ public class CotdWeb_Parser {
 		while(!seriesHeader.startsWith("*")) {
 			
 			String seriesFullId = currentSeriesContent.remove(0).split("-")[0];
-			String seriesName = seriesHeader.substring(seriesHeader.indexOf(": ") + 2); 
-			series.put(seriesFullId, seriesName);
+			String seriesCleanHeader = seriesHeader.replace("--- JP ", ""); 
+			series.put(seriesFullId, seriesCleanHeader);
 			seriesHeader = currentSeriesContent.remove(0);
 		}
 		

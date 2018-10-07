@@ -27,7 +27,7 @@ public class CotdWeb_PageHelper {
 		CotdWeb_PageHelper.series = CotdWeb_Parser.getSeriesFromCurrentSeries();
 		
 		for(CotdWeb_Card card : cards){
-			if(card.rarity.equals("SR") || card.rarity.equals("RRR") || card.rarity.equals("SP") || card.rarity.equals("FXR") || card.isParallel){
+			if(card.isParallel){
 				CotdWeb_PageHelper.createParallelCardPage(card);
 			}
 			else{
@@ -38,19 +38,16 @@ public class CotdWeb_PageHelper {
 	
 	public static void createParallelCardPage(CotdWeb_Card card) throws Exception{
 		
-		String originalFileId = card.fileId.replaceAll("SP?$", "").replaceAll("(BD)?R$", "").replaceAll("H$", "").replaceAll("SPM$", "").replaceAll("FX$", "").replaceAll("b$", "");
-		String originalId = card.id.replaceAll("SP?$", "").replaceAll("(BD)?R$", "").replaceAll("H$", "").replaceAll("SPM$", "").replaceAll("FX$", "").replaceAll("b$", "");
-		
-		String originalPageFilePath = conf.webFolder.getAbsolutePath() + "/" + card.seriesId + "/cards/" + originalFileId + ".html";
+		String originalPageFilePath = conf.webFolder.getAbsolutePath() + "/" + card.seriesId + "/cards/" + card.baseFileId + ".html";
 		File originalPageFile = new File(originalPageFilePath);
 		
 		ArrayList<String> originalContent = new ArrayList<String>(Files.readAllLines(originalPageFile.toPath(), StandardCharsets.UTF_8));
 		ArrayList<String> parallelContent = (ArrayList<String>)originalContent.clone();
 		
-		int titleIndex = originalContent.indexOf(originalId);
+		int titleIndex = originalContent.indexOf(card.baseId);
 		parallelContent.set(titleIndex, card.id);
 		
-		int imgIndex = originalContent.indexOf("<img src='../images/" + originalFileId + ".png'></img>");
+		int imgIndex = originalContent.indexOf("<img src='../images/" + card.baseFileId + ".png'></img>");
 		parallelContent.set(imgIndex, "<img src='../images/" + card.fileId + ".png'></img>");
 		
 		int idIndex = originalContent.indexOf("<td id='idLine'>") + 1;
@@ -63,11 +60,12 @@ public class CotdWeb_PageHelper {
 		}
 		parallelContent.set(indexIndex, "<a href='../index.html#paralelas'>Colección Completa</a>");
 		
-		String originalUrl = "(<a href='./" + originalFileId + ".html'>" + originalRarity + "</a>)";
+		String originalUrl = "(<a href='./" + card.baseFileId + ".html'>" + originalRarity + "</a>)";
 		String newUrl = "(<a href='./" + card.fileId + ".html'>" + card.rarity + "</a>)";
-		if(card.fileId.endsWith("b")) {
+		if(card.fileId.matches(".+[b-z]$")) {
 			originalUrl = originalUrl.replace(">" + originalRarity + "<",">a<");
-			newUrl = newUrl.replace(">" + card.rarity + "<",">b<");
+			String letter = card.fileId.substring(card.fileId.length() - 1);
+			newUrl = newUrl.replace(">" + card.rarity + "<",">" + letter + "<");
 		}
 		
 		
@@ -264,7 +262,9 @@ public class CotdWeb_PageHelper {
 			    }
 			});
 			
-			CotdWeb_PageHelper.updatePreviousNextLinks(cardFiles);
+			if(cardFiles.length > 0){
+				CotdWeb_PageHelper.updatePreviousNextLinks(cardFiles);
+			}
 			
 			File[] tdCardFiles = cardsFolder.listFiles(new FilenameFilter() {
 			    public boolean accept(File dir, String name) {
@@ -272,72 +272,38 @@ public class CotdWeb_PageHelper {
 			    }
 			});
 			
-			CotdWeb_PageHelper.updatePreviousNextLinks(tdCardFiles);
-			
-			/*Arrays.sort(cardFiles);
-			
-			String previousId = cardFiles[0].getName();
-			String previousName = CotdWeb_PageHelper.getCardName(cardFiles[0]).get(0);
-			String nextId = cardFiles[1].getName();
-			String nextName = CotdWeb_PageHelper.getCardName(cardFiles[1]).get(0);
-			
-			CotdWeb_PageHelper.updatePreviousNextLinks(cardFiles[0], null, null, nextId, nextName);
-			
-			for(int i = 1; i < (cardFiles.length-1); i++) {
-				
-				String currentId = nextId;
-				String currentName = nextName;
-				nextId = cardFiles[i+1].getName();
-				nextName =CotdWeb_PageHelper.getCardName(cardFiles[i+1]).get(0);
-				
-				CotdWeb_PageHelper.updatePreviousNextLinks(cardFiles[i], previousId, previousName, nextId, nextName);
-				
-				previousId = currentId;
-				previousName = currentName;
-
+			if(tdCardFiles.length > 0){
+				CotdWeb_PageHelper.updatePreviousNextLinks(tdCardFiles);
 			}
-			
-			CotdWeb_PageHelper.updatePreviousNextLinks(cardFiles[cardFiles.length-1], nextId, nextName, null, null);*/
 		}
 	}
 	
 	public static void updatePreviousNextLinks(File[] cardFiles) throws Exception{
-		/*HashMap<String,String> series = CotdWeb_Parser.getSeriesFromCurrentSeries();
+		
+		Arrays.sort(cardFiles);
+		
+		String previousId = cardFiles[0].getName();
+		String previousName = CotdWeb_PageHelper.getCardName(cardFiles[0]).get(0);
+		String nextId = cardFiles[1].getName();
+		String nextName = CotdWeb_PageHelper.getCardName(cardFiles[1]).get(0);
+		
+		CotdWeb_PageHelper.updatePreviousNextLinks(cardFiles[0], null, null, nextId, nextName);
+		
+		for(int i = 1; i < (cardFiles.length-1); i++) {
+			
+			String currentId = nextId;
+			String currentName = nextName;
+			nextId = cardFiles[i+1].getName();
+			nextName =CotdWeb_PageHelper.getCardName(cardFiles[i+1]).get(0);
+			
+			CotdWeb_PageHelper.updatePreviousNextLinks(cardFiles[i], previousId, previousName, nextId, nextName);
+			
+			previousId = currentId;
+			previousName = currentName;
 
-		for(String seriesId : series.keySet()) {
-
-			String cardsFolderPath = conf.webFolder.getAbsolutePath() + "/" + seriesId + "/cards/";
-			File cardsFolder = new File(cardsFolderPath);
-			File[] cardFiles = cardsFolder.listFiles(new FilenameFilter() {
-			    public boolean accept(File dir, String name) {
-			        return !name.contains("_T") && name.matches(".+\\d\\.html$");
-			    }
-			});*/
-			Arrays.sort(cardFiles);
-			
-			String previousId = cardFiles[0].getName();
-			String previousName = CotdWeb_PageHelper.getCardName(cardFiles[0]).get(0);
-			String nextId = cardFiles[1].getName();
-			String nextName = CotdWeb_PageHelper.getCardName(cardFiles[1]).get(0);
-			
-			CotdWeb_PageHelper.updatePreviousNextLinks(cardFiles[0], null, null, nextId, nextName);
-			
-			for(int i = 1; i < (cardFiles.length-1); i++) {
-				
-				String currentId = nextId;
-				String currentName = nextName;
-				nextId = cardFiles[i+1].getName();
-				nextName =CotdWeb_PageHelper.getCardName(cardFiles[i+1]).get(0);
-				
-				CotdWeb_PageHelper.updatePreviousNextLinks(cardFiles[i], previousId, previousName, nextId, nextName);
-				
-				previousId = currentId;
-				previousName = currentName;
-
-			}
-			
-			CotdWeb_PageHelper.updatePreviousNextLinks(cardFiles[cardFiles.length-1], nextId, nextName, null, null);
-		//}
+		}
+		
+		CotdWeb_PageHelper.updatePreviousNextLinks(cardFiles[cardFiles.length-1], previousId, previousName, null, null);
 	}
 	
 	public static void updatePreviousNextLinks(File cardFile, String previousId, String previousName, String nextId, String nextName) throws Exception{

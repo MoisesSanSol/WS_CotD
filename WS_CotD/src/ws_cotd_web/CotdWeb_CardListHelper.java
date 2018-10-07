@@ -15,8 +15,7 @@ public class CotdWeb_CardListHelper {
 		
 		for(CotdWeb_Card card : cards){
 			if(card.isReferenced){
-				String originalFileId = card.fileId.replaceAll("SP?$", "").replaceAll("(BD)?R$", "").replaceAll("H$", "").replaceAll("SPM$", "");
-				String anchor =  "<a href='./" + originalFileId + ".html'>" + card.name + "</a>";
+				String anchor =  "<a href='./" + card.baseFileId + ".html'>" + card.name + "</a>";
 				referenceAnchors.put(card.name, anchor);
 				references.put(card.name, new ArrayList<String>());
 			}
@@ -24,8 +23,7 @@ public class CotdWeb_CardListHelper {
 		
 		for(CotdWeb_Card card : cards){
 			if(card.hasReferences){
-				String originalFileId = card.fileId.replaceAll("SP?$", "").replaceAll("(BD)?R$", "").replaceAll("H$", "").replaceAll("SPM$", "");
-				String anchor =  "<a href='./" + originalFileId + ".html'>" + card.name + "</a>";
+				String anchor =  "<a href='./" + card.baseFileId + ".html'>" + card.name + "</a>";
 				for(String ability : card.abilities){
 					String updatedAbility = ability;
 					for(String referenced : referenceAnchors.keySet()) {

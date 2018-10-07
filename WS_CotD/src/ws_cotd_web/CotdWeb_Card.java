@@ -9,7 +9,9 @@ public class CotdWeb_Card implements Serializable{
 	
 	public String seriesId;
 	public String id;
+	public String baseId;
 	public String fileId;
+	public String baseFileId;
 	public String imageFileId;
 	
 	public String name;
@@ -30,5 +32,26 @@ public class CotdWeb_Card implements Serializable{
 		this.abilities = new ArrayList<String>();
 		this.notes = new ArrayList<String>();
 		this.references = new ArrayList<String>();
+	}
+	
+	public void calculateBaseIds(){
+
+		this.baseId = this.id;
+		this.baseFileId = this.fileId;
+		
+		ArrayList<String> parallelSufixes = new ArrayList<String>();
+		parallelSufixes.add("SP?$");
+		parallelSufixes.add("(BD)?R$");
+		parallelSufixes.add("H$");
+		parallelSufixes.add("SPM$");
+		parallelSufixes.add("FX$");
+		parallelSufixes.add("[b-z]$");
+		
+		for(String suffixPattern : parallelSufixes){
+			this.baseId = this.baseId.replaceAll(suffixPattern, "");
+			this.baseFileId = this.baseFileId.replaceAll(suffixPattern, "");
+		}
+		
+		this.isParallel = !this.id.equals(baseId);
 	}
 }

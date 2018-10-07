@@ -84,22 +84,34 @@ public class WsEn_FileHelper {
 	
 	public static void getFullAbilityList_WithReferences() throws Exception{
 		
-		ArrayList<String> content = new ArrayList<String>();
+		HashMap<String,String> abilities = new HashMap<String,String>();
 		
 		ArrayList<WsEn_Series> series = getMasterList();
 		for(WsEn_Series serie : series){
 			File abilityListFile = new File(WsEn_LocalConf.abilitylistfile_basepath + serie.fileName);
 			if(abilityListFile.exists()){
 				ArrayList<String> auxContent = new ArrayList<String>(Files.readAllLines(abilityListFile.toPath(), StandardCharsets.UTF_8));
+				String aux = "Error"; 
 				while(!auxContent.isEmpty()){
 					String line = auxContent.remove(0).trim();
-					if(!line.isEmpty() && !line.startsWith("#") && !content.contains(line)){
-						content.add(line);
+					if(line.startsWith("#")){
+						aux = line;
+					}
+					else if(!line.isEmpty()){
+						String idList = aux;
+						if(abilities.containsKey(line)){
+							idList = abilities.get(line) + "; " + aux;
+						}
+						abilities.put(line, idList);
 					}
 				}
 			}
 		}
-		
+
+		ArrayList<String> content = new ArrayList<String>();
+		for(String ability : abilities.keySet()){
+			content.add(ability + "\t" + abilities.get(ability)); 
+		}
 		Collections.sort(content);
 		File abilityListFile = new File(WsEn_LocalConf.masterabilitylistfile_fullpath);
 		Files.write(abilityListFile.toPath(), content, StandardCharsets.UTF_8);

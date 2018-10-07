@@ -143,13 +143,16 @@ public class CotdWeb_IndexHelper {
 			
 			//System.out.println("* Count CR: " + countCR);
 			int iCR = indexContent.indexOf("<td align=center id='CR_Count'>");
-			String totalCR_Count = indexContent.get(iCR + 1).split("/")[1];
-			indexContent.set(iCR + 1, String.valueOf(countCR) + "/" + totalCR_Count);
-			
+			if(iCR != -1){
+				String totalCR_Count = indexContent.get(iCR + 1).split("/")[1];
+				indexContent.set(iCR + 1, String.valueOf(countCR) + "/" + totalCR_Count);
+			}
 			//System.out.println("* Count CC: " + countCC);
 			int iCC = indexContent.indexOf("<td align=center id='CC_Count'>");
-			String totalCC_Count = indexContent.get(iCC + 1).split("/")[1];
-			indexContent.set(iCC + 1, String.valueOf(countCC) + "/" + totalCC_Count);
+			if(iCC != -1){
+				String totalCC_Count = indexContent.get(iCC + 1).split("/")[1];
+				indexContent.set(iCC + 1, String.valueOf(countCC) + "/" + totalCC_Count);
+			}
 			
 			int totalCount = countRR + countR + countU + countC + countCR + countCC;
 			//System.out.println("* Total Count: " + totalCount);
@@ -164,6 +167,11 @@ public class CotdWeb_IndexHelper {
 	public static void createEmptyIndex(String seriesFullId, String seriesName) throws Exception{
 		
 		String indexTemplateFilePath = conf.webTemplatesFolder.getAbsolutePath() + "\\indexTemplate.html";
+		if(seriesName.contains("Extra Booster")){
+			indexTemplateFilePath = conf.webTemplatesFolder.getAbsolutePath() + "\\indexTemplateExtraBooster.html";
+		}
+		seriesName = seriesName.substring(seriesName.indexOf(": ") + 2); 
+		
 		File indexTemplateFile = new File(indexTemplateFilePath);
 		ArrayList<String> indexContent = new ArrayList<String>(Files.readAllLines(indexTemplateFile.toPath(), StandardCharsets.UTF_8));
 
@@ -389,7 +397,7 @@ public class CotdWeb_IndexHelper {
 				indexContent = CotdWeb_IndexHelper.updateIndexPendingCardsColor("grb", maxVerde, minAzul, indexContent);
 			}
 		}
-		else {
+		else if(tieneAmarillo){
 			if(hayRojo) {
 				indexContent = CotdWeb_IndexHelper.updateIndexPendingCardsColor("yr", maxAmarillo, minRojo, indexContent);
 			}

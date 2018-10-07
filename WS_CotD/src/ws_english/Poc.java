@@ -9,10 +9,11 @@ public class Poc {
 		//ArrayList<WsEn_Series> series = WsEn_Scrapper.getSeriesList();
 		//WsEn_FileHelper.saveMasterList(series);
 		
-		ArrayList<WsEn_Series> series = WsEn_FileHelper.getMasterList();
-		WsEn_FileHelper.saveSeriesAbilitiesList(series);
+		//ArrayList<WsEn_Series> series = WsEn_FileHelper.getMasterList();
+		//WsEn_FileHelper.saveSeriesAbilitiesList(series);
 		
 		//WsEn_FileHelper.getFullAbilityList();
+		//WsEn_FileHelper.getFullAbilityList_WithReferences();
 
 	}
 	
