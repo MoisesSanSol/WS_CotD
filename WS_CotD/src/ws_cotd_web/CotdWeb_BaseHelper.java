@@ -25,6 +25,9 @@ public class CotdWeb_BaseHelper {
 				String cardsFolderPath = seriesFolderPath + "cards";
 				File cardsFolder = new File(cardsFolderPath);
 				cardsFolder.mkdir();
+				String cardsFolderPath = seriesFolderPath + "cardsbydate";
+				File cardsFolder = new File(cardsFolderPath);
+				cardsFolder.mkdir();
 				String imagesFolderPath = seriesFolderPath + "images";
 				File imagesFolder = new File(imagesFolderPath);
 				imagesFolder.mkdir();

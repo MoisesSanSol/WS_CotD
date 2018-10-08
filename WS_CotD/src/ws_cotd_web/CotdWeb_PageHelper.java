@@ -261,6 +261,7 @@ public class CotdWeb_PageHelper {
 			});
 			
 			if(cardFiles.length > 0){
+				Arrays.sort(cardFiles);
 				CotdWeb_PageHelper.updatePreviousNextLinks(cardFiles);
 			}
 			
@@ -271,14 +272,13 @@ public class CotdWeb_PageHelper {
 			});
 			
 			if(tdCardFiles.length > 0){
+				Arrays.sort(cardFiles);
 				CotdWeb_PageHelper.updatePreviousNextLinks(tdCardFiles);
 			}
 		}
 	}
 	
 	public static void updatePreviousNextLinks(File[] cardFiles) throws Exception{
-		
-		Arrays.sort(cardFiles);
 		
 		String previousId = cardFiles[0].getName();
 		String previousName = CotdWeb_PageHelper.getCardName(cardFiles[0]).get(0);

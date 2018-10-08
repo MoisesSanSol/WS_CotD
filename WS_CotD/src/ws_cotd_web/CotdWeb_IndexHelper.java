@@ -1,8 +1,10 @@
 package ws_cotd_web;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -211,6 +213,9 @@ public class CotdWeb_IndexHelper {
 			ArrayList<String> indexContent = new ArrayList<String>(Files.readAllLines(indexTemplateFile.toPath(), StandardCharsets.UTF_8));
 			TreeMap<Date,ArrayList<String>> cardDates = CotdWeb_IndexHelper.getCardDates(seriesId);
 			
+			String seriesCardsPath = conf.webFolder.getAbsolutePath() + "/" + seriesId + "/cards/";
+			String seriesCardsByDatePath = conf.webFolder.getAbsolutePath() + "/" + seriesId + "/cardsbydate/";
+			
 			String seriesName = series.get(seriesId).substring(series.get(seriesId).indexOf(": ") + 2); 
 			
 			for(int i = 0; i < indexContent.size(); i++){
@@ -223,6 +228,7 @@ public class CotdWeb_IndexHelper {
 			}
 			
 			ArrayList<String> cardsContent = new ArrayList<String>();
+			ArrayList<File> cardFiles = new ArrayList<File>();
 			
 	        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 			for(Date date : cardDates.keySet()){
@@ -232,9 +238,18 @@ public class CotdWeb_IndexHelper {
 	            cardsContent.add("</b></div>");
 	            cardsContent.add("<table border=2 width=100%><tr>");
 	            for(String cardLine : cardDates.get(date)){
-		            cardsContent.add("<td width=10%  align=center>");
-		            cardsContent.add(cardLine);
+		            
+	            	String href = cardLine.replaceAll(".+href='\\./cards/(.+?)'.+", "$1");
+	            	File originalCardPage = new File(seriesCardsPath + href);
+					File newCardPage = new File(seriesCardsByDatePath + href);
+	            	
+					Files.copy(originalCardPage.toPath(), newCardPage.toPath(), StandardCopyOption.REPLACE_EXISTING);
+					cardFiles.add(newCardPage);
+					
+	            	cardsContent.add("<td width=10%  align=center>");
+		            cardsContent.add(cardLine.replace("cards", "cardsbydate"));
 		            cardsContent.add("</td>");
+		            
 	            }
 	            for(int i = cardDates.get(date).size(); i < 10; i++){
 		            cardsContent.add("<td width=10%  align=center>");
@@ -251,6 +266,13 @@ public class CotdWeb_IndexHelper {
 			String indexFilePath = conf.webFolder.getAbsolutePath() + "/" + seriesId + "/cartasporfecha.html";
 			File indexFile = new File(indexFilePath);
 			Files.write(indexFile.toPath(), indexContent, StandardCharsets.UTF_8);
+			
+			if(cardFiles.size() > 0){
+				
+				File[] cardFilesArr = (File[])cardFiles.toArray(new File[cardFiles.size()]);
+				
+				CotdWeb_PageHelper.updatePreviousNextLinks(cardFilesArr);
+			}
 		}
 		
 	}
