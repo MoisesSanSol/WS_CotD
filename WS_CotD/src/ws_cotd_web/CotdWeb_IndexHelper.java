@@ -3,9 +3,12 @@ package ws_cotd_web;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.TreeMap;
 
 import ws_cotd.Cotd_Conf;
 
@@ -196,6 +199,62 @@ public class CotdWeb_IndexHelper {
 		
 	}
 	
+	public static void createDateBasedIndex() throws Exception{
+		
+		String indexTemplateFilePath = conf.webTemplatesFolder.getAbsolutePath() + "\\indexTemplatePorFecha.html";
+		File indexTemplateFile = new File(indexTemplateFilePath);
+		
+		HashMap<String,String> series = CotdWeb_Parser.getSeriesFromCurrentSeries();
+
+		for(String seriesId : series.keySet()) {
+		
+			ArrayList<String> indexContent = new ArrayList<String>(Files.readAllLines(indexTemplateFile.toPath(), StandardCharsets.UTF_8));
+			TreeMap<Date,ArrayList<String>> cardDates = CotdWeb_IndexHelper.getCardDates(seriesId);
+			
+			String seriesName = series.get(seriesId).substring(series.get(seriesId).indexOf(": ") + 2); 
+			
+			for(int i = 0; i < indexContent.size(); i++){
+				
+				String line = indexContent.get(i);
+				
+				line = line.replace("{Series Name}", seriesName);
+				
+				indexContent.set(i, line);
+			}
+			
+			ArrayList<String> cardsContent = new ArrayList<String>();
+			
+	        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+			for(Date date : cardDates.keySet()){
+	            String fecha = formatter.format(date);
+	            cardsContent.add("<div align=center style=\"font-size:150%\"><b>");
+	            cardsContent.add(fecha);
+	            cardsContent.add("</b></div>");
+	            cardsContent.add("<table border=2 width=100%><tr>");
+	            for(String cardLine : cardDates.get(date)){
+		            cardsContent.add("<td width=10%  align=center>");
+		            cardsContent.add(cardLine);
+		            cardsContent.add("</td>");
+	            }
+	            for(int i = cardDates.get(date).size(); i < 10; i++){
+		            cardsContent.add("<td width=10%  align=center>");
+		            cardsContent.add("</td>");
+	            }
+	            cardsContent.add("</tr></table><br>");
+			}
+			
+			indexContent.addAll(indexContent.indexOf("[DateBasedContent]"), cardsContent);
+			indexContent.remove("[DateBasedContent]");
+			
+			System.out.println("* Creating Index By Date Page: " + seriesId);
+			
+			String indexFilePath = conf.webFolder.getAbsolutePath() + "/" + seriesId + "/cartasporfecha.html";
+			File indexFile = new File(indexFilePath);
+			Files.write(indexFile.toPath(), indexContent, StandardCharsets.UTF_8);
+		}
+		
+	}
+	
 	public static String searchIndexDate(CotdWeb_Card card) throws Exception{
 
 		String fecha = "Not Found";
@@ -313,6 +372,50 @@ public class CotdWeb_IndexHelper {
 		colorIndexes.put("Azul", azules);
 		
 		return colorIndexes;
+	}
+	
+	
+	public static TreeMap<Date,ArrayList<String>> getCardDates(String seriesId) throws Exception{
+		
+		TreeMap<Date,ArrayList<String>> cardDates = new TreeMap<Date,ArrayList<String>>(Collections.reverseOrder());
+		
+		String seriesWebPath = conf.webFolder.getPath() + "\\" +  seriesId + "\\";
+		String indexPath = seriesWebPath + "index.html";
+		
+		ArrayList<String> indexContent = new ArrayList<String>(Files.readAllLines(new File(indexPath).toPath(), StandardCharsets.UTF_8));
+		
+		for (int i = 0; i < indexContent.size(); i++){
+			
+			String line = indexContent.get(i);
+			
+			if(line.contains("href") && line.contains("id")){
+					
+				String fecha = line.replaceAll("(.+?)<a href.+", "$1");
+		        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+		        try{
+		            Date date = formatter.parse(fecha);
+	
+		            if(date != null){
+			 
+						String cardFileId =  line.replaceAll(".+?(<a href.+)", "$1");
+						//System.out.println("* File Id: " + cardFileId);
+						//System.out.println("* Fecha: " + fecha);
+						
+						if(cardDates.containsKey(date)){
+							cardDates.get(date).add(cardFileId);
+						}
+						else{
+							ArrayList<String> cardFileIds = new ArrayList<String>();
+							cardFileIds.add(cardFileId);
+							cardDates.put(date, cardFileIds);
+						}
+		            }
+		        }
+		        catch(Exception breakOnEx){}
+			}
+		}
+		
+		return cardDates;
 	}
 	
 	public static void updateIndexPendingCardsColor() throws Exception{

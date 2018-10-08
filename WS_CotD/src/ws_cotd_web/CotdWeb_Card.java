@@ -8,6 +8,7 @@ public class CotdWeb_Card implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	public String seriesId;
+	public String seriesFullName;
 	public String id;
 	public String baseId;
 	public String fileId;

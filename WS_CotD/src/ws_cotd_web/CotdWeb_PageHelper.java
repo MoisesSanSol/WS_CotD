@@ -20,11 +20,9 @@ import ws_cotd.Cotd_Utilities;
 public class CotdWeb_PageHelper {
 
 	public static Cotd_Conf conf = Cotd_Conf.getInstance();
-	public static HashMap<String,String> series;
+	//public static HashMap<String,String> series;
 
 	public static void createCardPages(ArrayList<CotdWeb_Card> cards) throws Exception{
-		
-		CotdWeb_PageHelper.series = CotdWeb_Parser.getSeriesFromCurrentSeries();
 		
 		for(CotdWeb_Card card : cards){
 			if(card.isParallel){
@@ -92,7 +90,7 @@ public class CotdWeb_PageHelper {
 		ArrayList<String> templateContent = new ArrayList<String>(Files.readAllLines(templateFile.toPath(), StandardCharsets.UTF_8));
 
 		templateContent.set(templateContent.indexOf("[Title Line]"), card.id);
-		templateContent.set(templateContent.indexOf("[Series]"), CotdWeb_PageHelper.series.get(card.seriesId));
+		templateContent.set(templateContent.indexOf("[Series]"), card.seriesFullName);
 		String imageLine = "<img src='../images/" + card.fileId + ".png'></img>";
 		templateContent.set(templateContent.indexOf("[Image Line]"), imageLine);
 		

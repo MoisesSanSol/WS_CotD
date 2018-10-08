@@ -25,6 +25,7 @@ public class CotdWeb_Main {
 		
 		CotdWeb_PageHelper.updatePreviousNextLinks();
 		CotdWeb_IndexHelper.updateIndexPendingCardsColor();
+		CotdWeb_IndexHelper.createDateBasedIndex();
 		
 		System.out.println("*** Finished ***");
 	}

@@ -32,6 +32,8 @@ public class CotdWeb_Parser {
 		
 		int count = 1;
 		
+		String currentFullName = linea.replace("--- JP ", "");
+		
 		while(!temporalContent.isEmpty()){
 			
 			CotdWeb_Card card = new CotdWeb_Card();
@@ -43,6 +45,7 @@ public class CotdWeb_Parser {
 			card.id = card.idLine.split(" ")[0].replaceAll("a$", "");
 			card.rarity = card.idLine.split(" ")[1];
 			card.seriesId = card.id.split("-")[0].split("/")[1].toLowerCase();
+			card.seriesFullName = currentFullName;
 			String cardNumber = card.id.split("-")[1];
 			card.fileId = card.seriesId + "_" + cardNumber;
 			card.calculateBaseIds();
@@ -113,6 +116,10 @@ public class CotdWeb_Parser {
 			else if(abilityLine.startsWith("-@")) {
 				card.isReferenced = true;
 				card.hasReferences = true;
+			}
+			
+			if(abilityLine.length() > 4){
+				currentFullName = linea.replaceAll("-.?-- JP ", "");
 			}
 			
 			card.imageFileId = "jp_" + String.format("%02d", count);
