@@ -119,7 +119,7 @@ public class CotdWeb_Parser {
 			}
 			
 			if(abilityLine.length() > 4){
-				currentFullName = linea.replaceAll("-.?-- JP ", "");
+				currentFullName = abilityLine.replaceAll("-.?-- JP ", "");
 			}
 			
 			card.imageFileId = "jp_" + String.format("%02d", count);
