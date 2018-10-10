@@ -477,6 +477,19 @@ public class CotdWeb_IndexHelper {
 			}
 		}*/
 		
+		if(hayAmarillo && !tieneAmarillo){
+			throw new Exception ("Color Amarillo not expected but found.");
+		}
+		if(hayVerde && !tieneVerde){
+			throw new Exception ("Color Verde not expected but found.");
+		}
+		if(hayRojo && !tieneRojo){
+			throw new Exception ("Color Rojo not expected but found.");
+		}
+		if(hayAzul && !tieneAzul){
+			throw new Exception ("Color Azul not expected but found.");
+		}
+		
 		Cotd_Conf conf = Cotd_Conf.getInstance();
 		
 		String seriesWebPath = conf.webFolder.getPath() + "\\" +  seriesId + "\\";
@@ -491,10 +504,15 @@ public class CotdWeb_IndexHelper {
 		}
 		int maxVerde = -1;
 		if(hayVerde){
-			int minVerde = Collections.min(colorIndexes.get("Verde"));
 			maxVerde = Collections.max(colorIndexes.get("Verde"));
-			indexContent = CotdWeb_IndexHelper.updateIndexPendingCardsColor("g", minVerde, maxVerde, indexContent);
-			indexContent = CotdWeb_IndexHelper.updateIndexPendingCardsColor("yg", maxAmarillo, minVerde, indexContent);
+			if(tieneAmarillo){
+				int minVerde = Collections.min(colorIndexes.get("Verde"));
+				indexContent = CotdWeb_IndexHelper.updateIndexPendingCardsColor("g", minVerde, maxVerde, indexContent);
+				indexContent = CotdWeb_IndexHelper.updateIndexPendingCardsColor("yg", maxAmarillo, minVerde, indexContent);
+			}
+			else{
+				indexContent = CotdWeb_IndexHelper.updateIndexPendingCardsColor("g", 0, maxVerde, indexContent);
+			}
 		}
 		int minAzul = 100;
 		if(hayAzul){
