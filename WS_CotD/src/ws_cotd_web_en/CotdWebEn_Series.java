@@ -1,6 +1,6 @@
-package ws_english;
+package ws_cotd_web_en;
 
-public class WsEn_Series {
+public class CotdWebEn_Series {
 
 	String name;
 	String product;

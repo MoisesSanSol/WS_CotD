@@ -1,4 +1,4 @@
-package ws_english;
+package ws_wstcg_en;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -15,23 +15,23 @@ import org.jsoup.nodes.Element;
 import org.jsoup.safety.Whitelist;
 import org.jsoup.select.Elements;
 
-public class WsEn_Scrapper {
+public class WstcgEn_Scrapper {
 
-	public static ArrayList<WsEn_Series> getSeriesList() throws Exception{
+	public static ArrayList<WstcgEn_Series> getSeriesList() throws Exception{
 		
-		ArrayList<WsEn_Series> series = WsEn_Scrapper.getSeriesBaseInfo();
+		ArrayList<WstcgEn_Series> series = WstcgEn_Scrapper.getSeriesBaseInfo();
 		
-		series = WsEn_Scrapper.updateSeriesDetails(series);
+		series = WstcgEn_Scrapper.updateSeriesDetails(series);
 		
 		return series;
 		
 	}
 	
-	public static ArrayList<WsEn_Series> getSeriesBaseInfo() throws Exception{
+	public static ArrayList<WstcgEn_Series> getSeriesBaseInfo() throws Exception{
 		
-		ArrayList<WsEn_Series> series = new ArrayList<WsEn_Series>();
+		ArrayList<WstcgEn_Series> series = new ArrayList<WstcgEn_Series>();
 		
-		Document doc = Jsoup.connect(WsEn_LocalConf.wstcgen_allseries_url).maxBodySize(0).get();
+		Document doc = Jsoup.connect(WstcgEn_LocalConf.wstcgen_allseries_url).maxBodySize(0).get();
 		//System.out.println(doc.html());
 		
 		Elements headers = doc.select("h3");
@@ -43,7 +43,7 @@ public class WsEn_Scrapper {
 			
 			for(Element anchor : seriesAnchors){
 			
-				WsEn_Series serie = new WsEn_Series();
+				WstcgEn_Series serie = new WstcgEn_Series();
 				
 				serie.product = header.text();
 				serie.name = anchor.text();
@@ -59,20 +59,20 @@ public class WsEn_Scrapper {
 		return series;
 	}
 	
-	public static ArrayList<WsEn_Series> updateSeriesDetails(ArrayList<WsEn_Series> series) throws Exception{
+	public static ArrayList<WstcgEn_Series> updateSeriesDetails(ArrayList<WstcgEn_Series> series) throws Exception{
 		
-		for(WsEn_Series serie : series){
+		for(WstcgEn_Series serie : series){
 			System.out.println(serie.name);
 			System.out.println(serie.product);
-			WsEn_Scrapper.updateSeriesDetails(serie);
+			WstcgEn_Scrapper.updateSeriesDetails(serie);
 		}
 		
 		return series;
 	}
 	
-	public static WsEn_Series updateSeriesDetails(WsEn_Series series) throws Exception{
+	public static WstcgEn_Series updateSeriesDetails(WstcgEn_Series series) throws Exception{
 		
-		Document initialDoc = Jsoup.parse(WsEn_Scrapper.getSeriesPageResponse(series.wstcgId, "1"));
+		Document initialDoc = Jsoup.parse(WstcgEn_Scrapper.getSeriesPageResponse(series.wstcgId, "1"));
 		
 		Element firstCardAnchor = initialDoc.select("a[href*=cardno]").first();
 		String cardId = firstCardAnchor.attr("href").replaceAll(".+?=(.+-T?P?E?).+", "$1");
@@ -98,7 +98,7 @@ public class WsEn_Scrapper {
 	
 	public static String getSeriesPageResponse(String seriesWstcgId, String page) throws Exception{
 		
-		URL urlObj = new URL(WsEn_LocalConf.wstcgen_series_url);
+		URL urlObj = new URL(WstcgEn_LocalConf.wstcgen_series_url);
 		HttpsURLConnection con = (HttpsURLConnection) urlObj.openConnection();
 
 		//Add request header
@@ -133,7 +133,7 @@ public class WsEn_Scrapper {
 		return response.toString();
 	}
 	
-	public static ArrayList<String> getSeriesAbilities(WsEn_Series series) throws Exception{
+	public static ArrayList<String> getSeriesAbilities(WstcgEn_Series series) throws Exception{
 		
 		System.out.println("Getting abilitites for " + series.name);
 		
@@ -141,7 +141,7 @@ public class WsEn_Scrapper {
 		
 		for(int i = 1; i < series.wstcgLastPage; i++){
 			
-			Document initialDoc = Jsoup.parse(WsEn_Scrapper.getSeriesPageResponse(series.wstcgId, String.valueOf(i)));
+			Document initialDoc = Jsoup.parse(WstcgEn_Scrapper.getSeriesPageResponse(series.wstcgId, String.valueOf(i)));
 			
 			Elements cardAnchors = initialDoc.select("a[href*=cardno]");
 			
@@ -149,7 +149,7 @@ public class WsEn_Scrapper {
 				
 				String cardId = cardAnchor.attr("href").replaceAll(".+?=(.+)", "$1");
 				
-				content.addAll(WsEn_Scrapper.getCardAbilities(cardId));
+				content.addAll(WstcgEn_Scrapper.getCardAbilities(cardId));
 			}
 
 		}
@@ -163,7 +163,7 @@ public class WsEn_Scrapper {
 		
 		ArrayList<String> content = new ArrayList<String>();
 		
-		String url = WsEn_LocalConf.wstcgen_cardbase_url + cardId;
+		String url = WstcgEn_LocalConf.wstcgen_cardbase_url + cardId;
 		
 		Document doc = Jsoup.connect(url).userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36").maxBodySize(0).get();
 		doc.outputSettings().prettyPrint(false);

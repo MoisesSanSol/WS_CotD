@@ -1,4 +1,4 @@
-package ws_english;
+package ws_cotd_web_en;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -8,14 +8,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 
-public class WsEn_FileHelper {
+public class CotdWebEn_FileHelper {
 
-	public static void saveMasterList(ArrayList<WsEn_Series> series) throws Exception{
+	public static void saveMasterList(ArrayList<CotdWebEn_Series> series) throws Exception{
 		
-		File masterListFile = new File(WsEn_LocalConf.masterserieslistfile_fullpath);
+		File masterListFile = new File(CotdWebEn_LocalConf.masterserieslistfile_fullpath);
 		ArrayList<String> content = new ArrayList<String>();
 		
-		for(WsEn_Series serie : series){
+		for(CotdWebEn_Series serie : series){
 			content.add(serie.name);
 			content.add(serie.product);
 			content.add(serie.seriesId);
@@ -27,14 +27,14 @@ public class WsEn_FileHelper {
 		
 	}
 	
-	public static ArrayList<WsEn_Series> getMasterList() throws Exception{
+	public static ArrayList<CotdWebEn_Series> getMasterList() throws Exception{
 		
-		ArrayList<WsEn_Series> series = new ArrayList<WsEn_Series>();
-		File masterListFile = new File(WsEn_LocalConf.masterserieslistfile_fullpath);
+		ArrayList<CotdWebEn_Series> series = new ArrayList<CotdWebEn_Series>();
+		File masterListFile = new File(CotdWebEn_LocalConf.masterserieslistfile_fullpath);
 		ArrayList<String> content = new ArrayList<String>(Files.readAllLines(masterListFile.toPath(), StandardCharsets.UTF_8));
 		
 		while(!content.isEmpty()){
-			WsEn_Series serie = new WsEn_Series();
+			CotdWebEn_Series serie = new CotdWebEn_Series();
 			serie.name = content.remove(0);
 			serie.product = content.remove(0);
 			serie.fileName = serie.name + " (" + serie.product + ").txt";
@@ -48,12 +48,12 @@ public class WsEn_FileHelper {
 		return series;
 	}
 	
-	public static void saveSeriesAbilitiesList(ArrayList<WsEn_Series> series) throws Exception{
+	public static void saveSeriesAbilitiesList(ArrayList<CotdWebEn_Series> series) throws Exception{
 		
-		for(WsEn_Series serie : series){
-			File abilityListFile = new File(WsEn_LocalConf.abilitylistfile_basepath + serie.fileName);
+		for(CotdWebEn_Series serie : series){
+			File abilityListFile = new File(CotdWebEn_LocalConf.abilitylistfile_basepath + serie.fileName);
 			if(!abilityListFile.exists()){
-				ArrayList<String> content = WsEn_Scrapper.getSeriesAbilities(serie);
+				ArrayList<String> content = CotdWebEn_Scrapper.getSeriesAbilities(serie);
 				Files.write(abilityListFile.toPath(), content, StandardCharsets.UTF_8);
 			}
 		}
@@ -63,9 +63,9 @@ public class WsEn_FileHelper {
 		
 		ArrayList<String> content = new ArrayList<String>();
 		
-		ArrayList<WsEn_Series> series = getMasterList();
-		for(WsEn_Series serie : series){
-			File abilityListFile = new File(WsEn_LocalConf.abilitylistfile_basepath + serie.fileName);
+		ArrayList<CotdWebEn_Series> series = getMasterList();
+		for(CotdWebEn_Series serie : series){
+			File abilityListFile = new File(CotdWebEn_LocalConf.abilitylistfile_basepath + serie.fileName);
 			if(abilityListFile.exists()){
 				ArrayList<String> auxContent = new ArrayList<String>(Files.readAllLines(abilityListFile.toPath(), StandardCharsets.UTF_8));
 				while(!auxContent.isEmpty()){
@@ -78,7 +78,7 @@ public class WsEn_FileHelper {
 		}
 		
 		Collections.sort(content);
-		File abilityListFile = new File(WsEn_LocalConf.masterabilitylistfile_fullpath);
+		File abilityListFile = new File(CotdWebEn_LocalConf.masterabilitylistfile_fullpath);
 		Files.write(abilityListFile.toPath(), content, StandardCharsets.UTF_8);
 	}
 	
@@ -86,9 +86,9 @@ public class WsEn_FileHelper {
 		
 		HashMap<String,String> abilities = new HashMap<String,String>();
 		
-		ArrayList<WsEn_Series> series = getMasterList();
-		for(WsEn_Series serie : series){
-			File abilityListFile = new File(WsEn_LocalConf.abilitylistfile_basepath + serie.fileName);
+		ArrayList<CotdWebEn_Series> series = getMasterList();
+		for(CotdWebEn_Series serie : series){
+			File abilityListFile = new File(CotdWebEn_LocalConf.abilitylistfile_basepath + serie.fileName);
 			if(abilityListFile.exists()){
 				ArrayList<String> auxContent = new ArrayList<String>(Files.readAllLines(abilityListFile.toPath(), StandardCharsets.UTF_8));
 				String aux = "Error"; 
@@ -113,7 +113,7 @@ public class WsEn_FileHelper {
 			content.add(ability + "\t" + abilities.get(ability)); 
 		}
 		Collections.sort(content);
-		File abilityListFile = new File(WsEn_LocalConf.masterabilitylistfile_fullpath);
+		File abilityListFile = new File(CotdWebEn_LocalConf.masterabilitylistfile_fullpath);
 		Files.write(abilityListFile.toPath(), content, StandardCharsets.UTF_8);
 	}
 	
@@ -121,17 +121,51 @@ public class WsEn_FileHelper {
 		
 		HashMap<String,String> abilityTranslations = new HashMap<String,String>();
 		
-		File abilityTranslationsFile = new File(WsEn_LocalConf.seriesabilitytranslationsfile_basepath + seriesId + ".txt");
+		File abilityTranslationsFile = new File(CotdWebEn_LocalConf.seriesabilitytranslationsfile_basepath + seriesId + ".txt");
 		ArrayList<String> abilityTranslationsContent = new ArrayList<String>(Files.readAllLines(abilityTranslationsFile.toPath(), StandardCharsets.UTF_8));
 		while(!abilityTranslationsContent.isEmpty()){
-			String esAbility = abilityTranslationsContent.remove(0).replace("&", "&amp;").replace(">", "&gt;").replace("<", "&lt;");;
+			String esAbility = abilityTranslationsContent.remove(0).replace("&", "&amp;").replace(">", "&gt;").replace("<", "&lt;");
 			esAbility = "\\Q" + esAbility.replace("@", "\\E(.+?)\\Q") + "\\E"; 
-			String enAbility = abilityTranslationsContent.remove(0).replace("&", "&amp;").replace(">", "&gt;").replace("<", "&lt;");;
+			String enAbility = abilityTranslationsContent.remove(0).replace("&", "&amp;").replace(">", "&gt;").replace("<", "&lt;");
 			abilityTranslationsContent.remove(0);
 			
 			abilityTranslations.put(esAbility, enAbility);
 		}
 		
 		return abilityTranslations;
+	}
+	
+	public static HashMap<String,String> getSeriesAbilityTranslations_Raw(String seriesId) throws Exception{
+		
+		HashMap<String,String> abilityTranslations = new HashMap<String,String>();
+		
+		File abilityTranslationsFile = new File(CotdWebEn_LocalConf.seriesabilitytranslationsfile_basepath + seriesId + ".txt");
+		ArrayList<String> abilityTranslationsContent = new ArrayList<String>(Files.readAllLines(abilityTranslationsFile.toPath(), StandardCharsets.UTF_8));
+		while(!abilityTranslationsContent.isEmpty()){
+			String esAbility = abilityTranslationsContent.remove(0); 
+			String enAbility = abilityTranslationsContent.remove(0);
+			abilityTranslationsContent.remove(0);
+			
+			abilityTranslations.put(esAbility, enAbility);
+		}
+		
+		return abilityTranslations;
+	}
+	
+	public static void saveSeriesAbilityTranslations(String seriesId, HashMap<String,String> abilityTranslations) throws Exception{
+		
+		ArrayList<String> abilityTranslationsContent = new ArrayList<String>();
+		
+		ArrayList<String> translationPatterns = new ArrayList<String>(abilityTranslations.keySet());
+		Collections.sort(translationPatterns);
+		
+		for(String translationPattern : translationPatterns){
+			abilityTranslationsContent.add(translationPattern);
+			abilityTranslationsContent.add(abilityTranslations.get(translationPattern));
+			abilityTranslationsContent.add("");
+		}
+		
+		File abilityTranslationsFile = new File(CotdWebEn_LocalConf.seriesabilitytranslationsfile_basepath + seriesId + ".txt");
+		Files.write(abilityTranslationsFile.toPath(), abilityTranslationsContent, StandardCharsets.UTF_8);
 	}
 }

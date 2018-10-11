@@ -1,6 +1,6 @@
-package ws_english;
+package ws_wstcg_en;
 
-public class WsEn_LocalConf {
+public class WstcgEn_LocalConf {
 
 	public static String wstcgen_allseries_url = "https://en.ws-tcg.com/cardlist/list/";
 	public static String wstcgen_series_url = "https://en.ws-tcg.com/jsp/cardlist/expansionDetail";

@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import org.apache.commons.lang3.SerializationUtils;
@@ -196,19 +197,49 @@ public class CotdWeb_Parser {
 	public static ArrayList<String> getAbilityListFromWeb(String seriesId) throws Exception{
 		
 		ArrayList<String> abilities = new ArrayList<String>();
+		HashSet<String> uniqueAbilities = new HashSet<String>();
 		
 		File seriesWebFolder = new File(CotdWeb_Parser.conf.webFolder.getAbsolutePath() + "\\" + seriesId + "\\cards");
 
 		for(File file : seriesWebFolder.listFiles()){
-			abilities.addAll(CotdWeb_PageHelper.getCardAbilities(file));
+			uniqueAbilities.addAll(CotdWeb_PageHelper.getCardAbilities(file));
 		}
 		
+		abilities.addAll(uniqueAbilities);
 		Collections.sort(abilities);
 		
 		for(String ability : abilities){
-			System.out.println(ability);
+			//System.out.println(ability);
 		}
 		return abilities;
+	}
+
+	public static CotdWeb_Card getCardsFromPage(File cardPage) throws Exception{
+		
+		CotdWeb_Card card = new CotdWeb_Card();
+		
+		ArrayList<String> names = CotdWeb_PageHelper.getCardName(cardPage);
+		card.name = names.remove(0);
+		card.jpName = names.remove(0);
+		card.idLine = CotdWeb_PageHelper.getCardIdLine(cardPage);
+		card.id = card.idLine.split(" ")[0].replaceAll("a$", "");
+		card.rarity = card.idLine.split(" ")[1];
+		card.seriesId = card.id.split("-")[0].split("/")[1].toLowerCase();
+		card.seriesFullName = CotdWeb_PageHelper.getCardProduct(cardPage);
+		String cardNumber = card.id.split("-")[1];
+		card.fileId = card.seriesId + "_" + cardNumber;
+		card.calculateBaseIds();
+		ArrayList<String> statsArray = CotdWeb_PageHelper.getCardStats(cardPage);
+		String stats = "";
+		while(!statsArray.isEmpty()){
+			stats = stats + statsArray.remove(0);
+		}
+		card.statsLine = stats;
+		card.abilities = CotdWeb_PageHelper.getCardAbilities(cardPage);
+		card.references = CotdWeb_PageHelper.getCardRefereneces(cardPage);
+		card.notes = CotdWeb_PageHelper.getCardNotes(cardPage);
+		
+		return card;
 	}
 	
 }

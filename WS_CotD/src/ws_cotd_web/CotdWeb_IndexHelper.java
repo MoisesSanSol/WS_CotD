@@ -12,6 +12,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.TreeMap;
 
+import org.apache.commons.io.FileUtils;
+
 import ws_cotd.Cotd_Conf;
 
 public class CotdWeb_IndexHelper {
@@ -216,6 +218,11 @@ public class CotdWeb_IndexHelper {
 			String seriesCardsPath = conf.webFolder.getAbsolutePath() + "/" + seriesId + "/cards/";
 			String seriesCardsByDatePath = conf.webFolder.getAbsolutePath() + "/" + seriesId + "/cardsbydate/";
 			
+			File seriesCardsFolder = new File(seriesCardsPath);
+			File seriesCardsByDateFolder = new File(seriesCardsByDatePath);
+			
+			FileUtils.copyDirectory(seriesCardsFolder, seriesCardsByDateFolder);
+			
 			String seriesName = series.get(seriesId).substring(series.get(seriesId).indexOf(": ") + 2); 
 			
 			for(int i = 0; i < indexContent.size(); i++){
@@ -240,10 +247,7 @@ public class CotdWeb_IndexHelper {
 	            for(String cardLine : cardDates.get(date)){
 		            
 	            	String href = cardLine.replaceAll(".+href='\\./cards/(.+?)'.+", "$1");
-	            	File originalCardPage = new File(seriesCardsPath + href);
 					File newCardPage = new File(seriesCardsByDatePath + href);
-	            	
-					Files.copy(originalCardPage.toPath(), newCardPage.toPath(), StandardCopyOption.REPLACE_EXISTING);
 					cardFiles.add(newCardPage);
 					
 	            	cardsContent.add("<td width=10%  align=center>");

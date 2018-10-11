@@ -1,8 +1,8 @@
-package ws_english;
+package ws_cotd_web_en;
 
 import java.util.ArrayList;
 
-public class Poc {
+public class CotdWebEn_Main {
 
 	public static void main(String[] args) throws Exception {
 		
@@ -15,6 +15,8 @@ public class Poc {
 		//WsEn_FileHelper.getFullAbilityList();
 		//WsEn_FileHelper.getFullAbilityList_WithReferences();
 
+		CotdWebEn_AbilitiesHelper.updateSeriesAbilityList();
+		
 	}
 	
 }

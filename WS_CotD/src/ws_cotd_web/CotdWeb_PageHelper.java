@@ -107,7 +107,7 @@ public class CotdWeb_PageHelper {
 		templateContent.set(templateContent.indexOf("[Habilidades]"), abilities);
 		
 		if(!card.references.isEmpty()) {
-			String references = "<tr>\r\n<td>\r\n* Esta carta es referenciada en las habilidades de '";
+			String references = "<tr>\r\n<td id='references'>\r\n* Esta carta es referenciada en las habilidades de '";
 			references = references + card.references.remove(0) + "'\r\n";
 			while(!card.references.isEmpty()) {
 				references = references + "<br>\r\n* Esta carta es referenciada en las habilidades de '" + card.references.remove(0) + "'\r\n";
@@ -120,7 +120,7 @@ public class CotdWeb_PageHelper {
 		}
 		
 		if(!card.notes.isEmpty()) {
-			String notes = "<tr>\r\n<td>\r\n";
+			String notes = "<tr>\r\n<td id='notes'>\r\n";
 			notes = notes + card.notes.remove(0) ;
 			while(!card.notes.isEmpty()) {
 				notes = notes + "\r\n<br>\r\n" + card.notes.remove(0);
@@ -215,6 +215,40 @@ public class CotdWeb_PageHelper {
 		return stats;
 	}
 	
+	public static ArrayList<String> getCardRefereneces(File cardPage) throws Exception{
+		
+		ArrayList<String> references = new ArrayList<String>();
+		
+		Document doc = Jsoup.parse(cardPage, "UTF-8", "irrelevant");
+		
+		Element statsDom = doc.select("#references").first();
+		
+		String[] statsSplit = statsDom.html().split("<br>");
+		
+		for(String statLine : statsSplit){
+			references.add(CotdWeb_CardListHelper.escapeFromHtml(statLine).trim());
+		}
+		
+		return references;
+	}
+	
+	public static ArrayList<String> getCardNotes(File cardPage) throws Exception{
+		
+		ArrayList<String> notes = new ArrayList<String>();
+		
+		Document doc = Jsoup.parse(cardPage, "UTF-8", "irrelevant");
+		
+		Element statsDom = doc.select("#notes").first();
+		
+		String[] statsSplit = statsDom.html().split("<br>");
+		
+		for(String statLine : statsSplit){
+			notes.add(CotdWeb_CardListHelper.escapeFromHtml(statLine).trim());
+		}
+		
+		return notes;
+	}
+	
 	public static ArrayList<String> getCardName(File cardPage) throws Exception{
 		
 		ArrayList<String> names = new ArrayList<String>();
@@ -244,6 +278,19 @@ public class CotdWeb_PageHelper {
 		idLine = CotdWeb_CardListHelper.escapeFromHtml(idDom.text().trim());
 		
 		return idLine;
+	}
+	
+	public static String getCardProduct(File cardPage) throws Exception{
+		
+		String product;
+		
+		Document doc = Jsoup.parse(cardPage, "UTF-8", "irrelevant");
+		
+		Element idDom = doc.select("#product").first();
+		
+		product = CotdWeb_CardListHelper.escapeFromHtml(idDom.text().trim());
+		
+		return product;
 	}
 	
 	public static void updatePreviousNextLinks() throws Exception{
