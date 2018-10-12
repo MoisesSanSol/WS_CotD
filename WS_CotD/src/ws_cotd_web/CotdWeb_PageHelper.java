@@ -303,7 +303,7 @@ public class CotdWeb_PageHelper {
 			
 			File[] cardFiles = cardsFolder.listFiles(new FilenameFilter() {
 			    public boolean accept(File dir, String name) {
-			        return !name.contains("_T") && name.matches(".+\\d\\.html$");
+			        return !name.contains("_T") && !name.contains("_P") && name.matches(".+\\d\\.html$");
 			    }
 			});
 			
@@ -319,8 +319,19 @@ public class CotdWeb_PageHelper {
 			});
 			
 			if(tdCardFiles.length > 0){
-				Arrays.sort(cardFiles);
+				Arrays.sort(tdCardFiles);
 				CotdWeb_PageHelper.updatePreviousNextLinks(tdCardFiles);
+			}
+			
+			File[] prCardFiles = cardsFolder.listFiles(new FilenameFilter() {
+			    public boolean accept(File dir, String name) {
+			        return name.contains("_P") && name.matches(".+\\d\\.html$");
+			    }
+			});
+			
+			if(prCardFiles.length > 0){
+				Arrays.sort(prCardFiles);
+				CotdWeb_PageHelper.updatePreviousNextLinks(prCardFiles);
 			}
 		}
 	}
