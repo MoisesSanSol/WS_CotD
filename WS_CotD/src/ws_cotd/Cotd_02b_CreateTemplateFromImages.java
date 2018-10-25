@@ -177,11 +177,11 @@ public class Cotd_02b_CreateTemplateFromImages {
 		return trigger;
 	}
 	
-	private String getImageSoul(String nivel){
+	private String getImageSoul(String coste){
 		// TODO
 		String soul = "1";
 		
-		if(nivel.equals("3")){
+		if(coste.equals("2") || coste.equals("3")){
 			soul = "2";
 		}
 		
@@ -252,7 +252,7 @@ public class Cotd_02b_CreateTemplateFromImages {
 					System.out.println("* Image Level: " + nivel);
 					coste = this.getImageCost(image);
 					System.out.println("* Image Cost: " + coste);
-					soul = this.getImageSoul(nivel);
+					soul = this.getImageSoul(coste);
 					System.out.println("* Image Soul: " + soul);
 					trigger = this.getImageTrigger(nivel);
 					System.out.println("* Image Trigger: " + trigger);
