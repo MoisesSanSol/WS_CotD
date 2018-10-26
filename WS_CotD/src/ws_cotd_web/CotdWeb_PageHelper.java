@@ -51,12 +51,10 @@ public class CotdWeb_PageHelper {
 		int idIndex = originalContent.indexOf("<td id='idLine'>") + 1;
 		String originalIdLine = originalContent.get(idIndex);
 		String originalRarity = originalIdLine.split(" ")[1];
-
-		int indexIndex = originalContent.indexOf("<a href='../index.html'>Colección Completa</a>");
-		if(indexIndex == -1){
-			indexIndex = originalContent.indexOf("<a href='../index.html#trialDeck'>Colección Completa</a>");
-		}
-		parallelContent.set(indexIndex, "<a href='../index.html#paralelas'>Colección Completa</a>");
+		
+		String navigation = parallelContent.get(parallelContent.size() - 2);
+		navigation = navigation.replaceAll("index\\.html(#trialDeck)?", "index.html#paralelas");
+		parallelContent.set(parallelContent.size() - 2, navigation);
 		
 		String originalUrl = "(<a href='./" + card.baseFileId + ".html'>" + originalRarity + "</a>)";
 		String newUrl = "(<a href='./" + card.fileId + ".html'>" + card.rarity + "</a>)";
@@ -307,7 +305,7 @@ public class CotdWeb_PageHelper {
 			    }
 			});
 			
-			if(cardFiles.length > 0){
+			if(cardFiles.length > 1){
 				Arrays.sort(cardFiles);
 				CotdWeb_PageHelper.updatePreviousNextLinks(cardFiles);
 			}
@@ -318,7 +316,7 @@ public class CotdWeb_PageHelper {
 			    }
 			});
 			
-			if(tdCardFiles.length > 0){
+			if(tdCardFiles.length > 1){
 				Arrays.sort(tdCardFiles);
 				CotdWeb_PageHelper.updatePreviousNextLinks(tdCardFiles);
 			}
@@ -329,7 +327,7 @@ public class CotdWeb_PageHelper {
 			    }
 			});
 			
-			if(prCardFiles.length > 0){
+			if(prCardFiles.length > 1){
 				Arrays.sort(prCardFiles);
 				CotdWeb_PageHelper.updatePreviousNextLinks(prCardFiles);
 			}
