@@ -29,6 +29,8 @@ public class CotdWeb_WstcgScrapper {
 			
 			String url = conf.wsJpCardUrl + cardId;
 			
+			System.out.println("* Get WsTcg Image From Url: " + url);
+			
 			Document doc = Jsoup.connect(url).maxBodySize(0).get();
 			Element image = doc.select("td.graphic img").first();
 			

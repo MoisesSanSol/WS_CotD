@@ -15,7 +15,7 @@ public class CotdWeb_ExtrasMain {
 		//CotdWeb_ImageHelper.fillMissingImagesAfterRelease_Yyt("seriesId", "yytsSeriesPageId");
 		//CotdWeb_ImageHelper.createImageThumbs_FullFolders();
 		//CotdWeb_ImageHelper.reEnumerateImageFiles();
-		//CotdWeb_ExtrasMain.completeSeriesWithWsTcg("seriesFullId");
+		//CotdWeb_ExtrasMain.completeSeriesWithWsTcgImages("seriesFullId");
 		//CotdWeb_PageHelper.getTemporalFromCardPages();
 		//CotdWeb_ExtrasMain.completeSeriesWithWsTcgData("seriesFullId");
 		
@@ -27,13 +27,15 @@ public class CotdWeb_ExtrasMain {
 		
 		Cotd_01_ExportImages importedMainA = new Cotd_01_ExportImages();
 		importedMainA.cleanImagesFolder();
-		ArrayList<String> missingCards = CotdWeb_CardListHelper.listMissingCards_BoosterPack(seriesFullId);
+		//ArrayList<String> missingCards = CotdWeb_CardListHelper.listMissingCards_BoosterPack(seriesFullId);
+		ArrayList<String> missingCards = CotdWeb_CardListHelper.listMissingCards_ExtraBooster(seriesFullId);
 		CotdWeb_WstcgScrapper.getCardImagesFromWstcg(missingCards);
 		
 	}
 	
 	public static void completeSeriesWithWsTcgData(String seriesFullId) throws Exception{
-		ArrayList<String> missingCards = CotdWeb_CardListHelper.listMissingCards_BoosterPack(seriesFullId);
+		//ArrayList<String> missingCards = CotdWeb_CardListHelper.listMissingCards_BoosterPack(seriesFullId);
+		ArrayList<String> missingCards = CotdWeb_CardListHelper.listMissingCards_ExtraBooster(seriesFullId);
 		ArrayList<CotdWeb_Card> cards = CotdWeb_WstcgScrapper.getCardsFromWstcg(missingCards);
 		Cotd_WorkingFile.createTemporalFromCards(cards);
 	}

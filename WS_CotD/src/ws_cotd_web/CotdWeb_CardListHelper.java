@@ -147,4 +147,31 @@ public class CotdWeb_CardListHelper {
 		
 		return missingCards;
 	}
+	
+	public static ArrayList<String> listMissingCards_ExtraBooster(String seriesFullId){
+		
+		ArrayList<String> missingCards = new ArrayList<String>();
+		
+		String seriesId = seriesFullId.split("/")[1].toLowerCase();
+		
+		String cardsFolderPath = Cotd_Conf.getInstance().webFolder.getAbsolutePath() + "/" + seriesId + "/cards/";
+		
+		for(int i = 1; i <= 50; i++) {
+
+			String id = String.format("%02d", i);
+			String fileId = seriesId + "_" + id;
+			
+			File cardFile = new File(cardsFolderPath + fileId + ".html");
+			
+			if(cardFile.exists()){
+				System.out.println("Card already exists: " + fileId);
+			}
+			else{
+				System.out.println("Missing card: " + fileId);
+				missingCards.add(seriesFullId + "-" + id);
+			}
+		}
+		
+		return missingCards;
+	}
 }
