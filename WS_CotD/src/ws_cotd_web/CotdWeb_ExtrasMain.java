@@ -11,6 +11,7 @@ public class CotdWeb_ExtrasMain {
 		
 		System.out.println("*** Starting ***");
 		
+		//CotdWeb_BaseHelper.prepareNewSeries();
 		//CotdWeb_Parser.getAbilityListFromWeb("seriesFullId");
 		//CotdWeb_ImageHelper.fillMissingImagesAfterRelease_Yyt("seriesId", "yytsSeriesPageId");
 		//CotdWeb_ImageHelper.createImageThumbs_FullFolders();
@@ -18,6 +19,7 @@ public class CotdWeb_ExtrasMain {
 		//CotdWeb_ExtrasMain.completeSeriesWithWsTcgImages("seriesFullId");
 		//CotdWeb_PageHelper.getTemporalFromCardPages();
 		//CotdWeb_ExtrasMain.completeSeriesWithWsTcgData("seriesFullId");
+		//CotdWeb_IndexHelper.updateSeriesIndex_ShiftTdNumbers("seriesId", StartingNumber);
 		
 		System.out.println("*** Finished ***");
 

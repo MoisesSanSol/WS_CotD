@@ -10,8 +10,6 @@ public class CotdWeb_Main {
 		
 		System.out.println("** Generate Web Content From Temporal");
 
-		//CotdWeb_BaseHelper.prepareNewSeries();
-		
 		ArrayList<CotdWeb_Card> cards = CotdWeb_Parser.getCardsFromTemporal();
 		
 		cards = CotdWeb_CardListHelper.escapeCardsForHtml(cards);

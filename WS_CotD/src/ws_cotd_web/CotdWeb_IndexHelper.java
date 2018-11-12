@@ -271,7 +271,7 @@ public class CotdWeb_IndexHelper {
 			File indexFile = new File(indexFilePath);
 			Files.write(indexFile.toPath(), indexContent, StandardCharsets.UTF_8);
 			
-			if(cardFiles.size() > 0){
+			if(cardFiles.size() > 1){
 				
 				File[] cardFilesArr = (File[])cardFiles.toArray(new File[cardFiles.size()]);
 				
