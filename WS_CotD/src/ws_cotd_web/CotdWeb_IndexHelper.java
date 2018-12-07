@@ -363,7 +363,7 @@ public class CotdWeb_IndexHelper {
 			
 			String line = indexContent.get(i);
 			
-			if(line.contains("img") && !line.contains("TD") && !line.contains("PR") && !line.contains("SR") && !line.contains("RRR") && !line.contains("SP") && !line.contains("FXR")){
+			if(line.contains("img") && !line.contains("TD") && !line.contains("PR") && !line.contains("SR") && !line.contains("RRR") && !line.contains("SP") && !line.contains("FXR") && !line.contains("ColorException")){
 				
 				//System.out.println("** Image for: " + line.substring(line.lastIndexOf(">") + 1));
 				
