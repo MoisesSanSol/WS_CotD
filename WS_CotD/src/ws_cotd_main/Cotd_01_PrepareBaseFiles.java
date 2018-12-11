@@ -11,7 +11,7 @@ public class Cotd_01_PrepareBaseFiles {
 
 	boolean flowControl_CleanImages = true;
 	boolean flowControl_DownloadImages = true;
-	boolean flowControl_CreateGlobalTemplate = true;
+	boolean flowControl_CreateGlobalTemplate = false;
 	boolean flowControl_CreateImagesTemplate = true;
 	boolean flowControl_OpenFiles = true;
 	

@@ -26,6 +26,7 @@ public class Cotd_Conf {
 	public File abilitiesFile;
 	public File fromImagesFile;
 	public File fromGlobalFile;
+	public File fromFreedomFile;
 	public File fromOutakuyaFile;
 	public File temporalFile;
 	public File resultFile;
@@ -94,6 +95,9 @@ public class Cotd_Conf {
 			String fromGlobalFileStr = prop.getProperty("fromGlobalFile");
 			String fromGlobalFilePath = this.mainFolder.getAbsolutePath() + "\\" + fromGlobalFileStr;
 			this.fromGlobalFile = new File(fromGlobalFilePath);
+			String fromFreedomFileStr = prop.getProperty("fromFreedomFile");
+			String fromFreedomFilePath = this.mainFolder.getAbsolutePath() + "\\" + fromFreedomFileStr;
+			this.fromFreedomFile = new File(fromFreedomFilePath);
 			String abilitiesFileStr = prop.getProperty("abilitiesFile");
 			String abilitiesFilePath = this.mainFolder.getAbsolutePath() + "\\" + abilitiesFileStr;
 			this.abilitiesFile = new File(abilitiesFilePath);

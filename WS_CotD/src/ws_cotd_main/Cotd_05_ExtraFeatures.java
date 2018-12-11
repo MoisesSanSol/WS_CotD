@@ -9,7 +9,7 @@ public class Cotd_05_ExtraFeatures {
 	boolean flowControl_DefaultTraits = true;
 	boolean flowControl_CheckCards = true;
 	boolean flowControl_RenumberParallels = false;
-	boolean flowControl_RenameParallels = false;
+	boolean flowControl_RenameParallels = true;
 	
 	public static void main(String[] args) throws Exception {
 		
